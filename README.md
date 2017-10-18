@@ -31,7 +31,7 @@ By default, the application has three levels of permissions:
 
 * **Admin**: Admin users can add, edit, and delete Departments, Collections, and Folders (through Django admin interface)
 * **Edit Collections and DIPs**: Users in this Group can add and edit Collections and Folders
-* Public: Users with a username/password but no additional permissions have view-only access.
+* **Public**: Users with a username/password but no additional permissions have view-only access.
 
 ## Superuser credentials (dev)
 
