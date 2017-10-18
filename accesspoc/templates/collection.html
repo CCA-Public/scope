@@ -34,7 +34,7 @@
         <br>
         {% for dip in collection.dips.all|sort_by:'identifier' %}
         <div class="container dip">
-          <h4><a href="{% url 'dip' dip.objectid %}">{{ dip.identifier }}</a>: {{ dip.title }}, {{ dip.date }}</h4>
+          <h4><a href="{% url 'dip' dip.identifier %}">{{ dip.identifier }}</a>: {{ dip.title }}, {{ dip.date }}</h4>
           <p><strong>Extent and medium:</strong> {{ dip.format|safe }}</p>
         </div>
         {% endfor %}
