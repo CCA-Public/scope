@@ -19,7 +19,7 @@
           <p><strong>Title:</strong> {{ dip.title }}</p>
           <p><strong>Date:</strong> {{ dip.date }}</p>
           <p><strong>Creator:</strong> {{ dip.creator }}</p>
-          <p><strong>Extent and medium:</strong> {{ dip.dcformat|safe }}</p>
+          <p><strong>Format:</strong> {{ dip.dcformat|safe }}</p>
           <p><strong>Description:</strong> {{ dip.description|safe }}</p>
           {% if user.is_superuser %}
             <a href="{% url 'edit_dip' dip.identifier %}"><button class="btn btn-default">Edit</button></a>

@@ -17,7 +17,7 @@
         <p><strong>Title:</strong> {{ collection.title }}</p>
         <p><strong>Date:</strong> {{ collection.date }}</p>
         <p><strong>Creator:</strong> {{ collection.creator }}</p>
-        <p><strong>Extent and medium:</strong> {{ collection.dcformat|safe }}</p>
+        <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
         <p><strong>Description:</strong> {{ collection.description }}</p>
         <p><strong>Finding aid:</strong> <a href="{{ collection.findingaid }}">{{ collection.findingaid }}</a></p>
         {% if user.is_superuser %}
