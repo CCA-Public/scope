@@ -46,5 +46,5 @@ pip install -r requirements.txt
 
 ## To do
 
-* Choose which Dublin Core elements to display and make editable (set in config file?)    
+* Choose which Dublin Core elements are displayed in Collection and Folder pages (user-configurable?)   
 * Handle user accounts through app rather than admin
