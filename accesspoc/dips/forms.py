@@ -9,8 +9,14 @@ class DepartmentForm(forms.ModelForm):
         fields = ['name']
 
 class CollectionForm(forms.ModelForm):
-    extentmedium = forms.CharField(widget=forms.Textarea(), max_length=4000)
-    abstract = forms.CharField(widget=forms.Textarea(), max_length=4000)
+    def __init__(self, *args, **kwargs):
+        super(CollectionForm, self).__init__(*args, **kwargs)
+
+        for key in self.fields:
+            self.fields[key].required = False
+
+    dcformat = forms.CharField(widget=forms.Textarea(), max_length=4000)
+    description = forms.CharField(widget=forms.Textarea(), max_length=4000)
 
     class Meta:
         model = Collection
@@ -18,13 +24,20 @@ class CollectionForm(forms.ModelForm):
         'description', 'creator', 'link']
 
 class DIPForm(forms.ModelForm):
-    extentmedium = forms.CharField(widget=forms.Textarea(), max_length=4000)
-    scopecontent = forms.CharField(widget=forms.Textarea(), max_length=4000)
+    
+    def __init__(self, *args, **kwargs):
+        super(DIPForm, self).__init__(*args, **kwargs)
+
+        for key in self.fields:
+            self.fields[key].required = False
+
+    dcformat = forms.CharField(widget=forms.Textarea(), max_length=4000)
+    description = forms.CharField(widget=forms.Textarea(), max_length=4000)
 
     class Meta:
         model = DIP
-        fields = ['identifier', 'ispartof', 'title', 'date', 'dcformat', 
-        'description', 'creator', 'metsfile', 'objectszip']
+        fields = ['identifier', 'ispartof', 'metsfile', 'objectszip', 
+        'title', 'date', 'dcformat', 'description', 'creator']
 
 class DeleteCollectionForm(forms.ModelForm):
     class Meta:
