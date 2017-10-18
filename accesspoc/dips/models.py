@@ -22,7 +22,7 @@ class Collection(models.Model):
 	language = models.CharField(max_length=20, blank=True)
 	coverage = models.CharField(max_length=200, blank=True)
 	rights = models.CharField(max_length=200, blank=True)
-	link = models.URLField()
+	link = models.URLField(null=True, blank=True)
 
 	def __str__(self):
 		return self.identifier
