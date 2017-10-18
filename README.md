@@ -12,7 +12,7 @@ The application organizes and displays information in several levels:
 
 * **Collection**: This is the highest level of organization, and may correspond to an archive or other assembled collection of materials. Each Collection belongs to a Department, which allows end users to filter Collections by type.
 * **Folder**: Folders belong to Collections, and correspond to an Archival Information Package (AIP) and Dissemination Information Package (DIP), which in turn contain one to many digital files.
-* **Digital File**: Individual digital files also have detailed pages within the application, containing detailed metadata from the AIP METS file, including a list of PREMIS events.
+* **Digital File**: Individual digital files also have detailed pages within the application, containing detailed metadata from the AIP METS file, including a list of PREMIS events. Digital Files should never be created manually, but only generated via parsing of the METS file when a new Folder/DIP is added.
 
 ## Uploading new DIPs
 
@@ -30,7 +30,7 @@ By default, the application has three levels of permissions:
 
 ## Superuser credentials (dev)
 
-Username: admin
+Username: admin  
 Password: accesspoc
 
 ## Installation (dev)
