@@ -54,7 +54,7 @@ class DigitalFile(models.Model):
 	uuid = models.CharField(max_length=32, primary_key=True)
 	filepath = models.TextField()
 	fileformat = models.CharField(max_length=200)
-	formatversion = models.CharField(max_length=200, blank=True)
+	formatversion = models.CharField(max_length=200, blank=True, null=True)
 	size_bytes = models.IntegerField()
 	size_human = models.CharField(max_length=10, blank=True)
 	datemodified = models.CharField(max_length=30, blank=True)
