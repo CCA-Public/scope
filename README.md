@@ -31,7 +31,7 @@ By default, the application has three levels of permissions:
 
 * **Admin**: Admin users can add, edit, and delete Departments, Collections, and Folders (through Django admin interface)
 * **Edit Collections and DIPs**: Users in this Group can add and edit Collections and Folders
-* Public: Users with a username/password but no additional permissions have view-only access.
+* **Public**: Users with a username/password but no additional permissions have view-only access.
 
 ## Superuser credentials (dev)
 
@@ -40,16 +40,9 @@ Password: accesspoc
 
 ## Installation (dev)
 
-### Set up environment and install requirements
-
 virtualenv venv -p python3  
 source venv/bin/activate  
 pip install -r requirements.txt
-
-### Create database
-
-python accesspoc/manage.py makemigrations
-python accesspoc/manage.py migrate
 
 ## To do
 
