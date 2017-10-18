@@ -28,6 +28,11 @@ By default, the application has three levels of permissions:
 * **Edit Collections and DIPs**: Users in this Group can add and edit Collections and Folders
 * Public: Users with a username/password but no additional permissions have view-only access.
 
+## Superuser credentials (dev)
+
+Username: admin
+Password: accesspoc
+
 ## Installation (dev)
 
 ### Set up environment and install requirements
@@ -40,10 +45,6 @@ pip install -r requirements.txt
 
 python accesspoc/manage.py makemigrations
 python accesspoc/manage.py migrate
-
-### Create superuser
-
-python accesspoc/manage.py createsuperuser
 
 ## To do
 
