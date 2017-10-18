@@ -76,7 +76,7 @@ def new_dip(request):
 
 @login_required(login_url='/login/')
 def edit_collection(request, identifier):
-    # only admins and users in group "Staff" can edit records
+    # only admins and users in group "Edit Collections and DIPs" can edit records
     if request.user.groups.filter(name__in=['Edit Collections and DIPs']).exists() or request.user.is_superuser:
         instance = get_object_or_404(Collection, identifier=identifier)
         form = CollectionForm(request.POST or None, instance=instance)
@@ -89,7 +89,7 @@ def edit_collection(request, identifier):
 
 @login_required(login_url='/login/')
 def edit_dip(request, identifier):
-    # only admins and users in group "Staff" can edit records
+    # only admins and users in group "Edit Collections and DIPs" can edit records
     if request.user.groups.filter(name__in=['Edit Collections and DIPs']).exists() or request.user.is_superuser:
         instance = get_object_or_404(DIP, identifier=identifier)
         form = DIPForm(request.POST or None, instance=instance)
