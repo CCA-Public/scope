@@ -19,7 +19,7 @@
         <p><strong>Creator:</strong> {{ collection.creator }}</p>
         <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
         <p><strong>Description:</strong> {{ collection.description }}</p>
-        <p><strong>Finding aid:</strong> <a href="{{ collection.findingaid }}">{{ collection.findingaid }}</a></p>
+        <p><strong>Finding aid:</strong> <a href="{{ collection.findingaid }}">{{ collection.link }}</a></p>
         {% if user.is_superuser %}
           <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
           <a href="{% url 'delete_collection' collection.identifier %}"><button class="btn btn-danger">Delete</button></a>
