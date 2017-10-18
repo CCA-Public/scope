@@ -23,16 +23,16 @@ class METS(object):
     Class for METS file parsing methods
     """
 
-    def __init__(self, path, dip_objectid):
+    def __init__(self, path, dip_id):
         self.path = os.path.abspath(path)
-        self.dip_objectid = dip_objectid
+        self.dip_id = dip_id
 
     def __str__(self):
         return self.path
 
     def parse_mets(self):
         """
-        Parse METS file and return model object
+        Parse METS file and save data to DIP, DigitalFile, and PremisEvent models
         """
         # open xml file and strip namespaces
         tree = etree.parse(self.path)
@@ -45,18 +45,19 @@ class METS(object):
                 elem.tag = elem.tag[i+1:]
         objectify.deannotate(root, cleanup_namespaces=True)
 
-        # store names and xpaths of desired info from individual files in tuples and convert to ordered dict
-        xml_file_elements = (('filepath', './techMD/mdWrap/xmlData/object/originalName'),
-                        ('uuid', './techMD/mdWrap/xmlData/object/objectIdentifier/objectIdentifierValue'), 
-                        ('hashtype', './techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigestAlgorithm'), 
-                        ('hashvalue', './techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigest'), 
-                        ('bytes', './techMD/mdWrap/xmlData/object/objectCharacteristics/size'), 
-                        ('format', './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatName'), 
-                        ('version', './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatVersion'), 
-                        ('puid', './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatRegistry/formatRegistryKey'), 
-                        ('fits_modified_unixtime', './techMD/mdWrap/xmlData/object/objectCharacteristics/objectCharacteristicsExtension/fits/fileinfo/fslastmodified[@toolname="OIS File Information"]'), 
-                        ('fits_modified', './techMD/mdWrap/xmlData/object/objectCharacteristics/objectCharacteristicsExtension/fits/toolOutput/tool[@name="Exiftool"]/exiftool/FileModifyDate'))
-        xml_file_elements = collections.OrderedDict(xml_file_elements)
+        # create dict for names and xpaths of desired info from individual files
+        xml_file_elements = {
+            'filepath': './techMD/mdWrap/xmlData/object/originalName',
+            'uuid': './techMD/mdWrap/xmlData/object/objectIdentifier/objectIdentifierValue', 
+            'hashtype': './techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigestAlgorithm', 
+            'hashvalue': './techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigest', 
+            'bytes': './techMD/mdWrap/xmlData/object/objectCharacteristics/size', 
+            'format': './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatName', 
+            'version': './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatVersion', 
+            'puid': './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatRegistry/formatRegistryKey', 
+            'fits_modified_unixtime': './techMD/mdWrap/xmlData/object/objectCharacteristics/objectCharacteristicsExtension/fits/fileinfo/fslastmodified[@toolname="OIS File Information"]', 
+            'fits_modified': './techMD/mdWrap/xmlData/object/objectCharacteristics/objectCharacteristicsExtension/fits/toolOutput/tool[@name="Exiftool"]/exiftool/FileModifyDate'
+            }
 
         # build xml document root
         mets_root = root
@@ -65,7 +66,7 @@ class METS(object):
         for target in mets_root.findall(".//fileGrp[@USE='original']/file"):
 
             # create new dictionary for this item's info
-            file_data = {}
+            file_data = dict()
 
             # create new list of dicts for premis events in file_data
             file_data['premis_events'] = list()
@@ -122,7 +123,9 @@ class METS(object):
             # create human-readable version of last modified Unix time stamp (if file was characterized by FITS)
             if file_data['fits_modified_unixtime']:
                 unixtime = int(file_data['fits_modified_unixtime'])/1000 # convert milliseconds to seconds
-                file_data['modified_ois'] = datetime.datetime.fromtimestamp(unixtime).isoformat() # cconvert from unix to iso8601
+                file_data['modified_ois'] = datetime.datetime.fromtimestamp(unixtime).isoformat() # convert from unix to iso8601
+            else:
+                file_data['modified_ois'] = ''
 
             # add file_data to DigitalFile model
             digitalfile = DigitalFile(uuid=file_data['uuid'], filepath=file_data['filepath'], 
@@ -130,7 +133,7 @@ class METS(object):
                 size_bytes=file_data['bytes'], size_human=file_data['size'], 
                 datemodified=file_data['modified_ois'], puid=file_data['puid'], 
                 amdsec=file_data['amdsec_id'], hashtype=file_data['hashtype'], 
-                hashvalue=file_data['hashvalue'], dip=DIP.objects.get(objectid=self.dip_objectid))
+                hashvalue=file_data['hashvalue'], dip=DIP.objects.get(identifier=self.dip_id))
             digitalfile.save()
 
             # add premis events data to PREMISEvent model
@@ -140,4 +143,53 @@ class METS(object):
                     outcome=event['event_outcome'], detailnote=event['event_detail_note'], 
                     digitalfile=DigitalFile.objects.get(uuid=file_data['uuid']))
                 premisevent.save()
+
+        # gather and save descriptive metadata from dmdsec
+        for target in mets_root.findall('.//dmdSec/mdWrap[@MDTYPE="DC"]'): #TODO: use only most recently updated, if exists
+
+            # create dict to store data
+            dip_dmd = dict()
+
+            # create dict for names and xpaths of desired elements
+            dmdsec_dc_elements = {
+                        'identifier': './xmlData/dublincore/identifier', 
+                        'ispartof': './xmlData/dublincore/isPartof', 
+                        'title': './xmlData/dublincore/title', 
+                        'creator': './xmlData/dublincore/creator', 
+                        'subject': './xmlData/dublincore/subject', 
+                        'description': './xmlData/dublincore/description',
+                        'publisher': './xmlData/dublincore/publisher', 
+                        'contributor': './xmlData/dublincore/contributor', 
+                        'date': './xmlData/dublincore/date', 
+                        'dctype': './xmlData/dublincore/type', 
+                        'dcformat': './xmlData/dublincore/format', 
+                        'source': './xmlData/dublincore/source', 
+                        'language': './xmlData/dublincore/language', 
+                        'coverage': './xmlData/dublincore/coverage', 
+                        'rights': './xmlData/dublincore/rights'
+                    }
+
+            # iterate over elements and write key, value for each to dip_dmd dictionary
+            for key, value in dmdsec_dc_elements.items():
+                try:
+                    dip_dmd['{}'.format(key)] = target.find(value).text
+                except AttributeError:
+                    dip_dmd['{}'.format(key)] = ''
+
+            # update DIP model object - not ispartof (hardset)
+            dip = DIP.objects.get(identifier=self.dip_id)
+            dip.title = dip_dmd['title']
+            dip.creator = dip_dmd['creator']
+            dip.subject = dip_dmd['subject']
+            dip.description = dip_dmd['description']
+            dip.publisher = dip_dmd['publisher']
+            dip.contributor = dip_dmd['contributor']
+            dip.date = dip_dmd['date']
+            dip.dctype = dip_dmd['dctype']
+            dip.dcformat = dip_dmd['dcformat']
+            dip.source = dip_dmd['source']
+            dip.language = dip_dmd['language']
+            dip.coverage = dip_dmd['coverage']
+            dip.rights = dip_dmd['rights']
+            dip.save()
 
