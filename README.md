@@ -40,16 +40,9 @@ Password: accesspoc
 
 ## Installation (dev)
 
-### Set up environment and install requirements
-
 virtualenv venv -p python3  
 source venv/bin/activate  
 pip install -r requirements.txt
-
-### Create database
-
-python accesspoc/manage.py makemigrations
-python accesspoc/manage.py migrate
 
 ## To do
 
