@@ -1,0 +1,11 @@
+# python
+__pycache__/
+*.py[cod]
+.env
+venv/
+
+# sqlite db
+*.sqlite3
+
+# mac
+.DS_Store

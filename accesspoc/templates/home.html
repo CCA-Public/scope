@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Collections</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-primary all active">
+      <input type="radio" name="deptoptions" id="all" autocomplete="off" checked>All
+    </label>
+    {% for department in departments %}
+    <label class="btn btn-primary filter">
+      <input type="radio" name="deptoptions" id="{{ department }}" autocomplete="off">{{ department }}
+    </label>
+    {% endfor %}
+  </div>
+  <div class="collection-list">
+  {% for collection in collections %}
+    <div class="container dip collection" data-department="{{ collection.ispartof }}">
+      <div class="row">
+        <div class="col col-md-9">
+          <h3>{{ collection.identifier }}: {{ collection.title }}</h3>
+          <p><strong>Date:</strong> {{ collection.date }}</p>
+          <p><strong>Extent and medium:</strong> {{ collection.dcformat|safe }}</p>
+          <p><strong>Description:</strong> {{ collection.description }}</p>
+        </div>
+        <div class="col col-md-3">
+          <br>
+          <a href="{% url 'collection' collection.identifier %}"><button class="btn btn-primary">Go to collection</button></a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

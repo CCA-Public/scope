@@ -1,0 +1,33 @@
+{% extends 'base.html' %}{% load custom_tags %}
+
+{% block title %}
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Search</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Search all digital files</h2>
+  <br>
+  <table class="table table-striped table-bordered table-condensed sortable" id="fancyTable">
+    <tr>
+      <td><strong>Filepath</strong></td>
+      <td><strong>Format</strong></td>
+      <td><strong>Size (bytes)</strong></td>
+      <td><strong>Last modified</strong></td>
+      <td><strong>Folder</strong></td>
+    </tr>
+  {% for digitalfile in digitalfiles %}
+    <tr>
+      <td>{{ digitalfile.filepath }}</td>
+      <td>{{ digitalfile.fileformat }}</td>
+      <td>{{ digitalfile.size_bytes }}</td>
+      <td>{{ digitalfile.datemodified }}</td>
+      <td><a href="{% url 'dip' digitalfile.dip %}">{{ digitalfile.dip }}</a></td>
+    </tr>
+  {% endfor %}
+  </table>
+</div>
+{% endblock %}

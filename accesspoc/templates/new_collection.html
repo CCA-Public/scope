@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Add New Collection{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
+  <li class="breadcrumb-item active">Add New Collection</li>
+{% endblock %}
+
+{% block content %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}{% load custom_tags %}
+
+{% block title %}Collection {{ collection.identifier }}{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
+  <li class="breadcrumb-item active">{{ collection.identifier }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <h2>Collection description</h2>
+        <br>
+        <p><strong>Reference number:</strong> {{ collection.identifier }}</p>
+        <p><strong>Title:</strong> {{ collection.title }}</p>
+        <p><strong>Date:</strong> {{ collection.date }}</p>
+        <p><strong>Creator:</strong> {{ collection.creator }}</p>
+        <p><strong>Extent and medium:</strong> {{ collection.dcformat|safe }}</p>
+        <p><strong>Description:</strong> {{ collection.description }}</p>
+        <p><strong>Finding aid:</strong> <a href="{{ collection.findingaid }}">{{ collection.findingaid }}</a></p>
+        {% if user.is_superuser %}
+          <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
+          <a href="{% url 'delete_collection' collection.identifier %}"><button class="btn btn-danger">Delete</button></a>
+          <br><br>
+        {% elif user|has_group:"Edit Collections and DIPs" %}
+          <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
+          <br><br>
+        {% endif %}
+      </div>
+      <div class="col-md-5">
+        <h2>Folders with digital files:</h2>
+        <br>
+        {% for dip in collection.dips.all|sort_by:'identifier' %}
+        <div class="container dip">
+          <h4><a href="{% url 'dip' dip.objectid %}">{{ dip.identifier }}</a>: {{ dip.title }}, {{ dip.date }}</h4>
+          <p><strong>Extent and medium:</strong> {{ dip.format|safe }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    </div>
+{% endblock %}

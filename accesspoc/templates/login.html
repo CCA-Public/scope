@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">Login</li>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include 'includes/form.html' %}
+      <button type="submit" class="btn btn-primary btn-block">Log in</button>
+    </form>
+  </div>
+  <div class="container">
+  <br>
+  <h2>Policies for use of born-digital material at CCA</h2>
+  <p>Born-digital materials in the collection of the CCA are protected by copyright, licensing, and agreements with CCA's donors. Access to digital files is allowed only on the CCA's physical premises, and researchers are not permitted to take copies of files with them when leaving CCA except through a formal Reproductions request. Downloading files is permitted for CCA staff working on curatorial activities and for external researchers working on the dedicated access workstations in the CCA Study Room, for consultation in appropriate software.</p>
+  <p>By logging into to the Access Proof of Concept tool, you agree to abide by the policies outlined above, including:</p>
+  <ul>
+  	<li>Not to copy any files to your personal computer, nor to take any files away with you at the end of your session.</li>
+  	<li>To submit any requests for Reproductions through the official channels, by sending an email with all relevant information to reproductions@cca.qc.ca</li>
+  </ul>
+  </div>
+{% endblock %}

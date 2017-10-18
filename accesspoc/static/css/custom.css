@@ -1,0 +1,12 @@
+.dip {
+	border-bottom: 2px solid #000;
+	padding: 10px;
+}
+
+.dip p {
+	margin:0;
+}
+
+.headerlink a {
+	color: #fff !important;
+}

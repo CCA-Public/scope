@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Delete Folder{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Folder</a></li>
+  <li class="breadcrumb-item active">Delete</li>
+{% endblock %}
+
+{% block content %}
+  <h3>Confirm deletion</h3>
+  <p>Note: Deleting this DIP will also delete all child records (digital files and PREMIS events).</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Add New DIP{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Folders</li>
+  <li class="breadcrumb-item active">Add New Folder</li>
+{% endblock %}
+
+{% block content %}
+  <form action="." method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+{% endblock %}
