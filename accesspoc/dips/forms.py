@@ -9,35 +9,42 @@ class DepartmentForm(forms.ModelForm):
         fields = ['name']
 
 class CollectionForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(CollectionForm, self).__init__(*args, **kwargs)
-
-        for key in self.fields:
-            self.fields[key].required = False
-
-    dcformat = forms.CharField(widget=forms.Textarea(), max_length=4000)
-    description = forms.CharField(widget=forms.Textarea(), max_length=4000)
+    
+    dcformat = forms.CharField(widget=forms.Textarea(), 
+        label="Format", max_length=4000, required=False)
+    description = forms.CharField(widget=forms.Textarea(), 
+        max_length=4000, required=False)
 
     class Meta:
         model = Collection
-        fields = ['identifier', 'ispartof', 'title', 'date', 'dcformat', 
-        'description', 'creator', 'link']
+        fields = ['identifier', 'ispartof', 'title', 'creator', 
+        'subject', 'description', 'publisher', 'contributor', 
+        'date', 'dctype', 'dcformat', 'source', 'language', 
+        'coverage', 'rights', 'link']
+        labels = {
+            "ispartof": "Department", 
+            "dctype": "Type"
+        }
 
 class DIPForm(forms.ModelForm):
     
-    def __init__(self, *args, **kwargs):
-        super(DIPForm, self).__init__(*args, **kwargs)
-
-        for key in self.fields:
-            self.fields[key].required = False
-
-    dcformat = forms.CharField(widget=forms.Textarea(), max_length=4000)
-    description = forms.CharField(widget=forms.Textarea(), max_length=4000)
+    dcformat = forms.CharField(widget=forms.Textarea(), 
+        label="Format", max_length=4000, required=False)
+    description = forms.CharField(widget=forms.Textarea(), 
+        max_length=4000, required=False)
 
     class Meta:
         model = DIP
         fields = ['identifier', 'ispartof', 'metsfile', 'objectszip', 
-        'title', 'date', 'dcformat', 'description', 'creator']
+        'title', 'creator', 'subject', 'description', 'publisher', 
+        'contributor', 'date', 'dctype', 'dcformat', 'source', 
+        'language', 'coverage', 'rights']
+        labels = {
+            "ispartof": "Collection", 
+            "metsfile": "METS file", 
+            "objectszip": "Objects zip file", 
+            "dctype": "Type"
+        }
 
 class DeleteCollectionForm(forms.ModelForm):
     class Meta:
