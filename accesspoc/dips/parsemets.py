@@ -118,7 +118,9 @@ class METS(object):
 
             # create human-readable size
             file_data['bytes'] = int(file_data['bytes'])
-            file_data['size'] = convert_size(file_data['bytes'])
+            file_data['size'] = '0 bytes' # default to none
+            if file_data['bytes'] != 0:
+                file_data['size'] = convert_size(file_data['bytes'])
 
             # create human-readable version of last modified Unix time stamp (if file was characterized by FITS)
             if file_data['fits_modified_unixtime']:

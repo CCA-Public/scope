@@ -10,9 +10,10 @@ The primary application, "dips", allows users to add, organize, and interact wit
 
 The application organizes and displays information in several levels:
 
-* **Collection**: This is the highest level of organization, and may correspond to an archive or other assembled collection of materials. Each Collection belongs to a Department, which allows end users to filter Collections by type.
-* **Folder**: Folders belong to Collections, and correspond to an Archival Information Package (AIP) and Dissemination Information Package (DIP), which in turn contain one to many digital files.
-* **Digital File**: Individual digital files also have detailed pages within the application, containing detailed metadata from the AIP METS file, including a list of PREMIS events. Digital Files should never be created manually, but only generated via parsing of the METS file when a new Folder/DIP is added.
+* **Department**: This is the highest level of organization. A Department has only a name, and 0 to many Collections as children.
+* **Collection**: A Collection corresponds to an archive or other assembled collection of materials. Each Collection belongs to one Department, which allows end users to filter Collections by type on the home page. A Collection has 0 to many Folders as chidlren.
+* **Folder**: A Folder corresponds to an Archival Information Package (AIP) and Dissemination Information Package (DIP). A Folder has 1 to many Digital Files as children, which are auto-generated from information in the AIP METS file included as part of the DIP.
+* **Digital File**: A Digital File corresponds to a description of an original digital file in the AIP METS file, and contains detailed metadata from an AIP METS file amdSec, including a list of PREMIS events. Digital Files should never be created manually, but only generated via parsing of the METS file when a new Folder is added.
 
 ## Uploading new DIPs
 
