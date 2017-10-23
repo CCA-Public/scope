@@ -32,11 +32,11 @@
         </div>
         <div class="col-md-5">
           <h2>Attachments:</h2>
-          <div class="container dip">
+          <div class="card card-body p-3 mb-2">
             <p><strong>Digital files:</strong> {{ dip.objectszip.name }}</p>
             <a href="{{ dip.objectszip.url }}"><button class="btn btn-primary">Download zip file</button></a>
           </div>
-          <div class="container dip">
+          <div class="card card-body p-3 mb-2">
             <p><strong>METS file:</strong> {{ dip.metsfile.name }}</p>
             <a href="{{ dip.metsfile.url }}"><button class="btn btn-primary">View METS file</button></a>
           </div>
@@ -61,7 +61,7 @@
           <td>{{ digitalfile.fileformat }}</td>
           <td>{{ digitalfile.size_bytes }}</td>
           <td>{{ digitalfile.datemodified }}</td>
-          <td><a href="{% url 'digital_file' digitalfile.uuid %}"><button class="btn btn-primary">Details</button></a></td>
+          <td><a href="{% url 'digital_file' digitalfile.uuid %}"><button class="btn btn-primary">View</button></a></td>
         </tr>
       {% endfor %}
       </table>

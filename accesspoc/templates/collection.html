@@ -10,7 +10,7 @@
 {% block content %}
     <div class="container">
     <div class="row">
-      <div class="col-md-7">
+      <div class="col-md-6">
         <h2>Collection description</h2>
         <br>
         <p><strong>Identifier:</strong> {{ collection.identifier }}</p>
@@ -29,13 +29,13 @@
           <br><br>
         {% endif %}
       </div>
-      <div class="col-md-5">
+      <div class="col-md-6">
         <h2>Folders with digital files:</h2>
         <br>
         {% for dip in collection.dips.all|sort_by:'identifier' %}
-        <div class="container dip">
+        <div class="card card-body p-3 mb-2">
           <h4><a href="{% url 'dip' dip.identifier %}">{{ dip.identifier }}</a>: {{ dip.title }}, {{ dip.date }}</h4>
-          <p><strong>Extent and medium:</strong> {{ dip.format|safe }}</p>
+          <p><strong>Format:</strong> {{ dip.format|safe }}</p>
         </div>
         {% endfor %}
       </div>
