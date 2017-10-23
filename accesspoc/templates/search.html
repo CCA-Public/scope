@@ -18,6 +18,7 @@
       <td><strong>Size (bytes)</strong></td>
       <td><strong>Last modified</strong></td>
       <td><strong>Folder</strong></td>
+      <td><strong>Details</strong></td>
     </tr>
   {% for digitalfile in digitalfiles %}
     <tr>
@@ -26,6 +27,7 @@
       <td>{{ digitalfile.size_bytes }}</td>
       <td>{{ digitalfile.datemodified }}</td>
       <td><a href="{% url 'dip' digitalfile.dip %}">{{ digitalfile.dip }}</a></td>
+      <td><a href="{% url 'digital_file' digitalfile.uuid %}"><button class="btn btn-primary">View</button></a></td>
     </tr>
   {% endfor %}
   </table>
