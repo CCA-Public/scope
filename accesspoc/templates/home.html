@@ -21,17 +21,11 @@
   <div class="collection-list">
   {% for collection in collections %}
     <div class="container card card-body p-3 mb-2 mt-2 collection" data-department="{{ collection.ispartof }}">
-      <div class="row">
-        <div class="col col-md-9">
-          <h3>{{ collection.identifier }}: {{ collection.title }}</h3>
-          <p><strong>Date:</strong> {{ collection.date }}</p>
-          <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
-          <p><strong>Description:</strong> {{ collection.description }}</p>
-        </div>
-        <div class="col col-md-3">
-          <br>
-          <a href="{% url 'collection' collection.identifier %}"><button class="btn btn-primary">Go to this collection</button></a>
-        </div>
+      <h3>{{ collection.identifier }}: {{ collection.title }}</h3>
+      <p><strong>Date:</strong> {{ collection.date }}</p>
+      <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
+      <p><strong>Description:</strong> {{ collection.description }}</p>
+      <a href="{% url 'collection' collection.identifier %}"><button class="btn btn-primary">Go to this collection</button></a>
       </div>
     </div>
   {% endfor %}
