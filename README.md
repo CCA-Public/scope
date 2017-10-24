@@ -19,7 +19,7 @@ The application organizes and displays information in several levels:
 
 When a sufficiently privileged user creates a new Folder through the GUI interface, they need only enter the identifier, choose the Collection to which the Folder belongs, and upload a copy of the zipped digital objects and a copy of the AIP METS file. The application then uses the `parsemets.py` script to parse the METS file, automatically:
 
-* Saving Dublin Core metadata found in the dmdSec to the DIP model object for the Folder (TODO: make sure most recent dmdSec is being used if AIP has been re-ingested for metadata)  
+* Saving Dublin Core metadata found in the (most recently updated) dmdSec to the DIP model object for the Folder
 * Generating records for Digital Files and the PREMIS events associated with each digital file and saving them to the database.
 
 In a future version of the application, it should be possible to upload a new DIP via a (not yet existing) REST API, which will similarly populate the database from the METS file.
