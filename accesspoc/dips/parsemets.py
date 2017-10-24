@@ -30,6 +30,39 @@ class METS(object):
     def __str__(self):
         return self.path
 
+    def parse_dc(self, root):
+        """
+        Parse SIP-level Dublin Core metadata into dc_model dictionary.
+        Based on parse_dc function from Archivematica parse_mets_to_db.py script:
+
+        https://github.com/artefactual/archivematica/blob/92d7abd238585e64e6064bc3f1ddfc663c4d3ace/
+        src/MCPClient/lib/clientScripts/parse_mets_to_db.py
+        """
+        # Parse DC
+        dmds = root.xpath('dmdSec/mdWrap[@MDTYPE="DC"]/parent::*')
+        dc_model = dict()
+        
+        # Find which DC to parse
+        if len(dmds) > 0:
+            # Want most recently updated
+            dmds = sorted(dmds, key=lambda e: e.get('CREATED'))
+            # Only want SIP DC, not file DC
+            div = root.find('structMap/div/div[@TYPE="Directory"][@LABEL="objects"]')
+            dmdids = div.get('DMDID')
+            # No SIP DC
+            if dmdids is None:
+                return
+            dmdids = dmdids.split()
+            for dmd in dmds[::-1]:  # Reversed
+                if dmd.get('ID') in dmdids:
+                    dc_xml = dmd.find('mdWrap/xmlData/dublincore')
+                    break
+            for elem in dc_xml:
+                tag = elem.tag
+                dc_model['%s' % (tag)] = elem.text
+            print('Dublin Core:', dc_model)
+            return dc_model
+
     def parse_mets(self):
         """
         Parse METS file and save data to DIP, DigitalFile, and PremisEvent models
@@ -146,52 +179,36 @@ class METS(object):
                     digitalfile=DigitalFile.objects.get(uuid=file_data['uuid']))
                 premisevent.save()
 
-        # gather and save descriptive metadata from dmdsec
-        for target in mets_root.findall('.//dmdSec/mdWrap[@MDTYPE="DC"]'): #TODO: use only most recently updated, if exists
+        # gather dublin core metadata from most recent dmdSec
+        dc_model = self.parse_dc(root)
 
-            # create dict to store data
-            dip_dmd = dict()
-
-            # create dict for names and xpaths of desired elements
-            dmdsec_dc_elements = {
-                        'identifier': './xmlData/dublincore/identifier', 
-                        'ispartof': './xmlData/dublincore/isPartof', 
-                        'title': './xmlData/dublincore/title', 
-                        'creator': './xmlData/dublincore/creator', 
-                        'subject': './xmlData/dublincore/subject', 
-                        'description': './xmlData/dublincore/description',
-                        'publisher': './xmlData/dublincore/publisher', 
-                        'contributor': './xmlData/dublincore/contributor', 
-                        'date': './xmlData/dublincore/date', 
-                        'dctype': './xmlData/dublincore/type', 
-                        'dcformat': './xmlData/dublincore/format', 
-                        'source': './xmlData/dublincore/source', 
-                        'language': './xmlData/dublincore/language', 
-                        'coverage': './xmlData/dublincore/coverage', 
-                        'rights': './xmlData/dublincore/rights'
-                    }
-
-            # iterate over elements and write key, value for each to dip_dmd dictionary
-            for key, value in dmdsec_dc_elements.items():
-                try:
-                    dip_dmd['{}'.format(key)] = target.find(value).text
-                except AttributeError:
-                    dip_dmd['{}'.format(key)] = ''
-
-            # update DIP model object - not ispartof (hardset)
-            dip = DIP.objects.get(identifier=self.dip_id)
-            dip.title = dip_dmd['title']
-            dip.creator = dip_dmd['creator']
-            dip.subject = dip_dmd['subject']
-            dip.description = dip_dmd['description']
-            dip.publisher = dip_dmd['publisher']
-            dip.contributor = dip_dmd['contributor']
-            dip.date = dip_dmd['date']
-            dip.dctype = dip_dmd['dctype']
-            dip.dcformat = dip_dmd['dcformat']
-            dip.source = dip_dmd['source']
-            dip.language = dip_dmd['language']
-            dip.coverage = dip_dmd['coverage']
-            dip.rights = dip_dmd['rights']
-            dip.save()
+        # update DIP model object - not ispartof (hardset)
+        dip = DIP.objects.get(identifier=self.dip_id)
+        if 'title' in dc_model:
+            dip.title = dc_model['title']
+        if 'creator' in dc_model:
+            dip.creator = dc_model['creator']
+        if 'subject' in dc_model:
+            dip.subject = dc_model['subject']
+        if 'description' in dc_model:
+            dip.description = dc_model['description']
+        if 'publisher' in dc_model:
+            dip.publisher = dc_model['publisher']
+        if 'contributor' in dc_model:
+            dip.contributor = dc_model['contributor']
+        if 'date' in dc_model:
+            dip.date = dc_model['date']
+        if 'type' in dc_model:
+            dip.dctype = dc_model['type']
+        if 'format' in dc_model:
+            dip.dcformat = dc_model['format']
+        if 'source' in dc_model:
+            dip.source = dc_model['source']
+        if 'language' in dc_model:
+            dip.language = dc_model['language']
+        if 'coverage' in dc_model:
+            dip.coverage = dc_model['coverage']
+        if 'rights' in dc_model:
+            dip.rights = dc_model['rights']
+        dip.save()
 
