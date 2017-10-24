@@ -20,7 +20,7 @@
   </div>
   <div class="collection-list">
   {% for collection in collections %}
-    <div class="container dip collection" data-department="{{ collection.ispartof }}">
+    <div class="container card card-body p-3 mb-2 mt-2 collection" data-department="{{ collection.ispartof }}">
       <div class="row">
         <div class="col col-md-9">
           <h3>{{ collection.identifier }}: {{ collection.title }}</h3>
@@ -30,7 +30,7 @@
         </div>
         <div class="col col-md-3">
           <br>
-          <a href="{% url 'collection' collection.identifier %}"><button class="btn btn-primary">Go to collection</button></a>
+          <a href="{% url 'collection' collection.identifier %}"><button class="btn btn-primary">Go to this collection</button></a>
         </div>
       </div>
     </div>
