@@ -183,32 +183,33 @@ class METS(object):
         dc_model = self.parse_dc(root)
 
         # update DIP model object - not ispartof (hardset)
-        dip = DIP.objects.get(identifier=self.dip_id)
-        if 'title' in dc_model:
-            dip.title = dc_model['title']
-        if 'creator' in dc_model:
-            dip.creator = dc_model['creator']
-        if 'subject' in dc_model:
-            dip.subject = dc_model['subject']
-        if 'description' in dc_model:
-            dip.description = dc_model['description']
-        if 'publisher' in dc_model:
-            dip.publisher = dc_model['publisher']
-        if 'contributor' in dc_model:
-            dip.contributor = dc_model['contributor']
-        if 'date' in dc_model:
-            dip.date = dc_model['date']
-        if 'type' in dc_model:
-            dip.dctype = dc_model['type']
-        if 'format' in dc_model:
-            dip.dcformat = dc_model['format']
-        if 'source' in dc_model:
-            dip.source = dc_model['source']
-        if 'language' in dc_model:
-            dip.language = dc_model['language']
-        if 'coverage' in dc_model:
-            dip.coverage = dc_model['coverage']
-        if 'rights' in dc_model:
-            dip.rights = dc_model['rights']
-        dip.save()
+        if dc_model:
+            dip = DIP.objects.get(identifier=self.dip_id)
+            if 'title' in dc_model:
+                dip.title = dc_model['title']
+            if 'creator' in dc_model:
+                dip.creator = dc_model['creator']
+            if 'subject' in dc_model:
+                dip.subject = dc_model['subject']
+            if 'description' in dc_model:
+                dip.description = dc_model['description']
+            if 'publisher' in dc_model:
+                dip.publisher = dc_model['publisher']
+            if 'contributor' in dc_model:
+                dip.contributor = dc_model['contributor']
+            if 'date' in dc_model:
+                dip.date = dc_model['date']
+            if 'type' in dc_model:
+                dip.dctype = dc_model['type']
+            if 'format' in dc_model:
+                dip.dcformat = dc_model['format']
+            if 'source' in dc_model:
+                dip.source = dc_model['source']
+            if 'language' in dc_model:
+                dip.language = dc_model['language']
+            if 'coverage' in dc_model:
+                dip.coverage = dc_model['coverage']
+            if 'rights' in dc_model:
+                dip.rights = dc_model['rights']
+            dip.save()
 
