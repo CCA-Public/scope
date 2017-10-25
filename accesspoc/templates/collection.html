@@ -34,7 +34,11 @@
         <br>
         {% for dip in collection.dips.all|sort_by:'identifier' %}
         <div class="card card-body p-3 mb-2">
+          {% if dip.date %}
           <h4><a href="{% url 'dip' dip.identifier %}">{{ dip.identifier }}</a>: {{ dip.title }}, {{ dip.date }}</h4>
+          {% else %}
+          <h4><a href="{% url 'dip' dip.identifier %}">{{ dip.identifier }}</a>: {{ dip.title }}</h4>
+          {% endif %}
           {% if dip.dcformat %}
             <p><strong>Format:</strong> {{ dip.dcformat|safe }}</p>
           {% endif %}
