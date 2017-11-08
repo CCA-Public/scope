@@ -48,4 +48,6 @@ pip install -r requirements.txt
 ## To do
 
 * Choose which Dublin Core elements are displayed in Collection and Folder pages (user-configurable?)   
-* Handle user accounts through app rather than admin
+* Handle user accounts through app rather than admin  
+* REST API for uploading DIPs directly from Archivematica automation-tools  
+* Internationalization (French/English interface)
