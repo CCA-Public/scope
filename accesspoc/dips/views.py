@@ -50,7 +50,19 @@ def edit_user(request, pk):
         instance = get_object_or_404(User, pk=pk)
         form = UserChangeForm(request.POST or None, instance=instance)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+
+            # change password if requested
+            password = request.POST.get('password', '')
+            if password != '':
+                user.set_password(password)
+
+            # prevent non-admin from self-promotion
+            if not request.user.is_superuser:
+                user.is_superuser = False
+
+            user.save()
+
             return redirect('users')
         return render(request, 'edit_user.html', {'form': form})
     else:
