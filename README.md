@@ -48,7 +48,7 @@ pip install -r requirements.txt
 ## To do
   
 * Internationalization (French/English interface)
-* Handle user accounts through app rather than admin  
+* Add "Edit Collections and DIPs" group to Users and Edit User pages 
 * Tie user accounts to CCA domain accounts (phase 2?)  
 * REST API for uploading DIPs directly from Archivematica automation-tools (phase 2?)  
 * Choose which Dublin Core elements are displayed in Collection and Folder pages (user-configurable?) 
