@@ -25,7 +25,7 @@
             <a href="{% url 'edit_dip' dip.identifier %}"><button class="btn btn-default">Edit</button></a>
             <a href="{% url 'delete_dip' dip.identifier %}"><button class="btn btn-danger">Delete</button></a>
             <br><br>
-          {% elif user|has_group:"Edit Collections and DIPs" %}
+          {% elif user|has_group:"Edit Collections and Folders" %}
             <a href="{% url 'edit_dip' dip.identifier %}"><button class="btn btn-default">Edit</button></a>
             <br><br>
           {% endif %}
