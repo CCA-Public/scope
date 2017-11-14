@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Department, Collection, DIP, DigitalFile
-from .forms import DepartmentForm, CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm
+from .forms import DepartmentForm, CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm, UserChangeForm
 from .parsemets import METS, convert_size
 
 import os
@@ -17,6 +17,24 @@ def home(request):
 
 def faq(request):
     return render(request, 'faq.html')
+
+@login_required(login_url='/login/')
+def users(request):
+    users = User.objects.all()
+    return render(request, 'users.html', {'users': users})
+
+@login_required(login_url='/login/')
+def edit_user(request, pk):
+    # only admins and user themselves can edit records
+    if request.user.is_superuser or request.user.id == pk:
+        instance = get_object_or_404(User, pk=pk)
+        form = UserChangeForm(request.POST or None, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+        return render(request, 'edit_user.html', {'form': form})
+    else:
+        return redirect('users')
 
 @login_required(login_url='/login/')
 def search(request):

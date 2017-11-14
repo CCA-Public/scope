@@ -39,6 +39,8 @@ urlpatterns = [
     url(r'^new_folder/', views.new_dip, name='new_dip'),
     url(r'^faq/', views.faq, name='faq'),
     url(r'^search/', views.search, name='search'),
+    url(r'^user/(?P<pk>\d+)/edit$', views.edit_user, name='edit_user'),
+    url(r'^users/', views.users, name='users'),
     url(r'^admin/', admin.site.urls),
 ]
 

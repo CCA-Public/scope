@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}User - {{ user.username }}{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Users</li>
+  <li class="breadcrumb-item active">{{ user.username }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
+{% endblock %}
