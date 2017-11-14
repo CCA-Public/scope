@@ -11,8 +11,8 @@ The primary application, "dips", allows users to add, organize, and interact wit
 The application organizes and displays information in several levels:
 
 * **Department**: This is the highest level of organization. A Department has only a name, and 0 to many Collections as children.
-* **Collection**: A Collection corresponds to an archive or other assembled collection of materials. Each Collection belongs to one Department, which allows end users to filter Collections by type on the home page. A Collection has 0 to many Folders as chidlren.
-* **Folder**: A Folder corresponds to an Archival Information Package (AIP) and Dissemination Information Package (DIP). A Folder has 1 to many Digital Files as children, which are auto-generated from information in the AIP METS file included as part of the DIP.
+* **Collection**: A Collection corresponds to an archive or other assembled collection of materials. Each Collection belongs to one Department, which allows end users to filter Collections by type on the home page. A Collection has 0 to many Folders as children. Collecitons may also have unqualified Dublin Core metadata, as well as a link to a finding aid.
+* **Folder**: A Folder corresponds to an Archival Information Package (AIP) and Dissemination Information Package (DIP). A Folder has 1 to many Digital Files as children, which are auto-generated from information in the AIP METS file included as part of the DIP. Folders may also have unqualified Dublin Core metadata. The DC metadata from the most recently updated dmdSec is written into the Folder record when the METS file is uploaded (except "ispartof", which is hard-coded on creation of the Folder. This might be something to change for more generalized usage).
 * **Digital File**: A Digital File corresponds to a description of an original digital file in the AIP METS file, and contains detailed metadata from an AIP METS file amdSec, including a list of PREMIS events. Digital Files should never be created manually, but only generated via parsing of the METS file when a new Folder is added.
 
 ## Uploading new DIPs
@@ -31,7 +31,7 @@ Once the DIP has been uploaded, the metadata for the Folder can be edited throug
 By default, the application has three levels of permissions:
 
 * **Admin**: Admin users can add, edit, and delete Departments, Collections, and Folders and add and edit Users
-* **Edit Collections and DIPs**: Users in this Group can add and edit Collections and Folders
+* **Edit Collections and Folders**: Users in this Group can add and edit Collections and Folders
 * **Public**: Users with a username/password but no additional permissions have view-only access.
 
 ## Superuser credentials (dev)
