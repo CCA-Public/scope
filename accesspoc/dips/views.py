@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Department, Collection, DIP, DigitalFile
-from .forms import DepartmentForm, CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm, UserChangeForm
+from .forms import DepartmentForm, CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm, UserCreationForm, UserChangeForm
 from .parsemets import METS, convert_size
 
 import os
@@ -13,20 +13,40 @@ def home(request):
     collections = Collection.objects.all().order_by('identifier')
     dept_ids = Collection.objects.order_by('ispartof').values('ispartof').distinct()
     departments = [Department.objects.get(id=dept['ispartof']) for dept in dept_ids]
-    return render(request, 'home.html', {'collections': collections, 'departments': departments})
+    return render(request, 'home.html', {'collections': collections, 
+        'departments': departments})
 
 def faq(request):
     return render(request, 'faq.html')
 
 @login_required(login_url='/login/')
 def users(request):
-    users = User.objects.all()
-    return render(request, 'users.html', {'users': users})
+    # only admins can see users
+    if request.user.is_superuser:
+        users = User.objects.all()
+        return render(request, 'users.html', {'users': users})
+    else:
+        return redirect('home')
+
+@login_required(login_url='/login/')
+def new_user(request):
+    # only admins can make new users
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                return redirect('users')
+        else:
+            form = UserCreationForm()
+            return render(request, 'new_user.html', {'form': form})
+    else:
+        return redirect('home')
 
 @login_required(login_url='/login/')
 def edit_user(request, pk):
-    # only admins and user themselves can edit records
-    if request.user.is_superuser or request.user.id == pk:
+    # only admins can edit records
+    if request.user.is_superuser:
         instance = get_object_or_404(User, pk=pk)
         form = UserChangeForm(request.POST or None, instance=instance)
         if form.is_valid():
@@ -34,7 +54,7 @@ def edit_user(request, pk):
             return redirect('users')
         return render(request, 'edit_user.html', {'form': form})
     else:
-        return redirect('users')
+        return redirect('home')
 
 @login_required(login_url='/login/')
 def search(request):
