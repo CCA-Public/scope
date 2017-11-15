@@ -2,8 +2,8 @@ from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
 from .views import home, collection, dip, new_collection
-from .models import Collection, DIP
-from .forms import NewCollectionForm
+from .models import Department, Collection, DIP
+from .forms import CollectionForm
 
 class HomeTests(TestCase):
     def test_home_view_status_code(self):
@@ -17,17 +17,17 @@ class HomeTests(TestCase):
 
 class CollectionTests(TestCase):
     def setUp(self):
-        Collection.objects.create(objectid='AP999', title='Title', date='1990', 
-        	extentmedium='test', abstract='test', archivecreator='test', 
-            findingaid='http://fake.url')
+        Collection.objects.create(identifier='AP999', title='Title', date='1990', 
+        	dcformat='test', description='test', creator='test', 
+            link='http://fake.url')
 
     def test_collection_view_success_status_code(self):
-        url = reverse('collection', kwargs={'objectid': 'AP999'})
+        url = reverse('collection', kwargs={'identifier': 'AP999'})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
 
     def test_collection_view_not_found_status_code(self):
-        url = reverse('collection', kwargs={'objectid': 'AP998'})
+        url = reverse('collection', kwargs={'identifier': 'AP998'})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 404)
 
@@ -37,21 +37,23 @@ class CollectionTests(TestCase):
 
 class DIPTests(TestCase):
     def setUp(self):
-        Collection.objects.create(objectid='AP999', title='Title', date='1990', 
-            extentmedium='test', abstract='test', archivecreator='test', 
-            findingaid='http://fake.url')
-        collection = Collection.objects.only('objectid').get(objectid='AP999')
-        DIP.objects.create(objectid='AP999.S1.001', title='Title', date='1990', 
-            extentmedium='test', scopecontent='test', archivecreator='test', 
-            collection=collection)
+        Department.objects.create(name='Archives')
+        department = Department.objects.get(name='Archives')
+        Collection.objects.create(identifier='AP999', title='Title', date='1990', 
+            dcformat='test', description='test', creator='test', 
+            link='http://fake.url', ispartof=department)
+        collection = Collection.objects.only('identifier').get(identifier='AP999')
+        DIP.objects.create(identifier='AP999.S1.001', title='Title', date='1990', 
+            dcformat='test', scopecontent='test', creator='test', 
+            ispartof=collection)
 
     def test_dip_view_success_status_code(self):
-        url = reverse('dip', kwargs={'objectid': 'AP999.S1.001'})
+        url = reverse('dip', kwargs={'identifier': 'AP999.S1.001'})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
 
     def test_dip_view_not_found_status_code(self):
-        url = reverse('dip', kwargs={'objectid': 'AP998.S1.001'})
+        url = reverse('dip', kwargs={'identifier': 'AP998.S1.001'})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 404)
 
@@ -67,18 +69,23 @@ class NewCollectionTests(TestCase):
         self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_new_topic_valid_post_data(self):
+        # make department
+        Department.objects.create(name='Archives')
+        department = Department.objects.get(name='Archives')
+        # make collection
         url = reverse('new_collection')
         data = {
-            'objectid': 'AP999',
+            'identifier': 'AP999',
             'title': 'Title',
             'date': '1990',
-            'extentmedium': 'test',
+            'dcformat': 'test',
             'abstract': 'Lorem ipsum dolor sit amet',
-            'archivecreator': 'test',
-            'findingaid': 'http://fake.url'
+            'creator': 'test',
+            'findingaid': 'http://fake.url', 
+            'ispartof': department
         }
         response = self.client.post(url, data)
-        collection = Collection.objects.get(objectid='AP999')
+        collection = Collection.objects.get(identifier='AP999')
         self.assertTrue(collection)
 
     def test_new_topic_invalid_post_data(self):
@@ -87,8 +94,8 @@ class NewCollectionTests(TestCase):
         The expected behavior is to show the form again with validation errors
         '''
         url = reverse('new_collection')
-        response = self.client.post(url, {})
-        self.assertEquals(response.status_code, 200)
+        response = self.client.post(url, {'department': department})
+        self.assertRedirects(response, 'new_collection/')
 
     def test_new_topic_invalid_post_data_empty_fields(self):
         '''
