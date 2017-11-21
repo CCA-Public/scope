@@ -48,6 +48,7 @@ pip install -r requirements.txt
 ## To do
   
 * Internationalization (French/English interface)
+* Modify Folder upload to reflect DIP structure as defined through current sponsored development project - eliminate need to upload AIP METS file separately
 * Add "Edit Collections and DIPs" group to Users and Edit User pages 
 * Configure storage of zip and METS files: currently, everything is being saved to a "media" directory; add NFS support(?), option for multiple storage spaces
 * Delete zip & METS files when Folder/DIP is deleted
