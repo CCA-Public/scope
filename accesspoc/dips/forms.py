@@ -14,12 +14,11 @@ class CollectionForm(forms.ModelForm):
 
     class Meta:
         model = Collection
-        fields = ['identifier', 'ispartof', 'title', 'creator', 
+        fields = ['identifier', 'title', 'creator', 
         'subject', 'description', 'publisher', 'contributor', 
         'date', 'dctype', 'dcformat', 'source', 'language', 
         'coverage', 'rights', 'link']
         labels = {
-            "ispartof": "Department", 
             "dctype": "Type"
         }
 
