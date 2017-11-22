@@ -2,14 +2,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
-from .models import Department, Collection, DIP
+from .models import Collection, DIP
 
-
-class DepartmentForm(forms.ModelForm):
-
-    class Meta:
-        model = Department
-        fields = ['name']
 
 class CollectionForm(forms.ModelForm):
     

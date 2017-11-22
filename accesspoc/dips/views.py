@@ -2,8 +2,8 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Department, Collection, DIP, DigitalFile
-from .forms import DepartmentForm, CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm, UserCreationForm, UserChangeForm
+from .models import Collection, DIP, DigitalFile
+from .forms import CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm, UserCreationForm, UserChangeForm
 from .parsemets import METS, convert_size
 
 import os
@@ -12,9 +12,7 @@ import os
 def home(request):
     collections = Collection.objects.all().order_by('identifier')
     dept_ids = Collection.objects.order_by('ispartof').values('ispartof').distinct()
-    departments = [Department.objects.get(id=dept['ispartof']) for dept in dept_ids]
-    return render(request, 'home.html', {'collections': collections, 
-        'departments': departments})
+    return render(request, 'home.html', {'collections': collections})
 
 def faq(request):
     return render(request, 'faq.html')
@@ -87,17 +85,6 @@ def dip(request, identifier):
 def digital_file(request, uuid):
     digitalfile = get_object_or_404(DigitalFile, uuid=uuid)
     return render(request, 'digitalfile.html', {'digitalfile': digitalfile})
-
-@login_required(login_url='/login/')
-def new_department(request):
-    if request.method == 'POST':
-        form = DepartmentForm(request.POST)
-        if form.is_valid():
-            department = form.save()
-            return redirect('home')
-    else:
-        form = DepartmentForm()
-    return render(request, 'new_department.html', {'form': form})
 
 @login_required(login_url='/login/')
 def new_collection(request):

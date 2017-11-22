@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
 from .views import home, collection, dip, new_collection
-from .models import Department, Collection, DIP
+from .models import Collection, DIP
 from .forms import CollectionForm
 
 class HomeTests(TestCase):
@@ -37,11 +37,9 @@ class CollectionTests(TestCase):
 
 class DIPTests(TestCase):
     def setUp(self):
-        Department.objects.create(name='Archives')
-        department = Department.objects.get(name='Archives')
         Collection.objects.create(identifier='AP999', title='Title', date='1990', 
             dcformat='test', description='test', creator='test', 
-            link='http://fake.url', ispartof=department)
+            link='http://fake.url')
         collection = Collection.objects.only('identifier').get(identifier='AP999')
         DIP.objects.create(identifier='AP999.S1.001', title='Title', date='1990', 
             dcformat='test', scopecontent='test', creator='test', 
@@ -69,9 +67,6 @@ class NewCollectionTests(TestCase):
         self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_new_topic_valid_post_data(self):
-        # make department
-        Department.objects.create(name='Archives')
-        department = Department.objects.get(name='Archives')
         # make collection
         url = reverse('new_collection')
         data = {
@@ -81,8 +76,7 @@ class NewCollectionTests(TestCase):
             'dcformat': 'test',
             'abstract': 'Lorem ipsum dolor sit amet',
             'creator': 'test',
-            'findingaid': 'http://fake.url', 
-            'ispartof': department
+            'findingaid': 'http://fake.url'
         }
         response = self.client.post(url, data)
         collection = Collection.objects.get(identifier='AP999')
@@ -94,7 +88,7 @@ class NewCollectionTests(TestCase):
         The expected behavior is to show the form again with validation errors
         '''
         url = reverse('new_collection')
-        response = self.client.post(url, {'department': department})
+        response = self.client.post(url)
         self.assertRedirects(response, 'new_collection/')
 
     def test_new_topic_invalid_post_data_empty_fields(self):

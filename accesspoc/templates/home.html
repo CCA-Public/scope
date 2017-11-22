@@ -8,17 +8,6 @@
 
 {% block content %}
 <div class="container">
-    <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-primary all active">
-      <input type="radio" name="deptoptions" id="all" autocomplete="off" checked>All
-    </label>
-    {% for department in departments %}
-    <label class="btn btn-primary filter">
-      <input type="radio" name="deptoptions" id="{{ department }}" autocomplete="off">{{ department }}
-    </label>
-    {% endfor %}
-  </div>
-  <div class="collection-list">
   {% for collection in collections %}
     <div class="container card card-body p-3 mb-2 mt-2 collection" data-department="{{ collection.ispartof }}">
       <h3>{{ collection.identifier }}: {{ collection.title }}</h3>
@@ -29,6 +18,5 @@
       </div>
     </div>
   {% endfor %}
-  </div>
 </div>
 {% endblock %}
