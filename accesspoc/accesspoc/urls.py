@@ -30,7 +30,6 @@ urlpatterns = [
     url(r'^collection/(?P<identifier>[\w\.-_]+)/edit/$', views.edit_collection, name='edit_collection'),
     url(r'^collection/(?P<identifier>[\w\.-_]+)/delete/$', views.delete_collection, name='delete_collection'),
 	url(r'^collection/(?P<identifier>[\w\.-_]+)/$', views.collection, name='collection'),
-    url(r'^new_department/', views.new_department, name='new_department'),
     url(r'^new_collection/', views.new_collection, name='new_collection'),
     url(r'^folder/(?P<identifier>[-\w.-_]+)/edit/$', views.edit_dip, name='edit_dip'),
     url(r'^folder/(?P<identifier>[-\w.-_]+)/delete/$', views.delete_dip, name='delete_dip'),
