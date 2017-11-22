@@ -11,7 +11,6 @@ import os
 @login_required(login_url='/login/')
 def home(request):
     collections = Collection.objects.all().order_by('identifier')
-    dept_ids = Collection.objects.order_by('ispartof').values('ispartof').distinct()
     return render(request, 'home.html', {'collections': collections})
 
 def faq(request):
