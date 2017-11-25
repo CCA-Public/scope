@@ -46,6 +46,7 @@ pip install -r requirements.txt
 
 ## To do
   
+* Testing (current tests are incomplete and several are failing)  
 * Internationalization (French/English interface)
 * Separate "ispartof" from parent-child relationship? Keep open use for, e.g., series?  
 * Add "Edit Collections and DIPs" group to Users and Edit User pages 
