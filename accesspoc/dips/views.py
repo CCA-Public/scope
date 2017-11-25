@@ -9,6 +9,7 @@ from .parsemets import METS, convert_size
 import os
 import re
 import shutil
+import tempfile
 import zipfile
 
 @login_required(login_url='/login/')
@@ -107,19 +108,22 @@ def new_dip(request):
             # save form
             dip = form.save()
             # extract METS file from DIP objects zip
+            tmpdir = tempfile.mkdtemp()
+            if not os.path.isdir(tmpdir):
+                os.mkdirs(tmpdir)
             objectszip = os.path.join(settings.MEDIA_ROOT, request.FILES['objectszip'].name)
             metsfile = ''
             zip = zipfile.ZipFile(objectszip)
             for info in zip.infolist():
                 if re.match(r'.*METS.[0-9a-f\-]{32}.*$', info.filename):
-                   print(info.filename)
-                   metsfile = zip.extract(info)
+                   print('METS file to extract:', info.filename)
+                   metsfile = zip.extract(info, tmpdir)
             # parse METS file
             mets = METS(os.path.abspath(metsfile), request.POST.get('identifier'))
             mets.parse_mets()
             # delete extracted METS file
             dir_to_delete = os.path.dirname(os.path.abspath(metsfile))
-            shutil.rmtree(dir_to_delete)
+            shutil.rmtree(tmpdir)
             return redirect('home')
     else:
         form = DIPForm()
