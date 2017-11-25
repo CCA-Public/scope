@@ -47,6 +47,7 @@ pip install -r requirements.txt
 ## To do
   
 * Internationalization (French/English interface)
+* Extract METS file to temp dir rather than current dir
 * Separate "ispartof" from parent-child relationship? Keep open use for, e.g., series?  
 * Add "Edit Collections and DIPs" group to Users and Edit User pages 
 * Configure storage of zip and METS files: currently, everything is being saved to a "media" directory; add NFS support(?), option for multiple storage spaces
