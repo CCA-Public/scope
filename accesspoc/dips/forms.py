@@ -31,13 +31,12 @@ class DIPForm(forms.ModelForm):
 
     class Meta:
         model = DIP
-        fields = ['identifier', 'ispartof', 'metsfile', 'objectszip', 
+        fields = ['identifier', 'ispartof', 'objectszip', 
         'title', 'creator', 'subject', 'description', 'publisher', 
         'contributor', 'date', 'dctype', 'dcformat', 'source', 
         'language', 'coverage', 'rights']
         labels = {
             "ispartof": "Collection", 
-            "metsfile": "METS file", 
             "objectszip": "Objects zip file", 
             "dctype": "Type"
         }

@@ -36,7 +36,6 @@ class DIP(models.Model):
 	language = models.CharField(max_length=20, blank=True)
 	coverage = models.CharField(max_length=200, blank=True)
 	rights = models.CharField(max_length=200, blank=True)
-	metsfile = models.FileField(blank=True, default=None)
 	objectszip = models.FileField(blank=True, default=None)
 	uploaded = models.DateTimeField(auto_now_add=True)
 

@@ -7,6 +7,8 @@ from .forms import CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm,
 from .parsemets import METS, convert_size
 
 import os
+import re
+import zipfile
 
 @login_required(login_url='/login/')
 def home(request):
@@ -101,10 +103,21 @@ def new_dip(request):
     if request.method == 'POST':
         form = DIPForm(request.POST, request.FILES)
         if form.is_valid():
-            collection = form.save()
-            metspath = os.path.join(settings.MEDIA_ROOT, request.FILES['metsfile'].name)
-            mets = METS(metspath, request.POST.get('identifier'))
+            # save form
+            dip = form.save()
+            # extract METS file from DIP objects zip
+            objectszip = os.path.join(settings.MEDIA_ROOT, request.FILES['objectszip'].name)
+            metsfile = ''
+            zip = zipfile.ZipFile(objectszip)
+            for info in zip.infolist():
+                if re.match(r'.*METS.[0-9a-f\-]{32}.*$', info.filename):
+                   print(info.filename)
+                   metsfile = zip.extract(info)
+            # parse METS file
+            mets = METS(os.path.abspath(metsfile), request.POST.get('identifier'))
             mets.parse_mets()
+            # delete extracted METS file
+            os.remove(os.path.abspath(metsfile))
             return redirect('home')
     else:
         form = DIPForm()
