@@ -8,6 +8,7 @@ from .parsemets import METS, convert_size
 
 import os
 import re
+import shutil
 import zipfile
 
 @login_required(login_url='/login/')
@@ -117,7 +118,8 @@ def new_dip(request):
             mets = METS(os.path.abspath(metsfile), request.POST.get('identifier'))
             mets.parse_mets()
             # delete extracted METS file
-            os.remove(os.path.abspath(metsfile))
+            dir_to_delete = os.path.dirname(os.path.abspath(metsfile))
+            shutil.rmtree(dir_to_delete)
             return redirect('home')
     else:
         form = DIPForm()
