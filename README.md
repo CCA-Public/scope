@@ -49,7 +49,7 @@ pip install -r requirements.txt
 * Internationalization (French/English interface)
 * Separate "ispartof" from parent-child relationship? Keep open use for, e.g., series?  
 * Add "Edit Collections and DIPs" group to Users and Edit User pages 
-* Configure storage of zip and METS files: currently, everything is being saved to a "media" directory; add NFS support(?), option for multiple storage spaces
+* Configure storage of zip files from DIPs: currently, everything is being saved to a "media" directory; add NFS support(?), option for multiple storage spaces
 * Delete zip & METS files when Folder/DIP is deleted
 * Tie user accounts to CCA domain accounts (phase 2?)  
 * REST API for uploading DIPs directly from Archivematica automation-tools (phase 2?)  
