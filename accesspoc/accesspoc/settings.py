@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     
     'accounts',
-    'dips'
+    'dips', 
+
+    'django_cleanup' # deletes FileFields when objects are deleted
 ]
 
 MIDDLEWARE = [
