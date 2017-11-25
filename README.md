@@ -47,7 +47,6 @@ pip install -r requirements.txt
 ## To do
   
 * Internationalization (French/English interface)
-* Modify Folder upload to reflect DIP structure as defined through current sponsored development project - read METS file from zipped objects directory on upload, eliminate redundant METS file upload
 * Separate "ispartof" from parent-child relationship? Keep open use for, e.g., series?  
 * Add "Edit Collections and DIPs" group to Users and Edit User pages 
 * Configure storage of zip and METS files: currently, everything is being saved to a "media" directory; add NFS support(?), option for multiple storage spaces
