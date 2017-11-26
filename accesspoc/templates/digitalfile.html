@@ -3,6 +3,8 @@
 {% block title %}Digital file {{ digitalfile.uuid }}{% endblock %}
 
 {% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'collection' dip.ispartof %}">{{ dip.ispartof }}</a></li>
   <li class="breadcrumb-item">Folder</li>
   <li class="breadcrumb-item"><a href="{% url 'dip' digitalfile.dip %}">{{ digitalfile.dip }}</a></li>
   <li class="breadcrumb-item">Digital file</li>

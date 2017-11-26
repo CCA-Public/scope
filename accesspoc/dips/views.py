@@ -87,7 +87,9 @@ def dip(request, identifier):
 @login_required(login_url='/login/')
 def digital_file(request, uuid):
     digitalfile = get_object_or_404(DigitalFile, uuid=uuid)
-    return render(request, 'digitalfile.html', {'digitalfile': digitalfile})
+    dip = DIP.objects.get(identifier=digitalfile.dip)
+    return render(request, 'digitalfile.html', {'digitalfile': digitalfile, 
+        'dip': dip})
 
 @login_required(login_url='/login/')
 def new_collection(request):
