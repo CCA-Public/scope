@@ -29,7 +29,7 @@ Once the DIP has been uploaded, the metadata for the Folder can be edited throug
 
 By default, the application has three levels of permissions:
 
-* **Admin**: Admin users can add, edit, and delete Departments, Collections, and Folders and add and edit Users
+* **Admin**: Admin users can add, edit, and delete Collections and Folders and add and edit Users
 * **Edit Collections and Folders**: Users in this Group can add and edit Collections and Folders
 * **Public**: Users with a username/password but no additional permissions have view-only access.
 
