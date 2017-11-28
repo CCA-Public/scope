@@ -51,7 +51,8 @@ pip install -r requirements.txt
 * Testing (current tests are incomplete and several are failing)  
 * Internationalization (French/English interface)  
 * Add "Edit Collections and DIPs" group to Users and Edit User pages  
-* Review and configure storage of DIP zip files. Currently, everything is being saved to a "media" directory. Need way to configure multiple (mounted) storage spaces: as size of total DIPs passes 5TB, CCA will need to split storage into several directories  
+* Review and configure storage of DIP zip files. Currently, everything is being saved to a "media" directory. Need way to configure multiple (mounted) storage spaces: as size of total DIPs passes 5TB, CCA will need to split storage into several directories 
+* [Server-side processing](https://datatables.net/examples/data_sources/server_side.html) for large datatables - particularly for interface-wide search
 * Tie user accounts to CCA domain accounts (phase 2/post-beta)  
 
 ### Wishlist
