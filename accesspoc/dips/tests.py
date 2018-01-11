@@ -18,7 +18,7 @@ class HomeTests(TestCase):
 class CollectionTests(TestCase):
     def setUp(self):
         Collection.objects.create(identifier='AP999', title='Title', date='1990', 
-        	dcformat='test', description='test', creator='test', 
+            dcformat='test', description='test', creator='test', 
             link='http://fake.url')
 
     def test_collection_view_success_status_code(self):
@@ -42,7 +42,7 @@ class DIPTests(TestCase):
             link='http://fake.url')
         collection = Collection.objects.only('identifier').get(identifier='AP999')
         DIP.objects.create(identifier='AP999.S1.001', title='Title', date='1990', 
-            dcformat='test', scopecontent='test', creator='test', 
+            dcformat='test', description='test', creator='test', 
             ispartof=collection)
 
     def test_dip_view_success_status_code(self):
