@@ -33,13 +33,33 @@ By default, the application has three levels of permissions:
 * **Edit Collections and Folders**: Users in this Group can add and edit Collections and Folders
 * **Public**: Users with a username/password but no additional permissions have view-only access.
 
-## Superuser credentials (dev)
-
-Username: admin  
-Password: accesspoc
-
 ## Installation (dev)
 
+### Create virtualenv and install dependencies
+
+```
 virtualenv venv -p python3  
 source venv/bin/activate  
 pip install -r requirements.txt
+```
+
+### Create database
+
+```
+python accesspoc/manage.py makemigrations
+python accesspoc/manage.py migrate
+```
+
+### Create a superuser
+
+`python accesspoc/manage.py createsuperuser`
+
+Follow the instructions to create a user with full admin rights.
+
+### Start development server
+
+`python accesspoc/manage.py runserver`
+
+To change the default port or other development server behaviors, see the [relevant Django docs](https://docs.djangoproject.com/en/1.11/intro/tutorial01/#the-development-server).
+
+

@@ -6,3 +6,9 @@ venv/
 
 # mac
 .DS_Store
+
+# tox
+.tox/
+
+# database
+*.sqlite3
