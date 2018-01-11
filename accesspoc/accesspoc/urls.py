@@ -24,12 +24,12 @@ from accounts import views as account_views
 from dips import views
 
 urlpatterns = [
-	url(r'^$', views.home, name='home'),
+    url(r'^$', views.home, name='home'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^collection/(?P<identifier>[\w\.-_]+)/edit/$', views.edit_collection, name='edit_collection'),
     url(r'^collection/(?P<identifier>[\w\.-_]+)/delete/$', views.delete_collection, name='delete_collection'),
-	url(r'^collection/(?P<identifier>[\w\.-_]+)/$', views.collection, name='collection'),
+    url(r'^collection/(?P<identifier>[\w\.-_]+)/$', views.collection, name='collection'),
     url(r'^new_collection/', views.new_collection, name='new_collection'),
     url(r'^folder/(?P<identifier>[-\w.-_]+)/edit/$', views.edit_dip, name='edit_dip'),
     url(r'^folder/(?P<identifier>[-\w.-_]+)/delete/$', views.delete_dip, name='delete_dip'),
