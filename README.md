@@ -56,6 +56,21 @@ python accesspoc/manage.py migrate
 
 Follow the instructions to create a user with full admin rights.
 
+### Create "Edit Collections and DIPs" group
+
+* Open the Django admin app (by default at localhost:8000/admin) and sign in with your superuser account.  
+* Click "Groups", then "Add Group +" (button on right-hand side of page)  
+* Create a new group with name "Edit Collections and DIPs" and the following permissions:
+
+```
+dips | collection | Can add collection
+dips | collection | Can change collection
+dips | dip | Can add dip
+dips | dip | Can add dip
+```
+
+(to replace with seeder/script)
+
 ### Start development server
 
 `python accesspoc/manage.py runserver`
