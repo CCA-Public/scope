@@ -32,17 +32,21 @@ def users(request):
 @login_required(login_url='/login/')
 def new_user(request):
     # only admins can make new users
-    if request.user.is_superuser:
-        if request.method == 'POST':
-            form = UserCreationForm(request.POST)
-            if form.is_valid():
-                user = form.save()
-                return redirect('users')
-        else:
-            form = UserCreationForm()
-            return render(request, 'new_user.html', {'form': form})
-    else:
+    if not request.user.is_superuser:
         return redirect('home')
+
+    if not request.method == 'POST':
+        form = UserCreationForm()
+        return render(request, 'new_user.html', {'form': form})
+
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+        user = form.save()
+        return redirect('users')
+    #TODO: better handling of invalid forms
+    else:
+        form = UserCreationForm()
+        return render(request, 'new_user.html', {'form': form})
 
 @login_required(login_url='/login/')
 def edit_user(request, pk):
