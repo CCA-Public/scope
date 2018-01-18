@@ -142,10 +142,7 @@ def new_dip(request):
 @login_required(login_url='/login/')
 def edit_collection(request, identifier):
     # only admins and users in group "Edit Collections and Folders" can edit records
-    if not request.user.groups.filter(name__in=['Edit Collections and Folders']).exists():
-        return redirect('collection', identifier=identifier)
-
-    if not request.user.is_superuser:
+    if not (request.user.groups.filter(name__in=['Edit Collections and Folders']).exists() or request.user.is_superuser):
         return redirect('collection', identifier=identifier)
 
     instance = get_object_or_404(Collection, identifier=identifier)
@@ -159,10 +156,7 @@ def edit_collection(request, identifier):
 @login_required(login_url='/login/')
 def edit_dip(request, identifier):
     # only admins and users in group "Edit Collections and Folders" can edit records
-    if not request.user.groups.filter(name__in=['Edit Collections and Folders']).exists():
-        return redirect('collection', identifier=identifier)
-
-    if not request.user.is_superuser:
+    if not (request.user.groups.filter(name__in=['Edit Collections and Folders']).exists() or request.user.is_superuser):
         return redirect('collection', identifier=identifier)
 
     instance = get_object_or_404(DIP, identifier=identifier)
