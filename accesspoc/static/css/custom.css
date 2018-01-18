@@ -1,3 +1,7 @@
 .headerlink a {
 	color: #fff !important;
 }
+.main {
+	padding-right: 30px;
+	padding-left: 30px;
+}
