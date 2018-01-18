@@ -42,23 +42,25 @@
   <br>
   <h2>Digital files in this folder</h2>
   <br>
-  <table class="table table-striped table-bordered table-condensed sortable" id="fancyTable">
-    <tr>
-      <td><strong>Filepath</strong></td>
-      <td><strong>Format</strong></td>
-      <td><strong>Size (bytes)</strong></td>
-      <td><strong>Last modified</strong></td>
-      <td><strong>Details</strong></td>
-    </tr>
-  {% for digitalfile in dip.digital_files.all|sort_by:'filepath' %}
-    <tr>
-      <td>{{ digitalfile.filepath }}</td>
-      <td>{{ digitalfile.fileformat }}</td>
-      <td>{{ digitalfile.size_bytes }}</td>
-      <td>{{ digitalfile.datemodified }}</td>
-      <td><a href="{% url 'digital_file' digitalfile.uuid %}"><button class="btn btn-primary">View</button></a></td>
-    </tr>
-  {% endfor %}
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-condensed sortable" id="fancyTable">
+      <tr>
+        <td><strong>Filepath</strong></td>
+        <td><strong>Format</strong></td>
+        <td><strong>Size (bytes)</strong></td>
+        <td><strong>Last modified</strong></td>
+        <td><strong>Details</strong></td>
+      </tr>
+    {% for digitalfile in dip.digital_files.all|sort_by:'filepath' %}
+      <tr>
+        <td>{{ digitalfile.filepath }}</td>
+        <td>{{ digitalfile.fileformat }}</td>
+        <td>{{ digitalfile.size_bytes }}</td>
+        <td>{{ digitalfile.datemodified }}</td>
+        <td><a href="{% url 'digital_file' digitalfile.uuid %}"><button class="btn btn-primary">View</button></a></td>
+      </tr>
+    {% endfor %}
+    </table>
+  <div class="table-responsive">
 </div>
 {% endblock %}
