@@ -43,10 +43,9 @@ def new_user(request):
     if form.is_valid():
         user = form.save()
         return redirect('users')
+    
     #TODO: better handling of invalid forms
-    else:
-        form = UserCreationForm()
-        return render(request, 'new_user.html', {'form': form})
+    return render(request, 'new_user.html', {'form': form})
 
 @login_required(login_url='/login/')
 def edit_user(request, pk):
