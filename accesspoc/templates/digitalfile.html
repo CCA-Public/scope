@@ -12,33 +12,31 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-      <h2>Digital file description</h2>
-      <br>
-      <p><strong>UUID:</strong> {{ digitalfile.uuid }}</p>
-      <p><strong>Filepath:</strong> {{ digitalfile.filepath }}</p>
-      <p><strong>File format:</strong> {{ digitalfile.fileformat }}</p>
-      <p><strong>File format version:</strong> {{ digitalfile.formatversion }}</p>
-      <p><strong>Size (bytes):</strong> {{ digitalfile.size_bytes }}</p>
-      <p><strong>Size (human readable):</strong> {{ digitalfile.size_human }}</p>
-      <p><strong>Date modified:</strong> {{ digitalfile.datemodified }}</p>
-      <p><strong>PRONOM ID:</strong> <a href="http://nationalarchives.gov.uk/PRONOM/{{digitalfile.puid}}">{{ digitalfile.puid }}</a></p>
-      <p><strong>METS amdSec:</strong> {{ digitalfile.amdsec }}</p>
-      <p><strong>Hash ({{ digitalfile.hashtype }}):</strong> {{ digitalfile.hashvalue }}</p>
-    </div>
-    <div class="container">
-      <br>
-      <h2>PREMIS Events</h2>
-      <p><em>Event log from our digital preservation repository for this file.</em></p>
-      <br>
-      {% for event in digitalfile.premis_events.all|sort_by:'datetime' %}
-        <h4>Event: {{ event.uuid }}</h4>
-        <p><strong>Event type:</strong> {{ event.eventtype }}</p>
-        <p><strong>Datetime:</strong> {{ event.datetime }}</p>
-        <p><strong>Event detail:</strong> {{ event.detail }}</p>
-        <p><strong>Event outcome:</strong> {{ event.outcome }}</p>
-        <p><strong>Event detail note:</strong> {{ event.detailnote }}</p>
-        <br>
-      {% endfor %}
-    </div>
+  <h2>Digital file description</h2>
+  <br>
+  <p><strong>UUID:</strong> {{ digitalfile.uuid }}</p>
+  <p><strong>Filepath:</strong> {{ digitalfile.filepath }}</p>
+  <p><strong>File format:</strong> {{ digitalfile.fileformat }}</p>
+  <p><strong>File format version:</strong> {{ digitalfile.formatversion }}</p>
+  <p><strong>Size (bytes):</strong> {{ digitalfile.size_bytes }}</p>
+  <p><strong>Size (human readable):</strong> {{ digitalfile.size_human }}</p>
+  <p><strong>Date modified:</strong> {{ digitalfile.datemodified }}</p>
+  <p><strong>PRONOM ID:</strong> <a href="http://nationalarchives.gov.uk/PRONOM/{{digitalfile.puid}}">{{ digitalfile.puid }}</a></p>
+  <p><strong>METS amdSec:</strong> {{ digitalfile.amdsec }}</p>
+  <p><strong>Hash ({{ digitalfile.hashtype }}):</strong> {{ digitalfile.hashvalue }}</p>
+</div>
+<div class="container">
+  <br>
+  <h2>PREMIS Events</h2>
+  <p><em>Event log from our digital preservation repository for this file.</em></p>
+  <br>
+  {% for event in digitalfile.premis_events.all|sort_by:'datetime' %}
+    <h4>Event: {{ event.uuid }}</h4>
+    <p><strong>Event type:</strong> {{ event.eventtype }}</p>
+    <p><strong>Datetime:</strong> {{ event.datetime }}</p>
+    <p><strong>Event detail:</strong> {{ event.detail }}</p>
+    <p><strong>Event outcome:</strong> {{ event.outcome }}</p>
+    <p><strong>Event detail note:</strong> {{ event.detailnote }}</p>
+    <br>
+  {% endfor %}
 {% endblock %}
