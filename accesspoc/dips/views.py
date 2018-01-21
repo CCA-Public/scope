@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Collection, DIP, DigitalFile
-from .forms import CollectionForm, DIPForm, DeleteCollectionForm, DeleteDIPForm, UserCreationForm, UserChangeForm
+from .forms import CollectionForm, EditDIPForm, NewDIPForm, DeleteCollectionForm, DeleteDIPForm, UserCreationForm, UserChangeForm
 from .parsemets import METS, convert_size
 
 import os
@@ -111,10 +111,10 @@ def new_collection(request):
 @login_required(login_url='/login/')
 def new_dip(request):
     if not request.method == 'POST':
-        form = DIPForm()
+        form = NewDIPForm()
         return render(request, 'new_dip.html', {'form': form})
         
-    form = DIPForm(request.POST, request.FILES)
+    form = NewDIPForm(request.POST, request.FILES)
     if form.is_valid():
         # save form
         dip = form.save()
@@ -160,12 +160,12 @@ def edit_dip(request, identifier):
         return redirect('collection', identifier=identifier)
 
     instance = get_object_or_404(DIP, identifier=identifier)
-    form = DIPForm(request.POST or None, instance=instance)
+    form = EditDIPForm(request.POST or None, instance=instance)
     if form.is_valid():
         form.save()
         return redirect('dip', identifier=identifier)
     
-    return render(request, 'edit_dip.html', {'form': form})
+    return render(request, 'edit_dip.html', {'form': form, 'dip': instance})
 
 @login_required(login_url='/login/')
 def delete_collection(request, identifier):
