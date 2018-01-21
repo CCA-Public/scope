@@ -60,7 +60,7 @@ Follow the instructions to create a user with full admin rights.
 
 * Open the Django admin app (by default at localhost:8000/admin) and sign in with your superuser account.  
 * Click "Groups", then "Add Group +" (button on right-hand side of page)  
-* Create a new group with name "Edit Collections and DIPs" and the following permissions:
+* Create a new group with name "Edit Collections and Folders" and the following permissions:
 
 ```
 dips | collection | Can add collection
