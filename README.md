@@ -35,6 +35,13 @@ By default, the application has three levels of permissions:
 
 ## Installation (dev)
 
+### Clone repository
+
+```
+git clone https://github.com/timothyryanwalsh/dip-access-interface
+cd dip-access-interface
+```
+
 ### Create virtualenv and install dependencies
 
 ```
