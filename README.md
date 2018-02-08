@@ -63,9 +63,15 @@ python accesspoc/manage.py migrate
 
 Follow the instructions to create a user with full admin rights.
 
+### Start development server
+
+`python accesspoc/manage.py runserver`
+
+To change the default port or other development server behaviors, see the [relevant Django docs](https://docs.djangoproject.com/en/1.11/intro/tutorial01/#the-development-server).
+
 ### Create "Edit Collections and Folders" group
 
-* Open the Django admin app (by default at localhost:8000/admin) and sign in with your superuser account.  
+* Open the Django admin app (by default at `localhost:8000/admin`) and sign in with your superuser account.  
 * Click "Groups", then "Add Group +" (button on right-hand side of page)  
 * Create a new group with name "Edit Collections and Folders" and the following permissions:
 
@@ -77,11 +83,5 @@ dips | dip | Can add dip
 ```
 
 (to replace with seeder/script)
-
-### Start development server
-
-`python accesspoc/manage.py runserver`
-
-To change the default port or other development server behaviors, see the [relevant Django docs](https://docs.djangoproject.com/en/1.11/intro/tutorial01/#the-development-server).
 
 
