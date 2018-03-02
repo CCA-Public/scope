@@ -185,31 +185,31 @@ class METS(object):
         # update DIP model object - not ispartof (hardset)
         if dc_model:
             dip = DIP.objects.get(identifier=self.dip_id)
-            if 'title' in dc_model:
+            if 'title' in dc_model and dc_model['title'] != None:
                 dip.title = dc_model['title']
-            if 'creator' in dc_model:
+            if 'creator' in dc_model and dc_model['creator'] != None:
                 dip.creator = dc_model['creator']
-            if 'subject' in dc_model:
+            if 'subject' in dc_model and dc_model['subject'] != None:
                 dip.subject = dc_model['subject']
-            if 'description' in dc_model:
+            if 'description' in dc_model and dc_model['description'] != None:
                 dip.description = dc_model['description']
-            if 'publisher' in dc_model:
+            if 'publisher' in dc_model and dc_model['publisher'] != None:
                 dip.publisher = dc_model['publisher']
-            if 'contributor' in dc_model:
+            if 'contributor' in dc_model and dc_model['contributor'] != None:
                 dip.contributor = dc_model['contributor']
-            if 'date' in dc_model:
+            if 'date' in dc_model and dc_model['date'] != None:
                 dip.date = dc_model['date']
-            if 'type' in dc_model:
+            if 'type' in dc_model and dc_model['type'] != None:
                 dip.dctype = dc_model['type']
-            if 'format' in dc_model:
+            if 'format' in dc_model and dc_model['format'] != None:
                 dip.dcformat = dc_model['format']
-            if 'source' in dc_model:
+            if 'source' in dc_model and dc_model['source'] != None:
                 dip.source = dc_model['source']
-            if 'language' in dc_model:
+            if 'language' in dc_model and dc_model['language'] != None:
                 dip.language = dc_model['language']
-            if 'coverage' in dc_model:
+            if 'coverage' in dc_model and dc_model['coverage'] != None:
                 dip.coverage = dc_model['coverage']
-            if 'rights' in dc_model:
+            if 'rights' in dc_model and dc_model['rights'] != None:
                 dip.rights = dc_model['rights']
             dip.save()
 
