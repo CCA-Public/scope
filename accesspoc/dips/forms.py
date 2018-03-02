@@ -22,7 +22,7 @@ class CollectionForm(forms.ModelForm):
             "dctype": "Type"
         }
 
-class DIPForm(forms.ModelForm):
+class EditDIPForm(forms.ModelForm):
     
     dcformat = forms.CharField(widget=forms.Textarea(), 
         label="Format", max_length=4000, required=False)
@@ -31,14 +31,21 @@ class DIPForm(forms.ModelForm):
 
     class Meta:
         model = DIP
-        fields = ['identifier', 'ispartof', 'objectszip', 
-        'title', 'creator', 'subject', 'description', 'publisher', 
-        'contributor', 'date', 'dctype', 'dcformat', 'source', 
-        'language', 'coverage', 'rights']
+        fields = ['title', 'creator', 'subject', 'description', 
+        'publisher', 'contributor', 'date', 'dctype', 
+        'dcformat', 'source', 'language', 'coverage', 'rights']
+        labels = {
+            "dctype": "Type"
+        }
+
+class NewDIPForm(forms.ModelForm):
+
+    class Meta:
+        model = DIP
+        fields = ['identifier', 'ispartof', 'objectszip']
         labels = {
             "ispartof": "Collection", 
-            "objectszip": "Objects zip file", 
-            "dctype": "Type"
+            "objectszip": "Objects zip file"
         }
 
 class DeleteCollectionForm(forms.ModelForm):
