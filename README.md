@@ -38,7 +38,7 @@ By default, the application has three levels of permissions:
 ### Clone repository
 
 ```
-git clone https://github.com/timothyryanwalsh/dip-access-interface
+git clone https://github.com/CCA-Public/dip-access-interface
 cd dip-access-interface
 ```
 
