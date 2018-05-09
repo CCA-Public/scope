@@ -6,6 +6,8 @@ The Access Proof of Concept (real name pending) is a Django application designed
 
 The primary application, "dips", allows users to add, organize, and interact with these DIPs and the digital files they contain, depending on user permissions.
 
+[User stories](https://github.com/CCA-Public/dip-access-interface/wiki/User-Stories)
+
 ## Data Model
 
 The application organizes and displays information in several levels:
