@@ -6,6 +6,7 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'collection' collection.identifier %}">{{ collection.identifier }}</a></li>
   <li class="breadcrumb-item active">Edit</li>
 {% endblock %}
 
