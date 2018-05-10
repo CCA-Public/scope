@@ -151,7 +151,7 @@ def edit_collection(request, identifier):
         form.save()
         return redirect('collection', identifier=identifier)
     
-    return render(request, 'edit_collection.html', {'form': form})
+    return render(request, 'edit_collection.html', {'form': form, 'collection': instance})
 
 @login_required(login_url='/login/')
 def edit_dip(request, identifier):
