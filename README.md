@@ -86,4 +86,6 @@ dips | dip | Can add dip
 
 (to replace with seeder/script)
 
+### Open application in browser  
 
+* In the browser, visit URL `localhost:8000`  
