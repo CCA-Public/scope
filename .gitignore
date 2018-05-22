@@ -15,6 +15,3 @@ venv/
 
 # media
 accesspoc/media/
-
-# migrations
-accesspoc/dips/migrations/
