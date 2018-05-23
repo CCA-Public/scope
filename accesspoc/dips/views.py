@@ -1,10 +1,10 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Collection, DIP, DigitalFile
 from .forms import CollectionForm, EditDIPForm, NewDIPForm, DeleteCollectionForm, DeleteDIPForm, UserCreationForm, UserChangeForm
-from .parsemets import METS, convert_size
+from .parsemets import METS
 
 import os
 import re
@@ -12,22 +12,25 @@ import shutil
 import tempfile
 import zipfile
 
+
 @login_required(login_url='/login/')
 def home(request):
     collections = Collection.objects.all().order_by('identifier')
     return render(request, 'home.html', {'collections': collections})
 
+
 def faq(request):
     return render(request, 'faq.html')
+
 
 @login_required(login_url='/login/')
 def users(request):
     # only admins can see users
     if not request.user.is_superuser:
         return redirect('home')
-    
     users = User.objects.all()
     return render(request, 'users.html', {'users': users})
+
 
 @login_required(login_url='/login/')
 def new_user(request):
@@ -41,18 +44,19 @@ def new_user(request):
 
     form = UserCreationForm(request.POST)
     if form.is_valid():
-        user = form.save()
+        form.save()
         return redirect('users')
-    
-    #TODO: better handling of invalid forms
+
+    # TODO: better handling of invalid forms
     return render(request, 'new_user.html', {'form': form})
+
 
 @login_required(login_url='/login/')
 def edit_user(request, pk):
     # only admins can edit records
     if not request.user.is_superuser:
         return redirect('home')
-    
+
     instance = get_object_or_404(User, pk=pk)
     form = UserChangeForm(request.POST or None, instance=instance)
     if form.is_valid():
@@ -70,30 +74,37 @@ def edit_user(request, pk):
         user.save()
 
         return redirect('users')
-    
+
     return render(request, 'edit_user.html', {'form': form})
+
 
 @login_required(login_url='/login/')
 def search(request):
     digitalfiles = DigitalFile.objects.all()
     return render(request, 'search.html', {'digitalfiles': digitalfiles})
 
+
 @login_required(login_url='/login/')
 def collection(request, identifier):
     collection = get_object_or_404(Collection, identifier=identifier)
     return render(request, 'collection.html', {'collection': collection})
+
 
 @login_required(login_url='/login/')
 def dip(request, identifier):
     dip = get_object_or_404(DIP, identifier=identifier)
     return render(request, 'dip.html', {'dip': dip})
 
+
 @login_required(login_url='/login/')
 def digital_file(request, uuid):
     digitalfile = get_object_or_404(DigitalFile, uuid=uuid)
     dip = DIP.objects.get(identifier=digitalfile.dip)
-    return render(request, 'digitalfile.html', {'digitalfile': digitalfile, 
-        'dip': dip})
+    return render(request, 'digitalfile.html', {
+        'digitalfile': digitalfile,
+        'dip': dip,
+    })
+
 
 @login_required(login_url='/login/')
 def new_collection(request):
@@ -103,21 +114,22 @@ def new_collection(request):
 
     form = CollectionForm(request.POST)
     if form.is_valid():
-        collection = form.save()
+        form.save()
         return redirect('home')
-    
+
     return render(request, 'new_collection.html', {'form': form})
+
 
 @login_required(login_url='/login/')
 def new_dip(request):
     if not request.method == 'POST':
         form = NewDIPForm()
         return render(request, 'new_dip.html', {'form': form})
-        
+
     form = NewDIPForm(request.POST, request.FILES)
     if form.is_valid():
         # save form
-        dip = form.save()
+        form.save()
         # extract METS file from DIP objects zip
         tmpdir = tempfile.mkdtemp()
         if not os.path.isdir(tmpdir):
@@ -127,17 +139,17 @@ def new_dip(request):
         zip = zipfile.ZipFile(objectszip)
         for info in zip.infolist():
             if re.match(r'.*METS.[0-9a-f\-]{32}.*$', info.filename):
-               print('METS file to extract:', info.filename)
-               metsfile = zip.extract(info, tmpdir)
+                print('METS file to extract:', info.filename)
+                metsfile = zip.extract(info, tmpdir)
         # parse METS file
         mets = METS(os.path.abspath(metsfile), request.POST.get('identifier'))
         mets.parse_mets()
         # delete extracted METS file
-        dir_to_delete = os.path.dirname(os.path.abspath(metsfile))
         shutil.rmtree(tmpdir)
         return redirect('home')
 
     return render(request, 'new_dip.html', {'form': form})
+
 
 @login_required(login_url='/login/')
 def edit_collection(request, identifier):
@@ -150,8 +162,9 @@ def edit_collection(request, identifier):
     if form.is_valid():
         form.save()
         return redirect('collection', identifier=identifier)
-    
+
     return render(request, 'edit_collection.html', {'form': form, 'collection': instance})
+
 
 @login_required(login_url='/login/')
 def edit_dip(request, identifier):
@@ -164,33 +177,35 @@ def edit_dip(request, identifier):
     if form.is_valid():
         form.save()
         return redirect('dip', identifier=identifier)
-    
+
     return render(request, 'edit_dip.html', {'form': form, 'dip': instance})
+
 
 @login_required(login_url='/login/')
 def delete_collection(request, identifier):
     # only admins can delete records
     if not request.user.is_superuser:
         return redirect('collection', identifier=identifier)
-    
+
     instance = get_object_or_404(Collection, identifier=identifier)
     form = DeleteCollectionForm(request.POST or None, instance=instance)
     if form.is_valid():
         instance.delete()
         return redirect('home')
-    
+
     return render(request, 'delete_collection.html', {'form': form})
+
 
 @login_required(login_url='/login/')
 def delete_dip(request, identifier):
     # only admins can delete records
     if not request.user.is_superuser:
         return redirect('dip', identifier=identifier)
-        
+
     instance = get_object_or_404(DIP, identifier=identifier)
     form = DeleteDIPForm(request.POST or None, instance=instance)
     if form.is_valid():
         instance.delete()
         return redirect('home')
-    
+
     return render(request, 'delete_dip.html', {'form': form})

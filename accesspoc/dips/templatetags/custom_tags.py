@@ -3,9 +3,11 @@ from django.contrib.auth.models import Group
 
 register = template.Library()
 
+
 @register.filter
 def sort_by(queryset, order):
     return queryset.order_by(order)
+
 
 @register.filter(name='has_group')
 def has_group(user, group_name):

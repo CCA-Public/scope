@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Collection(models.Model):
     identifier = models.CharField(max_length=50, primary_key=True)
     title = models.CharField(max_length=200, blank=True)
@@ -19,6 +20,7 @@ class Collection(models.Model):
 
     def __str__(self):
         return self.identifier
+
 
 class DIP(models.Model):
     identifier = models.CharField(max_length=50, primary_key=True)
@@ -42,6 +44,7 @@ class DIP(models.Model):
     def __str__(self):
         return self.identifier
 
+
 class DigitalFile(models.Model):
     uuid = models.CharField(max_length=32, primary_key=True)
     filepath = models.TextField()
@@ -59,6 +62,7 @@ class DigitalFile(models.Model):
     def __str__(self):
         return self.uuid
 
+
 class PREMISEvent(models.Model):
     uuid = models.CharField(max_length=32, primary_key=True)
     eventtype = models.CharField(max_length=200, blank=True)
@@ -70,4 +74,3 @@ class PREMISEvent(models.Model):
 
     def __str__(self):
         return self.uuid
-

@@ -3,11 +3,12 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
-from .views import home, collection, dip, new_collection
+from .views import home, collection, dip
 from .models import Collection, DIP
 from .forms import CollectionForm
 
 import os
+
 
 class HomeTests(TestCase):
     def setUp(self):
@@ -24,14 +25,17 @@ class HomeTests(TestCase):
         view = resolve('/')
         self.assertEquals(view.func, home)
 
+
 class CollectionTests(TestCase):
     def setUp(self):
         User = get_user_model()
         User.objects.create_user('temp', 'temp@example.com', 'temp')
         self.client.login(username='temp', password='temp')
-        Collection.objects.create(identifier='AP999', title='Title', date='1990',
+        Collection.objects.create(
+            identifier='AP999', title='Title', date='1990',
             dcformat='test', description='test', creator='test',
-            link='http://fake.url')
+            link='http://fake.url',
+        )
 
     def test_collection_view_success_status_code(self):
         url = reverse('collection', kwargs={'identifier': 'AP999'})
@@ -47,19 +51,24 @@ class CollectionTests(TestCase):
         view = resolve('/collection/AP999/')
         self.assertEquals(view.func, collection)
 
+
 class DIPTests(TestCase):
     def setUp(self):
         User = get_user_model()
         User.objects.create_user('temp', 'temp@example.com', 'temp')
         self.client.login(username='temp', password='temp')
-        Collection.objects.create(identifier='AP999', title='Title', date='1990',
+        Collection.objects.create(
+            identifier='AP999', title='Title', date='1990',
             dcformat='test', description='test', creator='test',
-            link='http://fake.url')
+            link='http://fake.url',
+        )
         collection = Collection.objects.only('identifier').get(identifier='AP999')
-        DIP.objects.create(identifier='AP999.S1.001', title='Title', date='1990',
+        DIP.objects.create(
+            identifier='AP999.S1.001', title='Title', date='1990',
             dcformat='test', description='test', creator='test',
             ispartof=collection,
-            objectszip=os.path.join(settings.MEDIA_ROOT, 'fake.zip'))
+            objectszip=os.path.join(settings.MEDIA_ROOT, 'fake.zip'),
+        )
 
     def test_dip_view_success_status_code(self):
         url = reverse('dip', kwargs={'identifier': 'AP999.S1.001'})
@@ -74,6 +83,7 @@ class DIPTests(TestCase):
     def test_dip_url_resolves_dip_view(self):
         view = resolve('/folder/AP999.S1.001/')
         self.assertEquals(view.func, dip)
+
 
 class NewCollectionTests(TestCase):
     def setUp(self):
@@ -98,7 +108,7 @@ class NewCollectionTests(TestCase):
             'creator': 'test',
             'findingaid': 'http://fake.url'
         }
-        response = self.client.post(url, data)
+        self.client.post(url, data)
         collection = Collection.objects.get(identifier='AP999')
         self.assertTrue(collection)
 

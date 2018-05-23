@@ -6,60 +6,74 @@ from .models import Collection, DIP
 
 
 class CollectionForm(forms.ModelForm):
-    
-    dcformat = forms.CharField(widget=forms.Textarea(), 
-        label="Format", max_length=4000, required=False)
-    description = forms.CharField(widget=forms.Textarea(), 
-        max_length=4000, required=False)
+    dcformat = forms.CharField(
+        widget=forms.Textarea(), label="Format",
+        max_length=4000, required=False,
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(),
+        max_length=4000, required=False,
+    )
 
     class Meta:
         model = Collection
-        fields = ['identifier', 'title', 'creator', 
-        'subject', 'description', 'publisher', 'contributor', 
-        'date', 'dctype', 'dcformat', 'source', 'language', 
-        'coverage', 'rights', 'link']
+        fields = [
+            'identifier', 'title', 'creator',
+            'subject', 'description', 'publisher', 'contributor',
+            'date', 'dctype', 'dcformat', 'source', 'language',
+            'coverage', 'rights', 'link',
+        ]
         labels = {
-            "dctype": "Type"
+            "dctype": "Type",
         }
 
+
 class EditDIPForm(forms.ModelForm):
-    
-    dcformat = forms.CharField(widget=forms.Textarea(), 
-        label="Format", max_length=4000, required=False)
-    description = forms.CharField(widget=forms.Textarea(), 
-        max_length=4000, required=False)
+    dcformat = forms.CharField(
+        widget=forms.Textarea(), label="Format",
+        max_length=4000, required=False,
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(),
+        max_length=4000, required=False,
+    )
 
     class Meta:
         model = DIP
-        fields = ['title', 'creator', 'subject', 'description', 
-        'publisher', 'contributor', 'date', 'dctype', 
-        'dcformat', 'source', 'language', 'coverage', 'rights']
+        fields = [
+            'title', 'creator', 'subject', 'description',
+            'publisher', 'contributor', 'date', 'dctype',
+            'dcformat', 'source', 'language', 'coverage', 'rights',
+        ]
         labels = {
-            "dctype": "Type"
+            "dctype": "Type",
         }
 
-class NewDIPForm(forms.ModelForm):
 
+class NewDIPForm(forms.ModelForm):
     class Meta:
         model = DIP
         fields = ['identifier', 'ispartof', 'objectszip']
         labels = {
-            "ispartof": "Collection", 
-            "objectszip": "Objects zip file"
+            "ispartof": "Collection",
+            "objectszip": "Objects zip file",
         }
+
 
 class DeleteCollectionForm(forms.ModelForm):
     class Meta:
         model = Collection
         fields = ['identifier']
 
+
 class DeleteDIPForm(forms.ModelForm):
     class Meta:
         model = DIP
         fields = ['identifier']
 
+
 class UserCreationForm(UserCreationForm):
-    is_superuser = forms.BooleanField(label = 'Administrator',required=False)
+    is_superuser = forms.BooleanField(label='Administrator', required=False)
 
     def clean_password1(self):
         data = self.cleaned_data['password1']
@@ -75,13 +89,17 @@ class UserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name','last_name','email', 'is_active','is_superuser')
+        fields = (
+            'username', 'first_name', 'last_name',
+            'email', 'is_active', 'is_superuser',
+        )
+
 
 class UserChangeForm(UserChangeForm):
     email = forms.EmailField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     password_confirmation = forms.CharField(widget=forms.PasswordInput, required=False)
-    is_superuser = forms.BooleanField(label = 'Administrator', required=False)
+    is_superuser = forms.BooleanField(label='Administrator', required=False)
 
     def __init__(self, *args, **kwargs):
         suppress_administrator_toggle = kwargs.get('suppress_administrator_toggle', False)
