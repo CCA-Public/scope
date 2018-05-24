@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
@@ -5,7 +7,14 @@ from .views import home, collection, dip, new_collection
 from .models import Collection, DIP
 from .forms import CollectionForm
 
+import os
+
 class HomeTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        User.objects.create_user('temp', 'temp@example.com', 'temp')
+        self.client.login(username='temp', password='temp')
+
     def test_home_view_status_code(self):
         url = reverse('home')
         response = self.client.get(url)
@@ -17,8 +26,11 @@ class HomeTests(TestCase):
 
 class CollectionTests(TestCase):
     def setUp(self):
-        Collection.objects.create(identifier='AP999', title='Title', date='1990', 
-            dcformat='test', description='test', creator='test', 
+        User = get_user_model()
+        User.objects.create_user('temp', 'temp@example.com', 'temp')
+        self.client.login(username='temp', password='temp')
+        Collection.objects.create(identifier='AP999', title='Title', date='1990',
+            dcformat='test', description='test', creator='test',
             link='http://fake.url')
 
     def test_collection_view_success_status_code(self):
@@ -37,13 +49,17 @@ class CollectionTests(TestCase):
 
 class DIPTests(TestCase):
     def setUp(self):
-        Collection.objects.create(identifier='AP999', title='Title', date='1990', 
-            dcformat='test', description='test', creator='test', 
+        User = get_user_model()
+        User.objects.create_user('temp', 'temp@example.com', 'temp')
+        self.client.login(username='temp', password='temp')
+        Collection.objects.create(identifier='AP999', title='Title', date='1990',
+            dcformat='test', description='test', creator='test',
             link='http://fake.url')
         collection = Collection.objects.only('identifier').get(identifier='AP999')
-        DIP.objects.create(identifier='AP999.S1.001', title='Title', date='1990', 
-            dcformat='test', description='test', creator='test', 
-            ispartof=collection)
+        DIP.objects.create(identifier='AP999.S1.001', title='Title', date='1990',
+            dcformat='test', description='test', creator='test',
+            ispartof=collection,
+            objectszip=os.path.join(settings.MEDIA_ROOT, 'fake.zip'))
 
     def test_dip_view_success_status_code(self):
         url = reverse('dip', kwargs={'identifier': 'AP999.S1.001'})
@@ -56,11 +72,15 @@ class DIPTests(TestCase):
         self.assertEquals(response.status_code, 404)
 
     def test_dip_url_resolves_dip_view(self):
-        view = resolve('/dip/AP999.S1.001/')
+        view = resolve('/folder/AP999.S1.001/')
         self.assertEquals(view.func, dip)
 
 class NewCollectionTests(TestCase):
-    
+    def setUp(self):
+        User = get_user_model()
+        User.objects.create_user('temp', 'temp@example.com', 'temp')
+        self.client.login(username='temp', password='temp')
+
     def test_csrf(self):
         url = reverse('new_collection')
         response = self.client.get(url)
@@ -89,7 +109,8 @@ class NewCollectionTests(TestCase):
         '''
         url = reverse('new_collection')
         response = self.client.post(url)
-        self.assertRedirects(response, 'new_collection/')
+        form = response.context.get('form')
+        self.assertIsInstance(form, CollectionForm)
 
     def test_new_topic_invalid_post_data_empty_fields(self):
         '''
@@ -106,5 +127,4 @@ class NewCollectionTests(TestCase):
         url = reverse('new_collection')
         response = self.client.get(url)
         form = response.context.get('form')
-        self.assertIsInstance(form, NewCollectionForm)
-
+        self.assertIsInstance(form, CollectionForm)
