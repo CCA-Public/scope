@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'widget_tweaks',
-    
-    'accounts',
+
     'dips', 
 
     'django_cleanup' # deletes FileFields when objects are deleted
