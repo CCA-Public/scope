@@ -1,0 +1,6 @@
+venv
+.git
+.tox
+*.egg-info
+*.pyc
+**/__pycache__

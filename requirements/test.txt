@@ -1,0 +1,4 @@
+-r base.txt
+
+tox==3.0.0
+flake8==3.5.0

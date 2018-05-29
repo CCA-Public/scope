@@ -31,61 +31,100 @@ Once the DIP has been uploaded, the metadata for the Folder can be edited throug
 
 By default, the application has three levels of permissions:
 
-* **Admin**: Admin users can add, edit, and delete Collections and Folders and add and edit Users
-* **Edit Collections and Folders**: Users in this Group can add and edit Collections and Folders
+* **Admin**: Admin users can add, edit, and delete Collections and Folders and add and edit Users.
+* **Edit Collections and Folders**: Users in this Group can add and edit Collections and Folders.
 * **Public**: Users with a username/password but no additional permissions have view-only access.
 
-## Installation (dev)
+## Development installation
 
-### Clone repository
+Clone the repository and go to its directory:
 
 ```
 git clone https://github.com/CCA-Public/dip-access-interface
 cd dip-access-interface
 ```
 
-### Create virtualenv and install dependencies
+There are two options to setup a development instance: Python virtualenv or Docker Compose.
+
+### Python virtualenv
 
 ```
 virtualenv venv -p python3  
 source venv/bin/activate  
-pip install -r requirements.txt
+pip install -r requirements/development.txt
 ```
 
-### Create database
+#### Initialize database
 
 ```
-python accesspoc/manage.py makemigrations
-python accesspoc/manage.py migrate
+accesspoc/manage.py migrate
 ```
 
-### Create a superuser
+#### Create a superuser
 
-`python accesspoc/manage.py createsuperuser`
+```
+accesspoc/manage.py createsuperuser
+```
 
 Follow the instructions to create a user with full admin rights.
 
-### Start development server
+#### Start development server
 
-`python accesspoc/manage.py runserver`
+```
+accesspoc/manage.py runserver
+```
 
 To change the default port or other development server behaviors, see the [relevant Django docs](https://docs.djangoproject.com/en/1.11/intro/tutorial01/#the-development-server).
 
-### Create "Edit Collections and Folders" group
+#### Run tests
 
-* Open the Django admin app (by default at `localhost:8000/admin`) and sign in with your superuser account.  
-* Click "Groups", then "Add Group +" (button on right-hand side of page)  
-* Create a new group with name "Edit Collections and Folders" and the following permissions:
+To run the application tests and syntax checks, execute:
 
 ```
-dips | collection | Can add collection
-dips | collection | Can change collection
-dips | dip | Can add dip
-dips | dip | Can add dip
+tox
 ```
 
-(to replace with seeder/script)
+### Docker Compose
 
-### Open application in browser  
+Requires [Docker CE](https://www.docker.com/community-edition) and [Docker Compose](https://docs.docker.com/compose/)
 
-* In the browser, visit URL `localhost:8000`  
+```
+docker-compose up -d
+```
+
+#### Initialize database
+
+```
+docker-compose exec accesspoc accesspoc/manage.py migrate
+```
+
+#### Create a superuser
+
+```
+docker-compose exec accesspoc accesspoc/manage.py createsuperuser
+```
+
+Follow the instructions to create a user with full admin rights.
+
+#### Start development server
+
+The server is already started in the Docker image over port 8000.
+
+#### Run tests
+
+To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in your host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
+
+```
+docker run --rm -t -v `pwd`:/src -w /src python:3.6 /bin/bash -c "pip install tox && tox"
+docker run --rm -t -v `pwd`:/app omercnet/tox
+```
+
+#### Access the logs
+
+```
+docker-compose logs -f accesspoc
+```
+
+## Access the application  
+
+In both environments with the default options, visit http://localhost:8000 in the browser.
