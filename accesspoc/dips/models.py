@@ -1,4 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    def group_names(self):
+        return ', '.join(list(self.groups.values_list('name', flat=True)))
+
+    def is_editor(self):
+        return (
+            self.is_superuser or
+            self.groups.filter(name='Edit Collections and Folders').exists()
+        )
 
 
 class Collection(models.Model):

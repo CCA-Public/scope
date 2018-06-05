@@ -13,6 +13,7 @@
       <td><strong>First name</strong></td>
       <td><strong>Last name</strong></td>
       <td><strong>Email</strong></td>
+      <td><strong>Groups</strong></td>
       <td><strong>Active</strong></td>
       <td><strong>Admin</strong></td>
       <td><strong>Edit</strong></td>
@@ -23,6 +24,7 @@
       <td>{{ user.first_name }}</td>
       <td>{{ user.last_name }}</td>
       <td>{{ user.email }}</td>
+      <td>{{ user.group_names }}</td>
       <td>{{ user.is_active }}</td>
       <td>{{ user.is_superuser }}</td>
       <td><a href="{% url 'edit_user' user.pk %}"><button class="btn btn-primary">View</button></a></td>

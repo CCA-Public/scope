@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
-from .models import Collection, DIP
+from .models import User, Collection, DIP
 
 
 class CollectionForm(forms.ModelForm):
@@ -75,6 +75,14 @@ class DeleteDIPForm(forms.ModelForm):
 class UserCreationForm(UserCreationForm):
     is_superuser = forms.BooleanField(label='Administrator', required=False)
 
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        self.fields['groups'] = forms.MultipleChoiceField(
+            choices=Group.objects.all().values_list('id', 'name'),
+            required=False,
+            help_text='Ctrl + Click to select multiple or unselect.',
+        )
+
     def clean_password1(self):
         data = self.cleaned_data['password1']
         if data != '' and len(data) < 8:
@@ -85,36 +93,45 @@ class UserCreationForm(UserCreationForm):
         user = super(UserCreationForm, self).save(commit=False)
         if commit:
             user.save()
+            for group_id in self.cleaned_data['groups']:
+                group = Group.objects.get(id=group_id)
+                user.groups.add(group)
         return user
 
     class Meta:
         model = User
         fields = (
             'username', 'first_name', 'last_name',
-            'email', 'is_active', 'is_superuser',
+            'email', 'is_active', 'is_superuser', 'groups',
         )
 
 
 class UserChangeForm(UserChangeForm):
-    email = forms.EmailField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     password_confirmation = forms.CharField(widget=forms.PasswordInput, required=False)
     is_superuser = forms.BooleanField(label='Administrator', required=False)
 
     def __init__(self, *args, **kwargs):
         suppress_administrator_toggle = kwargs.get('suppress_administrator_toggle', False)
-
         if 'suppress_administrator_toggle' in kwargs:
             del kwargs['suppress_administrator_toggle']
 
         super(UserChangeForm, self).__init__(*args, **kwargs)
-
         if suppress_administrator_toggle:
             del self.fields['is_superuser']
 
+        self.fields['groups'] = forms.MultipleChoiceField(
+            choices=Group.objects.all().values_list('id', 'name'),
+            required=False,
+            help_text='Ctrl + Click to select multiple or unselect.',
+        )
+
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'is_active', 'is_superuser')
+        fields = (
+            'username', 'first_name', 'last_name',
+            'email', 'is_active', 'is_superuser', 'groups',
+        )
 
     def clean_password(self):
         data = self.cleaned_data['password']

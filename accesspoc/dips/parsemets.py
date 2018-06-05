@@ -7,7 +7,7 @@ from .models import DIP, DigitalFile, PREMISEvent
 
 
 def convert_size(size):
-    # convert size to human-readable form
+    # Convert size to human-readable form
     size_name = ("bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
     i = int(math.floor(math.log(size, 1024)))
     p = math.pow(1024, i)
@@ -66,7 +66,7 @@ class METS(object):
         """
         Parse METS file and save data to DIP, DigitalFile, and PremisEvent models
         """
-        # open xml file and strip namespaces
+        # Open xml file and strip namespaces
         tree = etree.parse(self.path)
         root = tree.getroot()
 
@@ -78,7 +78,7 @@ class METS(object):
                 elem.tag = elem.tag[i + 1:]
         objectify.deannotate(root, cleanup_namespaces=True)
 
-        # create dict for names and xpaths of desired info from individual files
+        # Create dict for names and xpaths of desired info from individual files
         xml_file_elements = {
             'filepath': './techMD/mdWrap/xmlData/object/originalName',
             'uuid': './techMD/mdWrap/xmlData/object/objectIdentifier/objectIdentifierValue',
@@ -92,40 +92,40 @@ class METS(object):
             'fits_modified': './techMD/mdWrap/xmlData/object/objectCharacteristics/objectCharacteristicsExtension/fits/toolOutput/tool[@name="Exiftool"]/exiftool/FileModifyDate',
         }
 
-        # build xml document root
+        # Build xml document root
         mets_root = root
 
-        # gather info for each file in filegroup "original"
+        # Gather info for each file in filegroup "original"
         for target in mets_root.findall(".//fileGrp[@USE='original']/file"):
 
-            # create new dictionary for this item's info
+            # Create new dictionary for this item's info
             file_data = dict()
 
-            # create new list of dicts for premis events in file_data
+            # Create new list of dicts for premis events in file_data
             file_data['premis_events'] = list()
 
-            # gather amdsec id from filesec
+            # Gather amdsec id from filesec
             amdsec_id = target.attrib['ADMID']
             file_data['amdsec_id'] = amdsec_id
 
-            # parse amdSec
+            # Parse amdSec
             amdsec_xpath = ".//amdSec[@ID='{}']".format(amdsec_id)
             for target1 in mets_root.findall(amdsec_xpath):
-                # iterate over elements and write key, value for each to file_data dictionary
+                # Iterate over elements and write key, value for each to file_data dictionary
                 for key, value in xml_file_elements.items():
                     try:
                         file_data['{}'.format(key)] = target1.find(value).text
                     except AttributeError:
                         file_data['{}'.format(key)] = ''
 
-                # parse premis events related to file
+                # Parse premis events related to file
                 premis_event_xpath = ".//digiprovMD/mdWrap[@MDTYPE='PREMIS:EVENT']"
                 for target2 in target1.findall(premis_event_xpath):
 
-                    # create dict to store data
+                    # Create dict to store data
                     premis_event = dict()
 
-                    # create dict for names and xpaths of desired elements
+                    # Create dict for names and xpaths of desired elements
                     premis_key_values = {
                         'event_uuid': './xmlData/event/eventIdentifier/eventIdentifierValue',
                         'event_type': '.xmlData/event/eventType',
@@ -135,33 +135,33 @@ class METS(object):
                         'event_detail_note': './xmlData/event/eventOutcomeInformation/eventOutcomeDetail/eventOutcomeDetailNote',
                     }
 
-                    # iterate over elements and write key, value for each to premis_event dictionary
+                    # Iterate over elements and write key, value for each to premis_event dictionary
                     for key, value in premis_key_values.items():
                         try:
                             premis_event['{}'.format(key)] = target2.find(value).text
                         except AttributeError:
                             premis_event['{}'.format(key)] = ''
 
-                    # write premis_event dict to file_data
+                    # Write premis_event dict to file_data
                     file_data['premis_events'].append(premis_event)
 
-            # format filepath
+            # Format filepath
             file_data['filepath'] = file_data['filepath'].replace('%transferDirectory%', '')
 
-            # create human-readable size
+            # Create human-readable size
             file_data['bytes'] = int(file_data['bytes'])
-            file_data['size'] = '0 bytes'  # default to none
+            file_data['size'] = '0 bytes'  # Default to none
             if file_data['bytes'] != 0:
                 file_data['size'] = convert_size(file_data['bytes'])
 
-            # create human-readable version of last modified Unix time stamp (if file was characterized by FITS)
+            # Create human-readable version of last modified Unix time stamp (if file was characterized by FITS)
             if file_data['fits_modified_unixtime']:
                 unixtime = int(file_data['fits_modified_unixtime']) / 1000  # convert milliseconds to seconds
                 file_data['modified_ois'] = datetime.datetime.fromtimestamp(unixtime).isoformat()  # convert from unix to iso8601
             else:
                 file_data['modified_ois'] = ''
 
-            # add file_data to DigitalFile model
+            # Add file_data to DigitalFile model
             digitalfile = DigitalFile(
                 uuid=file_data['uuid'], filepath=file_data['filepath'],
                 fileformat=file_data['format'], formatversion=file_data['version'],
@@ -172,7 +172,7 @@ class METS(object):
             )
             digitalfile.save()
 
-            # add premis events data to PREMISEvent model
+            # Add premis events data to PREMISEvent model
             for event in file_data['premis_events']:
                 premisevent = PREMISEvent(
                     uuid=event['event_uuid'], eventtype=event['event_type'],
@@ -182,10 +182,10 @@ class METS(object):
                 )
                 premisevent.save()
 
-        # gather dublin core metadata from most recent dmdSec
+        # Gather dublin core metadata from most recent dmdSec
         dc_model = self.parse_dc(root)
 
-        # update DIP model object - not ispartof (hardset)
+        # Update DIP model object - not ispartof (hardset)
         if dc_model:
             dip = DIP.objects.get(identifier=self.dip_id)
             if 'title' in dc_model and dc_model['title'] is not None:
