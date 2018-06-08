@@ -84,6 +84,10 @@ To run the application tests and syntax checks, execute:
 tox
 ```
 
+#### Access the application  
+
+With the default options, visit http://localhost:8000 in the browser.
+
 ### Docker Compose
 
 Requires [Docker CE](https://www.docker.com/community-edition) and [Docker Compose](https://docs.docker.com/compose/)
@@ -95,13 +99,13 @@ docker-compose up -d
 #### Initialize database
 
 ```
-docker-compose exec accesspoc accesspoc/manage.py migrate
+docker-compose exec accesspoc ./manage.py migrate
 ```
 
 #### Create a superuser
 
 ```
-docker-compose exec accesspoc accesspoc/manage.py createsuperuser
+docker-compose exec accesspoc ./manage.py createsuperuser
 ```
 
 Follow the instructions to create a user with full admin rights.
@@ -125,6 +129,6 @@ docker run --rm -t -v `pwd`:/app omercnet/tox
 docker-compose logs -f accesspoc
 ```
 
-## Access the application  
+#### Access the application  
 
-In both environments with the default options, visit http://localhost:8000 in the browser.
+With the default options, visit http://localhost:43430 in the browser.

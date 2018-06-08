@@ -29,8 +29,8 @@ RUN set -ex \
         \) -exec rm -rf '{}' + \
     && rm -rf /usr/src/python
 
-COPY . /src/
+COPY ./accesspoc /src
 
 EXPOSE 8000
 
-CMD ["accesspoc/manage.py", "runserver", "0:8000"]
+CMD ["gunicorn", "accesspoc.wsgi:application", "-b=0:8000", "-k=gevent"]

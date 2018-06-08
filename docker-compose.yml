@@ -5,6 +5,6 @@ services:
   accesspoc:
     build: .
     volumes:
-      - .:/src
+      - ./accesspoc:/src
     ports:
-      - '8000:8000'
+      - '43430:8000'
