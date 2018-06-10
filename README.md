@@ -35,7 +35,9 @@ By default, the application has three levels of permissions:
 * **Edit Collections and Folders**: Users in this Group can add and edit Collections and Folders.
 * **Public**: Users with a username/password but no additional permissions have view-only access.
 
-## Development installation
+## Development environment with Docker Compose
+
+Requires [Docker CE](https://www.docker.com/community-edition) and [Docker Compose](https://docs.docker.com/compose/).
 
 Clone the repository and go to its directory:
 
@@ -44,65 +46,19 @@ git clone https://github.com/CCA-Public/dip-access-interface
 cd dip-access-interface
 ```
 
-There are two options to setup a development instance: Python virtualenv or Docker Compose.
-
-### Python virtualenv
-
-```
-virtualenv venv -p python3  
-source venv/bin/activate  
-pip install -r requirements/development.txt
-```
-
-#### Initialize database
-
-```
-accesspoc/manage.py migrate
-```
-
-#### Create a superuser
-
-```
-accesspoc/manage.py createsuperuser
-```
-
-Follow the instructions to create a user with full admin rights.
-
-#### Start development server
-
-```
-accesspoc/manage.py runserver
-```
-
-To change the default port or other development server behaviors, see the [relevant Django docs](https://docs.djangoproject.com/en/1.11/intro/tutorial01/#the-development-server).
-
-#### Run tests
-
-To run the application tests and syntax checks, execute:
-
-```
-tox
-```
-
-#### Access the application  
-
-With the default options, visit http://localhost:8000 in the browser.
-
-### Docker Compose
-
-Requires [Docker CE](https://www.docker.com/community-edition) and [Docker Compose](https://docs.docker.com/compose/)
+Build images, initialize services, etc.:
 
 ```
 docker-compose up -d
 ```
 
-#### Initialize database
+Initialize database:
 
 ```
 docker-compose exec accesspoc ./manage.py migrate
 ```
 
-#### Create a superuser
+Create a superuser:
 
 ```
 docker-compose exec accesspoc ./manage.py createsuperuser
@@ -110,25 +66,164 @@ docker-compose exec accesspoc ./manage.py createsuperuser
 
 Follow the instructions to create a user with full admin rights.
 
-#### Start development server
-
-The server is already started in the Docker image over port 8000.
-
-#### Run tests
-
-To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in your host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
+To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
 
 ```
 docker run --rm -t -v `pwd`:/src -w /src python:3.6 /bin/bash -c "pip install tox && tox"
 docker run --rm -t -v `pwd`:/app omercnet/tox
 ```
 
-#### Access the logs
+Access the logs:
 
 ```
 docker-compose logs -f accesspoc
 ```
 
-#### Access the application  
+To access the application with the default options visit http://localhost:43430 in the browser.
 
-With the default options, visit http://localhost:43430 in the browser.
+## Production installation
+
+The following steps are just an example of how to run the application in a production environment over Ubuntu 16.04.
+
+Install build requirements (as the root user):
+
+```
+apt-get update
+apt-get upgrade
+apt-get install gcc python3-dev
+wget https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+rm get-pip.py
+pip install virtualenv
+```
+
+Create user to own and run the application, log in and make sure you're placed in its home folder:
+
+```
+adduser accesspoc
+su - accesspoc
+cd ~
+```
+
+Clone the repository and go to its directory:
+
+```
+git clone https://github.com/CCA-Public/dip-access-interface
+cd dip-access-interface
+```
+
+Until different settings files are added and the environment is configured, you'll need to edit `accesspoc/accesspoc/settings.py` to add the host IP or domain address to the `ALLOWED_HOSTS` variable. E.g.:
+
+```
+ALLOWED_HOSTS = ['example.com']
+```
+
+Create a Python virtual environment and install the application requirements:
+
+```
+virtualenv venv -p python3  
+source venv/bin/activate  
+pip install -r requirements/development.txt
+```
+
+Initialize the database:
+
+```
+accesspoc/manage.py migrate
+```
+
+Create a superuser:
+
+```
+accesspoc/manage.py createsuperuser
+```
+
+Follow the instructions to create a user with full admin rights.
+
+You can now deactivate the environment and go back to the root session:
+
+```
+deactivate && exit
+```
+
+The application requirements install Gunicorn and WhiteNoise to serve the application, including the static files. Make a systemd service file to run the Gunicorn daemon in `/etc/systemd/system/accesspoc-gunicorn.service`, with the following content:
+
+```
+[Unit]
+Description=Accesspoc Gunicorn daemon
+After=network.target
+
+[Service]
+User=accesspoc
+Group=accesspoc
+PrivateTmp=true
+PIDFile=/home/accesspoc/accesspoc-gunicorn.pid
+WorkingDirectory=/home/accesspoc/dip-access-interface/accesspoc
+ExecStart=/home/accesspoc/dip-access-interface/venv/bin/gunicorn \
+            --access-logfile /dev/null \
+            --worker-class gevent \
+            --workers 4 \
+            --bind unix:/home/accesspoc/accesspoc-gunicorn.sock \
+            accesspoc.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Start and enable the service:
+
+```
+systemctl start accesspoc-gunicorn
+systemctl enable accesspoc-gunicorn
+```
+
+To access the service logs, use:
+
+```
+journalctl -u accesspoc-gunicorn
+```
+
+The Gunicorn service is using an Unix socket to listen for connections so we will use Nginx to proxy the application:
+
+```
+apt-get install nginx
+nano /etc/nginx/sites-available/accesspoc
+```
+
+With a basic configuration:
+
+```
+upstream accesspoc {
+  server unix:/home/accesspoc/accesspoc-gunicorn.sock;
+}
+
+server {
+  listen 80;
+  server_name _;
+  client_max_body_size 500M;
+
+  location / {
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_redirect off;
+    proxy_buffering off;
+    proxy_pass http://accesspoc;
+  }
+}
+```
+
+Link the site configuration to `sites-enabled` and remove the default configuration:
+
+```
+ln -s /etc/nginx/sites-available/accesspoc /etc/nginx/sites-enabled
+rm /etc/nginx/sites-available/default
+```
+
+Verify configuration and restart Nginx service:
+
+```
+nginx -t
+systemctl restart nginx
+```
