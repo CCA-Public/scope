@@ -1,17 +1,22 @@
-# python
+# Python
 __pycache__/
 *.py[cod]
 .env
 venv/
 
-# mac
+# Mac
 .DS_Store
 
-# tox
+# Tox
 .tox/
 
-# database
+# Database
 *.sqlite3
 
-# media
+# Media
 accesspoc/media/
+
+# Coverage
+.coverage
+.coverage\.*
+coverage.xml
