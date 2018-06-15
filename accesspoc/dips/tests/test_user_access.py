@@ -10,90 +10,105 @@ GET_PAGES = {
     'faq': [
         ('unauth', 200),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 200),
         ('basic', 200),
     ],
     'home': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 200),
         ('basic', 200),
     ],
     'search': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 200),
         ('basic', 200),
     ],
     'users': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 302),
         ('basic', 302),
     ],
     'new_user': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 302),
         ('basic', 302),
     ],
     'edit_user': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 302),
         ('basic', 302),
     ],
     'collection': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 200),
         ('basic', 200),
     ],
     'new_collection': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 302),
         ('editor', 200),
         ('basic', 302),
     ],
     'edit_collection': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 302),
         ('editor', 200),
         ('basic', 302),
     ],
     'delete_collection': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 302),
         ('editor', 302),
         ('basic', 302),
     ],
     'dip': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 200),
         ('basic', 200),
     ],
     'new_dip': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 302),
         ('editor', 200),
         ('basic', 302),
     ],
     'edit_dip': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 302),
         ('editor', 200),
         ('basic', 302),
     ],
     'delete_dip': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 302),
         ('editor', 302),
         ('basic', 302),
     ],
     'digital_file': [
         ('unauth', 302),
         ('admin', 200),
+        ('manager', 200),
         ('editor', 200),
         ('basic', 200),
     ],
@@ -105,8 +120,11 @@ class UserAccessTests(TestCase):
         # Create test users
         User.objects.create_superuser('admin', 'admin@example.com', 'admin')
         User.objects.create_user('basic', 'basic@example.com', 'basic')
+        manager_user = User.objects.create_user('manager', 'manager@example.com', 'manager')
+        group = Group.objects.get(name='Managers')
+        manager_user.groups.add(group)
         editor_user = User.objects.create_user('editor', 'editor@example.com', 'editor')
-        group = Group.objects.get(name='Edit Collections and Folders')
+        group = Group.objects.get(name='Editors')
         editor_user.groups.add(group)
 
         # Create editable resources
@@ -158,9 +176,17 @@ class UserAccessTests(TestCase):
             'password1': 'test123test',
             'password2': 'test123test',
         }
+        new_data_2 = {
+            'username': 'test3',
+            'password1': 'test123test',
+            'password2': 'test123test',
+        }
         edit_url = reverse('edit_user', kwargs={'pk': self.user.pk})
         edit_data = {
             'username': 'test_changed',
+        }
+        edit_data_2 = {
+            'username': 'test_changed_2',
         }
 
         # Unauthenticated, create
@@ -207,19 +233,34 @@ class UserAccessTests(TestCase):
         self.assertFalse(User.objects.filter(username='test_changed').exists())
         self.client.logout()
 
-        # Admin, create
-        self.client.login(username='admin', password='admin')
+        # Manager, create
+        self.client.login(username='manager', password='manager')
         before_count = len(User.objects.all())
         response = self.client.post(new_url, new_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/users/')
         after_count = len(User.objects.all())
         self.assertEqual(before_count + 1, after_count)
-        # Admin, edit
+        # Manager, edit
         response = self.client.post(edit_url, edit_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/users/')
         self.assertTrue(User.objects.filter(username='test_changed').exists())
+        self.client.logout()
+
+        # Admin, create
+        self.client.login(username='admin', password='admin')
+        before_count = len(User.objects.all())
+        response = self.client.post(new_url, new_data_2)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/users/')
+        after_count = len(User.objects.all())
+        self.assertEqual(before_count + 1, after_count)
+        # Admin, edit
+        response = self.client.post(edit_url, edit_data_2)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/users/')
+        self.assertTrue(User.objects.filter(username='test_changed_2').exists())
         self.client.logout()
 
     def test_post_collection(self):
@@ -286,6 +327,21 @@ class UserAccessTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/collection/%s/' % self.collection.identifier)
         self.assertTrue(Collection.objects.filter(title='test_collection_2').exists())
+        self.client.logout()
+
+        # Manager, create
+        self.client.login(username='manager', password='manager')
+        before_count = len(Collection.objects.all())
+        response = self.client.post(new_url, new_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/')
+        after_count = len(Collection.objects.all())
+        self.assertEqual(before_count, after_count)
+        # Manager, edit
+        response = self.client.post(edit_url, edit_data_2)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/collection/%s/' % self.collection.identifier)
+        self.assertFalse(Collection.objects.filter(title='test_collection_3').exists())
         self.client.logout()
 
         # Admin, create
@@ -369,6 +425,21 @@ class UserAccessTests(TestCase):
         self.assertTrue(DIP.objects.filter(title='test_dip_2').exists())
         self.client.logout()
 
+        # Manager, create
+        self.client.login(username='manager', password='manager')
+        before_count = len(DIP.objects.all())
+        response = self.client.post(new_url, new_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/')
+        after_count = len(DIP.objects.all())
+        self.assertEqual(before_count, after_count)
+        # Manager, edit
+        response = self.client.post(edit_url, edit_data_2)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/folder/%s/' % self.dip.identifier)
+        self.assertFalse(DIP.objects.filter(title='test_dip_3').exists())
+        self.client.logout()
+
         # Admin, create
         self.client.login(username='admin', password='admin')
         # To avoid testing the file upload in here, the form validation
@@ -423,6 +494,16 @@ class UserAccessTests(TestCase):
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count)
 
+        # Manager
+        self.client.login(username='manager', password='manager')
+        before_count = len(DIP.objects.all())
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        next_url = '/folder/%s/' % self.dip.identifier
+        self.assertEqual(response.url, next_url)
+        after_count = len(DIP.objects.all())
+        self.assertEqual(before_count, after_count)
+
         # Admin
         self.client.login(username='admin', password='admin')
         before_count = len(DIP.objects.all())
@@ -463,6 +544,16 @@ class UserAccessTests(TestCase):
 
         # Editor
         self.client.login(username='editor', password='editor')
+        before_count = len(Collection.objects.all())
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        next_url = '/collection/%s/' % self.collection.identifier
+        self.assertEqual(response.url, next_url)
+        after_count = len(Collection.objects.all())
+        self.assertEqual(before_count, after_count)
+
+        # Manager
+        self.client.login(username='manager', password='manager')
         before_count = len(Collection.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)

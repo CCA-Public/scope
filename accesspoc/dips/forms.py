@@ -93,9 +93,6 @@ class UserCreationForm(UserCreationForm):
         user = super(UserCreationForm, self).save(commit=False)
         if commit:
             user.save()
-            for group_id in self.cleaned_data['groups']:
-                group = Group.objects.get(id=group_id)
-                user.groups.add(group)
         return user
 
     class Meta:

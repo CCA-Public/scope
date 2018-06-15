@@ -27,13 +27,17 @@ In a future version of the application, it should be possible to upload a new DI
 
 Once the DIP has been uploaded, the metadata for the Folder can be edited through the GUI by any user with sufficient permissions.
 
-## Permissions
+## User types and permissions
 
-By default, the application has three levels of permissions:
+By default, the application has five levels of permissions:
 
-* **Admin**: Admin users can add, edit, and delete Collections and Folders and add and edit Users.
-* **Edit Collections and Folders**: Users in this Group can add and edit Collections and Folders.
+* **Administrators**: Administrators have access to all parts of the application.
+* **Managers**: Users in this group can manage users but not make them administrators.
+* **Editors**: Users in this group can add and edit Collections and Folders but not delete them.
 * **Public**: Users with a username/password but no additional permissions have view-only access.
+* **Unauthenticated**: Not logged in users can only access the FAQ and login pages.
+
+For more information check the [user management and permissions feature file](features/user_management_and_permissions.feature).
 
 ## Development environment with Docker Compose
 

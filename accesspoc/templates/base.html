@@ -23,46 +23,29 @@
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-        {% if user.is_superuser %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ user.username }}
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-              <a class="dropdown-item" href="{% url 'users' %}">Edit Users</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{% url 'new_collection' %}">Add New Collection</a>
-              <a class="dropdown-item" href="{% url 'new_dip' %}">Add New Folder</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
-            </div>
-          </li>
-        {% elif user|has_group:"Edit Collections and Folders" %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ user.username }}
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-              <a class="dropdown-item" href="{% url 'new_collection' %}">Add New Collection</a>
-              <a class="dropdown-item" href="{% url 'new_dip' %}">Add New Folder</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
-            </div>
-          </li>
-        {% elif user.is_authenticated %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ user.username }}
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-              <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
-            </div>
-          </li>
-        {% else %}
-          <form class="form-inline ml-auto">
-            <a href="{% url 'login' %}" class="btn btn-outline-secondary">Log in</a>
-          </form>
-        {% endif %}
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                {% if user.is_manager %}
+                  <a class="dropdown-item" href="{% url 'users' %}">Edit Users</a>
+                  <div class="dropdown-divider"></div>
+                {% endif %}
+                {% if user.is_editor %}
+                  <a class="dropdown-item" href="{% url 'new_collection' %}">Add New Collection</a>
+                  <a class="dropdown-item" href="{% url 'new_dip' %}">Add New Folder</a>
+                  <div class="dropdown-divider"></div>
+                {% endif %}
+                <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+              </div>
+            </li>
+          {% else %}
+            <form class="form-inline ml-auto">
+              <a href="{% url 'login' %}" class="btn btn-outline-secondary">Log in</a>
+            </form>
+          {% endif %}
         </ul>
       </div>
     </nav>

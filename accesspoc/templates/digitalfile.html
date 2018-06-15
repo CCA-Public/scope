@@ -27,14 +27,13 @@
   <br>
   <h2>PREMIS Events</h2>
   <p><em>Event log from our digital preservation repository for this file.</em></p>
-  <br>
   {% for event in digitalfile.premis_events.all|sort_by:'datetime' %}
+    <br>
     <h4>Event: {{ event.uuid }}</h4>
     <p><strong>Event type:</strong> {{ event.eventtype }}</p>
     <p><strong>Datetime:</strong> {{ event.datetime }}</p>
     <p><strong>Event detail:</strong> {{ event.detail }}</p>
     <p><strong>Event outcome:</strong> {{ event.outcome }}</p>
     <p><strong>Event detail note:</strong> {{ event.detailnote }}</p>
-    <br>
   {% endfor %}
 {% endblock %}

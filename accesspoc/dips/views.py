@@ -25,8 +25,8 @@ def faq(request):
 
 @login_required(login_url='/login/')
 def users(request):
-    # Only admins can see users
-    if not request.user.is_superuser:
+    # Only admins or managers can see users
+    if not request.user.is_manager():
         return redirect('home')
     users = User.objects.all()
     return render(request, 'users.html', {'users': users})
@@ -34,17 +34,30 @@ def users(request):
 
 @login_required(login_url='/login/')
 def new_user(request):
-    # Only admins can make new users
-    if not request.user.is_superuser:
+    # Only admins or managers can make new users
+    if not request.user.is_manager():
         return redirect('home')
 
-    if not request.method == 'POST':
-        form = UserCreationForm()
-        return render(request, 'new_user.html', {'form': form})
+    form = UserCreationForm(request.POST or None)
 
-    form = UserCreationForm(request.POST)
+    # Disable superuser field for non-admin users
+    if not request.user.is_superuser:
+        form.fields['is_superuser'].disabled = True
+
     if form.is_valid():
-        form.save()
+        user = form.save(commit=False)
+
+        # Avoid superuser creation from non-admin user
+        if not request.user.is_superuser:
+            user.is_superuser = False
+
+        user.save()
+
+        # Add user groups
+        for group_id in form.cleaned_data['groups']:
+            group = Group.objects.get(id=group_id)
+            user.groups.add(group)
+
         return redirect('users')
 
     return render(request, 'new_user.html', {'form': form})
@@ -52,17 +65,23 @@ def new_user(request):
 
 @login_required(login_url='/login/')
 def edit_user(request, pk):
-    # Only admins can edit users
-    if not request.user.is_superuser:
+    # Only admins or managers can make new users
+    if not request.user.is_manager():
         return redirect('home')
 
     instance = get_object_or_404(User, pk=pk)
     current_groups = list(instance.groups.values_list('id', flat=True))
+    current_is_superuser = instance.is_superuser
     form = UserChangeForm(
         request.POST or None,
         instance=instance,
         initial={'groups': current_groups},
     )
+
+    # Disable superuser field for non-admin users
+    if not request.user.is_superuser:
+        form.fields['is_superuser'].disabled = True
+
     if form.is_valid():
         user = form.save(commit=False)
 
@@ -71,9 +90,9 @@ def edit_user(request, pk):
         if password != '':
             user.set_password(password)
 
-        # Prevent non-admin from self-promotion
+        # Avoid is_superuser change from non-admin user
         if not request.user.is_superuser:
-            user.is_superuser = False
+            user.is_superuser = current_is_superuser
 
         user.save()
 
@@ -128,7 +147,7 @@ def digital_file(request, uuid):
 
 @login_required(login_url='/login/')
 def new_collection(request):
-    # Only admins and users in group "Edit Collections and Folders"
+    # Only admins and users in group "Editors"
     # can add collections
     if not request.user.is_editor():
         return redirect('home')
@@ -147,7 +166,7 @@ def new_collection(request):
 
 @login_required(login_url='/login/')
 def new_dip(request):
-    # Only admins and users in group "Edit Collections and Folders"
+    # Only admins and users in group "Editors"
     # can add DIPs
     if not request.user.is_editor():
         return redirect('home')
@@ -182,7 +201,7 @@ def new_dip(request):
 
 @login_required(login_url='/login/')
 def edit_collection(request, identifier):
-    # Only admins and users in group "Edit Collections and Folders"
+    # Only admins and users in group "Editors"
     # can edit collections
     if not request.user.is_editor():
         return redirect('collection', identifier=identifier)
@@ -198,7 +217,7 @@ def edit_collection(request, identifier):
 
 @login_required(login_url='/login/')
 def edit_dip(request, identifier):
-    # Only admins and users in group "Edit Collections and Folders"
+    # Only admins and users in group "Editors"
     # can edit DIPs
     if not request.user.is_editor():
         return redirect('dip', identifier=identifier)

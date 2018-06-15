@@ -9,7 +9,13 @@ class User(AbstractUser):
     def is_editor(self):
         return (
             self.is_superuser or
-            self.groups.filter(name='Edit Collections and Folders').exists()
+            self.groups.filter(name='Editors').exists()
+        )
+
+    def is_manager(self):
+        return (
+            self.is_superuser or
+            self.groups.filter(name='Managers').exists()
         )
 
 

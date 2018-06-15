@@ -17,14 +17,13 @@
   <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
   <p><strong>Description:</strong> {{ collection.description }}</p>
   <p><strong>Finding aid:</strong> <a href="{{ collection.link }}">{{ collection.link }}</a></p>
-  {% if user.is_superuser %}
+  {% if user.is_editor %}
     <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
-    <a href="{% url 'delete_collection' collection.identifier %}"><button class="btn btn-danger">Delete</button></a>
-    <br><br>
-  {% elif user|has_group:"Edit Collections and Folders" %}
-    <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
-    <br><br>
   {% endif %}
+  {% if user.is_superuser %}
+    <a href="{% url 'delete_collection' collection.identifier %}"><button class="btn btn-danger">Delete</button></a>
+  {% endif %}
+  <br>
   <h2>Folders in this collection</h2>
   <br>
   <div class="table-responsive">

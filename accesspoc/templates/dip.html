@@ -20,13 +20,11 @@
       <p><strong>Creator:</strong> {{ dip.creator }}</p>
       <p><strong>Format:</strong> {{ dip.dcformat|safe }}</p>
       <p><strong>Description:</strong> {{ dip.description|safe }}</p>
+      {% if user.is_editor %}
+        <a href="{% url 'edit_dip' dip.identifier %}"><button class="btn btn-default">Edit</button></a>
+      {% endif %}
       {% if user.is_superuser %}
-        <a href="{% url 'edit_dip' dip.identifier %}"><button class="btn btn-default">Edit</button></a>
         <a href="{% url 'delete_dip' dip.identifier %}"><button class="btn btn-danger">Delete</button></a>
-        <br><br>
-      {% elif user|has_group:"Edit Collections and Folders" %}
-        <a href="{% url 'edit_dip' dip.identifier %}"><button class="btn btn-default">Edit</button></a>
-        <br><br>
       {% endif %}
     </div>
     <div class="col-md-5">
