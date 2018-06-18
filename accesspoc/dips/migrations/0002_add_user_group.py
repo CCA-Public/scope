@@ -7,12 +7,12 @@ from django.contrib.auth.management import create_permissions
 
 
 def migrate_permissions(apps, schema_editor):
-    '''
+    """
     Create permissions in migration before they are created in a
     post_migrate signal handler. They are needed to create the user
     group and the signal handler won't create duplicated permissions.
     This must be executed after the auth and dips apps are migrated.
-    '''
+    """
     for app_config in apps.get_app_configs():
         app_config.models_module = True
         create_permissions(app_config, apps=apps, verbosity=0)
@@ -20,10 +20,10 @@ def migrate_permissions(apps, schema_editor):
 
 
 def add_user_group(apps, schema_editor):
-    '''
+    """
     Create 'Edit Collections and Folders' user group with
     permissions to add and edit collections and dips.
-    '''
+    """
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
     editor_group, created = Group.objects.get_or_create(

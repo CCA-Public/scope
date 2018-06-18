@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
+from unittest.mock import patch
+
 from dips.views import home
 
 
@@ -11,7 +13,8 @@ class HomeTests(TestCase):
         User.objects.create_user('temp', 'temp@example.com', 'temp')
         self.client.login(username='temp', password='temp')
 
-    def test_home_view_status_code(self):
+    @patch('elasticsearch_dsl.Search.execute')
+    def test_home_view_status_code(self, patch):
         url = reverse('home')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

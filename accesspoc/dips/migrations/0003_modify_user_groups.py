@@ -6,9 +6,9 @@ from django.db import migrations
 
 
 def modify_editors_user_group(apps, schema_editor):
-    '''
+    """
     Rename 'Edit Collections and Folders' user group to 'Editors'.
-    '''
+    """
     Group = apps.get_model('auth', 'Group')
     editors_group = Group.objects.get(name='Edit Collections and Folders')
     editors_group.name = 'Editors'
@@ -16,10 +16,10 @@ def modify_editors_user_group(apps, schema_editor):
 
 
 def add_managers_user_group(apps, schema_editor):
-    '''
+    """
     Create 'Managers' user group with permissions to add and edit
     collections and dips.
-    '''
+    """
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
     managers_group, created = Group.objects.get_or_create(name='Managers')

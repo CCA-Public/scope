@@ -1,4 +1,20 @@
+[![Travis CI](https://travis-ci.org/CCA-Public/dip-access-interface.svg?branch=master)](https://travis-ci.org/CCA-Public/dip-access-interface)
+[![Codecov](https://codecov.io/gh/CCA-Public/dip-access-interface/branch/master/graph/badge.svg)](https://codecov.io/gh/CCA-Public/dip-access-interface)
+[![pyup](https://pyup.io/repos/github/CCA-Public/dip-access-interface/shield.svg)](https://pyup.io/repos/github/CCA-Public/dip-access-interface)
+[![Python 3](https://pyup.io/repos/github/CCA-Public/dip-access-interface/python-3-shield.svg)](https://pyup.io/repos/github/CCA-Public/dip-access-interface)
+
 # DIP Access Interface
+
+* [Overview](#overview)
+* [Data model](#data-model)
+* [Uploading new DIPs](#uploading-new-dips)
+* [User types and permissions](#user-types-and-permissions)
+* [Installation](#installation)
+  * [Requirements](#requirements)
+  * [Environment](#environment)
+  * [Setup](#setup)
+  * [Serve](#serve)
+* [Development](#development)
 
 ## Overview
 
@@ -8,7 +24,7 @@ The primary application, "dips", allows users to add, organize, and interact wit
 
 [User stories](https://github.com/CCA-Public/dip-access-interface/wiki/User-Stories)
 
-## Data Model
+## Data model
 
 The application organizes and displays information in several levels:
 
@@ -39,57 +55,28 @@ By default, the application has five levels of permissions:
 
 For more information check the [user management and permissions feature file](features/user_management_and_permissions.feature).
 
-## Development environment with Docker Compose
-
-Requires [Docker CE](https://www.docker.com/community-edition) and [Docker Compose](https://docs.docker.com/compose/).
-
-Clone the repository and go to its directory:
-
-```
-git clone https://github.com/CCA-Public/dip-access-interface
-cd dip-access-interface
-```
-
-Build images, initialize services, etc.:
-
-```
-docker-compose up -d
-```
-
-Initialize database:
-
-```
-docker-compose exec accesspoc ./manage.py migrate
-```
-
-Create a superuser:
-
-```
-docker-compose exec accesspoc ./manage.py createsuperuser
-```
-
-Follow the instructions to create a user with full admin rights.
-
-To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
-
-```
-docker run --rm -t -v `pwd`:/src -w /src python:3.6 /bin/bash -c "pip install tox && tox"
-docker run --rm -t -v `pwd`:/app omercnet/tox
-```
-
-Access the logs:
-
-```
-docker-compose logs -f accesspoc
-```
-
-To access the application with the default options visit http://localhost:43430 in the browser.
-
-## Production installation
+## Installation
 
 The following steps are just an example of how to run the application in a production environment over Ubuntu 16.04.
 
-Install build requirements (as the root user):
+### Requirements
+
+* Python 3.4 or higher
+* Elasticsearch 6.x
+
+### Environment
+
+The following environment variables are used to run the application:
+
+* `ES_HOSTS` **[REQUIRED]**: List of Elasticsearch hosts separated by comma. RFC-1738 formatted URLs can be used. E.g.:`https://user:secret@host:443/`.
+* `ES_TIMEOUT`: Timeout in seconds for Elasticsearch requests. *Default:* `10`.
+* `ES_POOL_SIZE`: Elasticsearch requests pool size. *Default:* `10`.
+* `ES_INDEXES_SHARDS`: Number of shards for Elasticsearch indexes. *Default:* `1`.
+* `ES_INDEXES_REPLICAS`: Number of replicas for Elasticsearch indexes. *Default:* `0`.
+
+### Setup
+
+As the root user, install pip and virtualenv:
 
 ```
 apt-get update
@@ -101,12 +88,51 @@ rm get-pip.py
 pip install virtualenv
 ```
 
+And install Java 8 and Elasticsearch:
+
+```
+apt-get install apt-transport-https openjdk-8-jre
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+apt-get update
+apt-get install elasticsearch
+systemctl daemon-reload
+systemctl start elasticsearch
+systemctl enable elasticsearch
+```
+
+Verify Elasticsearch is running:
+
+```
+curl -XGET http://localhost:9200
+
+{
+  "name" : "ofgAtrJ",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "3h9xSrVlRJmDHgQ8FLnByA",
+  "version" : {
+    "number" : "6.3.0",
+    "build_hash" : "db0d481",
+    "build_date" : "2017-02-09T22:05:32.386Z",
+    "build_snapshot" : false,
+    "lucene_version" : "6.4.1"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
+
 Create user to own and run the application, log in and make sure you're placed in its home folder:
 
 ```
 adduser accesspoc
 su - accesspoc
 cd ~
+```
+
+Create an environment file in `~/accesspoc-env`, at least with the required variable, to reference it where it's needed, for example:
+
+```
+ES_HOSTS=localhost:9200
 ```
 
 Clone the repository and go to its directory:
@@ -116,7 +142,7 @@ git clone https://github.com/CCA-Public/dip-access-interface
 cd dip-access-interface
 ```
 
-Until different settings files are added and the environment is configured, you'll need to edit `accesspoc/accesspoc/settings.py` to add the host IP or domain address to the `ALLOWED_HOSTS` variable. E.g.:
+Until different settings files are added and this is added to the environment, you'll need to edit `accesspoc/accesspoc/settings.py` to add the host IP or domain address to the `ALLOWED_HOSTS` variable. E.g.:
 
 ```
 ALLOWED_HOSTS = ['example.com']
@@ -127,7 +153,13 @@ Create a Python virtual environment and install the application requirements:
 ```
 virtualenv venv -p python3  
 source venv/bin/activate  
-pip install -r requirements/development.txt
+pip install -r requirements/production.txt
+```
+
+Export the environment for the `manage.py` commands:
+
+```
+export $(cat ~/accesspoc-env)
 ```
 
 Initialize the database:
@@ -136,7 +168,13 @@ Initialize the database:
 accesspoc/manage.py migrate
 ```
 
-Create a superuser:
+Create search indexes:
+
+```
+accesspoc/manage.py index_data
+```
+
+Add a superuser:
 
 ```
 accesspoc/manage.py createsuperuser
@@ -150,7 +188,9 @@ You can now deactivate the environment and go back to the root session:
 deactivate && exit
 ```
 
-The application requirements install Gunicorn and WhiteNoise to serve the application, including the static files. Make a systemd service file to run the Gunicorn daemon in `/etc/systemd/system/accesspoc-gunicorn.service`, with the following content:
+### Serve
+
+The application requirements install Gunicorn and WhiteNoise to serve the application, including the static files. Back as the root user, make a systemd service file to run the Gunicorn daemon in `/etc/systemd/system/accesspoc-gunicorn.service`, with the following content:
 
 ```
 [Unit]
@@ -162,6 +202,7 @@ User=accesspoc
 Group=accesspoc
 PrivateTmp=true
 PIDFile=/home/accesspoc/accesspoc-gunicorn.pid
+EnvironmentFile=/home/accesspoc/accesspoc-env
 WorkingDirectory=/home/accesspoc/dip-access-interface/accesspoc
 ExecStart=/home/accesspoc/dip-access-interface/venv/bin/gunicorn \
             --access-logfile /dev/null \
@@ -205,7 +246,7 @@ upstream accesspoc {
 
 server {
   listen 80;
-  server_name _;
+  server_name example.com;
   client_max_body_size 500M;
 
   location / {
@@ -231,3 +272,55 @@ Verify configuration and restart Nginx service:
 nginx -t
 systemctl restart nginx
 ```
+
+## Development
+
+Requires [Docker CE](https://www.docker.com/community-edition) and [Docker Compose](https://docs.docker.com/compose/).
+
+Clone the repository and go to its directory:
+
+```
+git clone https://github.com/CCA-Public/dip-access-interface
+cd dip-access-interface
+```
+
+Build images, initialize services, etc.:
+
+```
+docker-compose up -d
+```
+
+Initialize database:
+
+```
+docker-compose exec accesspoc ./manage.py migrate
+```
+
+Create search indexes:
+
+```
+docker-compose exec accesspoc ./manage.py index_data
+```
+
+Add a superuser:
+
+```
+docker-compose exec accesspoc ./manage.py createsuperuser
+```
+
+Follow the instructions to create a user with full admin rights.
+
+To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
+
+```
+docker run --rm -t -v `pwd`:/src -w /src python:3.6 /bin/bash -c "pip install tox && tox"
+docker run --rm -t -v `pwd`:/app omercnet/tox
+```
+
+Access the logs:
+
+```
+docker-compose logs -f accesspoc elasticsearch
+```
+
+To access the application with the default options visit http://localhost:43430 in the browser.

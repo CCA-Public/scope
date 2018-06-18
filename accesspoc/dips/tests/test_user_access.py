@@ -1,7 +1,9 @@
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.contrib.auth.models import Group
+from unittest.mock import patch
+
 from dips.models import User, Collection, DIP, DigitalFile
 
 import os
@@ -116,7 +118,8 @@ GET_PAGES = {
 
 
 class UserAccessTests(TestCase):
-    def setUp(self):
+    @patch('elasticsearch_dsl.DocType.save')
+    def setUp(self, patch):
         # Create test users
         User.objects.create_superuser('admin', 'admin@example.com', 'admin')
         User.objects.create_user('basic', 'basic@example.com', 'basic')
@@ -141,11 +144,12 @@ class UserAccessTests(TestCase):
             size_bytes=1
         )
 
-    def test_get_pages(self):
-        '''
+    @patch('elasticsearch_dsl.Search.execute')
+    def test_get_pages(self, patch):
+        """
         Makes get requests to pages with different user types logged in
         and verifies if the user can see the page or gets redirected.
-        '''
+        """
         for page, responses in GET_PAGES.items():
             if page in ['edit_user']:
                 url = reverse(page, kwargs={'pk': self.user.pk})
@@ -166,10 +170,10 @@ class UserAccessTests(TestCase):
                 self.client.logout()
 
     def test_post_user(self):
-        '''
+        """
         Makes post requests to create and edit user pages with different
         user types logged in and verifies the results.
-        '''
+        """
         new_url = reverse('new_user')
         new_data = {
             'username': 'test2',
@@ -263,11 +267,12 @@ class UserAccessTests(TestCase):
         self.assertTrue(User.objects.filter(username='test_changed_2').exists())
         self.client.logout()
 
-    def test_post_collection(self):
-        '''
+    @patch('elasticsearch_dsl.DocType.save')
+    def test_post_collection(self, patch):
+        """
         Makes post requests to create and edit collection pages with different
         user types logged in and verifies the results.
-        '''
+        """
         new_url = reverse('new_collection')
         new_data = {
             'identifier': '2',
@@ -359,11 +364,12 @@ class UserAccessTests(TestCase):
         self.assertTrue(Collection.objects.filter(title='test_collection_3').exists())
         self.client.logout()
 
-    def test_post_dip(self):
-        '''
+    @patch('elasticsearch_dsl.DocType.save')
+    def test_post_dip(self, patch):
+        """
         Makes post requests to create and edit DIP pages with different
         user types logged in and verifies the results.
-        '''
+        """
         new_url = reverse('new_dip')
         new_data = {
             'identifier': 'B',
@@ -455,11 +461,12 @@ class UserAccessTests(TestCase):
         self.assertTrue(DIP.objects.filter(title='test_dip_3').exists())
         self.client.logout()
 
-    def test_delete_dip(self):
-        '''
+    @patch('dips.models.delete_document')
+    def test_delete_dip(self, patch):
+        """
         Makes post request to delete a DIP with different
         user types logged in and verifies the results.
-        '''
+        """
         url = reverse('delete_dip', kwargs={'identifier': self.dip.identifier})
         data = {
             'identifier': 'A',
@@ -513,11 +520,12 @@ class UserAccessTests(TestCase):
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count + 1)
 
-    def test_delete_collection(self):
-        '''
+    @patch('dips.models.delete_document')
+    def test_delete_collection(self, patch):
+        """
         Makes post request to delete a collection with different
         user types logged in and verifies the results.
-        '''
+        """
         url = reverse('delete_collection', kwargs={'identifier': self.collection.identifier})
         data = {
             'identifier': '1',

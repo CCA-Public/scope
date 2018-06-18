@@ -10,19 +10,21 @@
 {% block content %}
   <h2>Collection description</h2>
   <br>
-  <p><strong>Identifier:</strong> {{ collection.identifier }}</p>
-  <p><strong>Title:</strong> {{ collection.title }}</p>
-  <p><strong>Date:</strong> {{ collection.date }}</p>
-  <p><strong>Creator:</strong> {{ collection.creator }}</p>
-  <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
-  <p><strong>Description:</strong> {{ collection.description }}</p>
-  <p><strong>Finding aid:</strong> <a href="{{ collection.link }}">{{ collection.link }}</a></p>
-  {% if user.is_editor %}
-    <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
-  {% endif %}
-  {% if user.is_superuser %}
-    <a href="{% url 'delete_collection' collection.identifier %}"><button class="btn btn-danger">Delete</button></a>
-  {% endif %}
+  <div>
+    <p><strong>Identifier:</strong> {{ collection.identifier }}</p>
+    <p><strong>Title:</strong> {{ collection.title }}</p>
+    <p><strong>Date:</strong> {{ collection.date }}</p>
+    <p><strong>Creator:</strong> {{ collection.creator }}</p>
+    <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
+    <p><strong>Description:</strong> {{ collection.description }}</p>
+    <p><strong>Finding aid:</strong> <a href="{{ collection.link }}">{{ collection.link }}</a></p>
+    {% if user.is_editor %}
+      <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
+    {% endif %}
+    {% if user.is_superuser %}
+      <a href="{% url 'delete_collection' collection.identifier %}"><button class="btn btn-danger">Delete</button></a>
+    {% endif %}
+  </div>
   <br>
   <h2>Folders in this collection</h2>
   <br>
@@ -35,7 +37,7 @@
         <td><strong>Description</strong></td>
         <td><strong>Details</strong></td>
       </tr>
-    {% for dip in collection.dips.all %}
+    {% for dip in dips %}
       <tr>
         <td>{{ dip.identifier }}</td>
         <td>{{ dip.title }}</td>

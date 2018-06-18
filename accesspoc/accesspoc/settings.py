@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+from envparse import env
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
 
     'widget_tweaks',
 
-    'dips',
+    'dips.apps.DipsConfig',
+    'search.apps.SearchConfig',
 
     'django_cleanup'  # deletes FileFields when objects are deleted
 ]
@@ -142,3 +144,20 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'
+
+# Fixtures
+
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'dips', 'tests', 'fixtures'),
+]
+
+# Elasticsearch
+
+# RFC-1738 formatted URLs can be used. E.g.:'https://user:secret@host:443/'
+ES_HOSTS = env('ES_HOSTS', cast=list, subcast=str)
+ES_TIMEOUT = env.int('ES_TIMEOUT', default=10)
+ES_POOL_SIZE = env.int('ES_POOL_SIZE', default=10)
+ES_INDEXES_SETTINGS = {
+    'number_of_shards': env.int('ES_INDEXES_SHARDS', default=1),
+    'number_of_replicas': env.int('ES_INDEXES_REPLICAS', default=0),
+}

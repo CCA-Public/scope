@@ -1,8 +1,10 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.urls import resolve
 from django.test import TestCase
+from django.urls import resolve
+from unittest.mock import patch
+
 from dips.views import dip
 from dips.models import Collection, DIP
 
@@ -10,7 +12,8 @@ import os
 
 
 class DIPTests(TestCase):
-    def setUp(self):
+    @patch('elasticsearch_dsl.DocType.save')
+    def setUp(self, patch):
         User = get_user_model()
         User.objects.create_user('temp', 'temp@example.com', 'temp')
         self.client.login(username='temp', password='temp')
@@ -27,7 +30,8 @@ class DIPTests(TestCase):
             objectszip=os.path.join(settings.MEDIA_ROOT, 'fake.zip'),
         )
 
-    def test_dip_view_success_status_code(self):
+    @patch('elasticsearch_dsl.Search.execute')
+    def test_dip_view_success_status_code(self, patch):
         url = reverse('dip', kwargs={'identifier': 'AP999.S1.001'})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

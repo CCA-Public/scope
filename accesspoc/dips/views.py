@@ -15,7 +15,7 @@ import zipfile
 
 @login_required(login_url='/login/')
 def home(request):
-    collections = Collection.objects.all().order_by('identifier')
+    collections = Collection.es_doc.search().sort('identifier.raw')
     return render(request, 'home.html', {'collections': collections})
 
 
@@ -119,20 +119,28 @@ def edit_user(request, pk):
 
 @login_required(login_url='/login/')
 def search(request):
-    digitalfiles = DigitalFile.objects.all()
-    return render(request, 'search.html', {'digitalfiles': digitalfiles})
+    digital_files = DigitalFile.es_doc.search()
+    return render(request, 'search.html', {'digital_files': digital_files})
 
 
 @login_required(login_url='/login/')
 def collection(request, identifier):
     collection = get_object_or_404(Collection, identifier=identifier)
-    return render(request, 'collection.html', {'collection': collection})
+    dips = DIP.es_doc.search().query(
+        'match',
+        **{'ispartof.identifier': identifier},
+    ).sort('identifier.raw')
+    return render(request, 'collection.html', {'collection': collection, 'dips': dips})
 
 
 @login_required(login_url='/login/')
 def dip(request, identifier):
     dip = get_object_or_404(DIP, identifier=identifier)
-    return render(request, 'dip.html', {'dip': dip})
+    digital_files = DigitalFile.es_doc.search().query(
+        'match',
+        **{'dip.identifier': identifier},
+    ).sort('filepath.raw')
+    return render(request, 'dip.html', {'dip': dip, 'digital_files': digital_files})
 
 
 @login_required(login_url='/login/')
