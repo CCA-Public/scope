@@ -1,5 +1,5 @@
 Feature: User management and permissions
-  The CCArchitects DIP access application has five major user types:
+  The CCA DIP access application has five major user types:
     - Administrators: Administrators in user stories.
     - Managers: Reference librarians in user stories.
     - Editors: Processing Archivist in user stories.
@@ -8,7 +8,7 @@ Feature: User management and permissions
   This user types have different permission over the application:
 
   Scenario: Administrators
-    Given a DIP access application running
+    Given an instance running
     And a superuser created in the database with the Django task
     When an administrator logs in the app with that superuser credentials
     Then the administrator is able to view, create and edit users
@@ -18,7 +18,7 @@ Feature: User management and permissions
     And the administrator has access to all the parts of the application
 
   Scenario: Managers
-    Given a DIP access application running
+    Given an instance running
     And a user that belongs to the "Managers" group created in the application
     When a manager logs in the application with that user credentials
     Then the manager is able to view, create and edit users
@@ -28,7 +28,7 @@ Feature: User management and permissions
     And the manager has access to all the view parts of the application
 
   Scenario: Editors
-    Given a DIP access aplication running
+    Given an instance running
     And a user that belongs to the "Editors" group created in the application
     When an editor logs in the application with that user credentials
     Then the editor can't view or manage users
@@ -36,7 +36,7 @@ Feature: User management and permissions
     And the editor has access to all the view parts of the application
 
   Scenario: Viewer
-    Given a DIP access aplication running
+    Given an instance running
     And a user that is not an administrator and doesn't belongs to any group created in the application
     When a viewer logs in the application with that user credentials
     Then the viewer can browse and view Collections
@@ -47,7 +47,7 @@ Feature: User management and permissions
     And the viewer cannot create, edit or delete Collections or Folders
 
   Scenario: Unauthenticated
-    Given a DIP access application running
+    Given an instance running
     When a user without credentials tries to access the application
     Then the unauthenticated user can only see the FAQ and the login pages
     And all the other pages will redirect the unauthenticated user to the login page
