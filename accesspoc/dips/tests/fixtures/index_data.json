@@ -1,27 +1,27 @@
 [
 {
   "model": "dips.collection",
-  "pk": "123",
+  "pk": 1,
   "fields": {}
 },
 {
   "model": "dips.collection",
-  "pk": "456",
+  "pk": 2,
   "fields": {}
 },
 {
   "model": "dips.dip",
-  "pk": "ABC",
+  "pk": 1,
   "fields": {
-    "ispartof": "123",
+    "collection": 1,
     "uploaded": "2018-06-12T05:09:47.368Z"
   }
 },
 {
   "model": "dips.dip",
-  "pk": "DEF",
+  "pk": 2,
   "fields": {
-    "ispartof": "456",
+    "collection": 2,
     "uploaded": "2018-06-12T05:10:14.497Z"
   }
 },
@@ -30,7 +30,7 @@
   "pk": "070b9cd9-a502-49c9-8b79-22abec1efd7e",
   "fields": {
     "size_bytes": 1361321,
-    "dip": "DEF"
+    "dip": 2
   }
 },
 {
@@ -38,7 +38,7 @@
   "pk": "07263cdf-d11f-4d24-9e16-ef46f002d037",
   "fields": {
     "size_bytes": 1080282,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -46,7 +46,7 @@
   "pk": "35fa094d-dda9-432c-ab0c-329f798a620e",
   "fields": {
     "size_bytes": 1361321,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -54,7 +54,7 @@
   "pk": "4d6b532c-2c51-4aa3-91cd-9c4618e775a4",
   "fields": {
     "size_bytes": 125968,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -62,7 +62,7 @@
   "pk": "4fcd3a88-c994-4cc2-8f85-a28dd0b38dc6",
   "fields": {
     "size_bytes": 1041114,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -70,7 +70,7 @@
   "pk": "56864c46-fc69-4b6a-86cb-9cd78d832407",
   "fields": {
     "size_bytes": 4261301,
-    "dip": "DEF"
+    "dip": 2
   }
 },
 {
@@ -78,7 +78,7 @@
   "pk": "57f074ea-e37f-4e52-afa0-6b8ca08d3137",
   "fields": {
     "size_bytes": 527345,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -86,7 +86,7 @@
   "pk": "61e8a632-2fc8-438b-8e77-e4ca2ec36fc0",
   "fields": {
     "size_bytes": 18324,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -94,7 +94,7 @@
   "pk": "92870e0b-8e38-4603-9b2c-3c93e4539ff1",
   "fields": {
     "size_bytes": 2050617,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -102,7 +102,7 @@
   "pk": "d3e6163e-4bc3-44a0-b0dd-ca43631ea71a",
   "fields": {
     "size_bytes": 113318,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -110,7 +110,7 @@
   "pk": "e019b788-267d-4c16-8254-cad01eeab3fb",
   "fields": {
     "size_bytes": 4261301,
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {
@@ -118,7 +118,7 @@
   "pk": "f78f0b06-7968-4e44-afc3-0a2883375ece",
   "fields": {
     "size_bytes": 1437654,
-    "dip": "ABC"
+    "dip": 1
   }
 }
 ]

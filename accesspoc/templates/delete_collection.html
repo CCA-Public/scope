@@ -5,7 +5,8 @@
 {% block title %}Delete Collection{% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collection</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'collection' collection.pk %}">{{ collection }}</a></li>
   <li class="breadcrumb-item active">Delete</li>
 {% endblock %}
 

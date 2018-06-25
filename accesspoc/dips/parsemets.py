@@ -95,6 +95,9 @@ class METS(object):
         # Build xml document root
         mets_root = root
 
+        # Get DIP object
+        dip = DIP.objects.get(pk=self.dip_id)
+
         # Gather info for each file in filegroup "original"
         for target in mets_root.findall(".//fileGrp[@USE='original']/file"):
 
@@ -168,7 +171,7 @@ class METS(object):
                 size_bytes=file_data['bytes'], size_human=file_data['size'],
                 datemodified=file_data['modified_ois'], puid=file_data['puid'],
                 amdsec=file_data['amdsec_id'], hashtype=file_data['hashtype'],
-                hashvalue=file_data['hashvalue'], dip=DIP.objects.get(identifier=self.dip_id),
+                hashvalue=file_data['hashvalue'], dip=dip,
             )
             digitalfile.save()
 
@@ -187,31 +190,32 @@ class METS(object):
 
         # Update DIP model object - not ispartof (hardset)
         if dc_model:
-            dip = DIP.objects.get(identifier=self.dip_id)
-            if 'title' in dc_model and dc_model['title'] is not None:
-                dip.title = dc_model['title']
-            if 'creator' in dc_model and dc_model['creator'] is not None:
-                dip.creator = dc_model['creator']
-            if 'subject' in dc_model and dc_model['subject'] is not None:
-                dip.subject = dc_model['subject']
-            if 'description' in dc_model and dc_model['description'] is not None:
-                dip.description = dc_model['description']
-            if 'publisher' in dc_model and dc_model['publisher'] is not None:
-                dip.publisher = dc_model['publisher']
-            if 'contributor' in dc_model and dc_model['contributor'] is not None:
-                dip.contributor = dc_model['contributor']
-            if 'date' in dc_model and dc_model['date'] is not None:
-                dip.date = dc_model['date']
-            if 'type' in dc_model and dc_model['type'] is not None:
-                dip.dctype = dc_model['type']
-            if 'format' in dc_model and dc_model['format'] is not None:
-                dip.dcformat = dc_model['format']
-            if 'source' in dc_model and dc_model['source'] is not None:
-                dip.source = dc_model['source']
-            if 'language' in dc_model and dc_model['language'] is not None:
-                dip.language = dc_model['language']
-            if 'coverage' in dc_model and dc_model['coverage'] is not None:
-                dip.coverage = dc_model['coverage']
-            if 'rights' in dc_model and dc_model['rights'] is not None:
-                dip.rights = dc_model['rights']
+            if dc_model['title']:
+                dip.dc.title = dc_model['title']
+            if dc_model['creator']:
+                dip.dc.creator = dc_model['creator']
+            if dc_model['subject']:
+                dip.dc.subject = dc_model['subject']
+            if dc_model['description']:
+                dip.dc.description = dc_model['description']
+            if dc_model['publisher']:
+                dip.dc.publisher = dc_model['publisher']
+            if dc_model['contributor']:
+                dip.dc.contributor = dc_model['contributor']
+            if dc_model['date']:
+                dip.dc.date = dc_model['date']
+            if dc_model['type']:
+                dip.dc.type = dc_model['type']
+            if dc_model['format']:
+                dip.dc.format = dc_model['format']
+            if dc_model['source']:
+                dip.dc.source = dc_model['source']
+            if dc_model['language']:
+                dip.dc.language = dc_model['language']
+            if dc_model['coverage']:
+                dip.dc.coverage = dc_model['coverage']
+            if dc_model['rights']:
+                dip.dc.rights = dc_model['rights']
+            dip.dc.save()
+            # Trigger ES update
             dip.save()

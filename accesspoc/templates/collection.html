@@ -1,28 +1,23 @@
 {% extends 'base.html' %}{% load custom_tags %}
 
-{% block title %}Collection {{ collection.identifier }}{% endblock %}
+{% block title %}Collection {{ collection }}{% endblock %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
-  <li class="breadcrumb-item active">{{ collection.identifier }}</li>
+  <li class="breadcrumb-item active">{{ collection }}</li>
 {% endblock %}
 
 {% block content %}
   <h2>Collection description</h2>
   <br>
   <div>
-    <p><strong>Identifier:</strong> {{ collection.identifier }}</p>
-    <p><strong>Title:</strong> {{ collection.title }}</p>
-    <p><strong>Date:</strong> {{ collection.date }}</p>
-    <p><strong>Creator:</strong> {{ collection.creator }}</p>
-    <p><strong>Format:</strong> {{ collection.dcformat|safe }}</p>
-    <p><strong>Description:</strong> {{ collection.description }}</p>
+    {% include 'includes/dc.html' with dc=collection.dc %}
     <p><strong>Finding aid:</strong> <a href="{{ collection.link }}">{{ collection.link }}</a></p>
     {% if user.is_editor %}
-      <a href="{% url 'edit_collection' collection.identifier %}"><button class="btn btn-default">Edit</button></a>
+      <a href="{% url 'edit_collection' collection.pk %}"><button class="btn btn-default">Edit</button></a>
     {% endif %}
     {% if user.is_superuser %}
-      <a href="{% url 'delete_collection' collection.identifier %}"><button class="btn btn-danger">Delete</button></a>
+      <a href="{% url 'delete_collection' collection.pk %}"><button class="btn btn-danger">Delete</button></a>
     {% endif %}
   </div>
   <br>
@@ -39,11 +34,11 @@
       </tr>
     {% for dip in dips %}
       <tr>
-        <td>{{ dip.identifier }}</td>
-        <td>{{ dip.title }}</td>
-        <td>{{ dip.date }}</td>
-        <td>{{ dip.description|safe }}</td>
-        <td><a href="{% url 'dip' dip.identifier %}"><button class="btn btn-primary">View</button></a></td>
+        <td>{{ dip.dc.identifier }}</td>
+        <td>{{ dip.dc.title|default:'' }}</td>
+        <td>{{ dip.dc.date|default:'' }}</td>
+        <td>{{ dip.dc.description|default:''|safe }}</td>
+        <td><a href="{% url 'dip' dip.meta.id %}"><button class="btn btn-primary">View</button></a></td>
       </tr>
     {% endfor %}
     </table>

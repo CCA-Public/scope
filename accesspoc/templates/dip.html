@@ -1,12 +1,12 @@
 {% extends 'base.html' %}{% load custom_tags %}
 
-{% block title %}Folder {{ dip.identifier }}{% endblock %}
+{% block title %}Folder {{ dip }}{% endblock %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'collection' dip.ispartof %}">{{ dip.ispartof }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection }}</a></li>
   <li class="breadcrumb-item">Folder</li>
-  <li class="breadcrumb-item active">{{ dip.identifier }}</li>
+  <li class="breadcrumb-item active">{{ dip }}</li>
 {% endblock %}
 
 {% block content %}
@@ -14,17 +14,12 @@
     <div class="col-md-7">
       <h2>Folder description</h2>
       <br>
-      <p><strong>Identifier:</strong> {{ dip.identifier }}</p>
-      <p><strong>Title:</strong> {{ dip.title }}</p>
-      <p><strong>Date:</strong> {{ dip.date }}</p>
-      <p><strong>Creator:</strong> {{ dip.creator }}</p>
-      <p><strong>Format:</strong> {{ dip.dcformat|safe }}</p>
-      <p><strong>Description:</strong> {{ dip.description|safe }}</p>
+      {% include 'includes/dc.html' with dc=dip.dc %}
       {% if user.is_editor %}
-        <a href="{% url 'edit_dip' dip.identifier %}"><button class="btn btn-default">Edit</button></a>
+        <a href="{% url 'edit_dip' dip.pk %}"><button class="btn btn-default">Edit</button></a>
       {% endif %}
       {% if user.is_superuser %}
-        <a href="{% url 'delete_dip' dip.identifier %}"><button class="btn btn-danger">Delete</button></a>
+        <a href="{% url 'delete_dip' dip.pk %}"><button class="btn btn-danger">Delete</button></a>
       {% endif %}
     </div>
     <div class="col-md-5">
@@ -52,8 +47,8 @@
         <td>{{ digital_file.filepath }}</td>
         <td>{{ digital_file.fileformat }}</td>
         <td>{{ digital_file.size_bytes }}</td>
-        <td>{{ digital_file.datemodified }}</td>
-        <td><a href="{% url 'digital_file' digital_file.uuid %}"><button class="btn btn-primary">View</button></a></td>
+        <td>{{ digital_file.datemodified|default:'' }}</td>
+        <td><a href="{% url 'digital_file' digital_file.meta.id %}"><button class="btn btn-primary">View</button></a></td>
       </tr>
     {% endfor %}
     </table>

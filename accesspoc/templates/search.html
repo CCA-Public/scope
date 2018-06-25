@@ -25,9 +25,9 @@
         <td>{{ digital_file.filepath }}</td>
         <td>{{ digital_file.fileformat }}</td>
         <td>{{ digital_file.size_bytes }}</td>
-        <td>{{ digital_file.datemodified }}</td>
-        <td><a href="{% url 'dip' digital_file.dip.identifier %}">{{ digital_file.dip.identifier }}</a></td>
-        <td><a href="{% url 'digital_file' digital_file.uuid %}"><button class="btn btn-primary">View</button></a></td>
+        <td>{{ digital_file.datemodified|default:'' }}</td>
+        <td><a href="{% url 'dip' digital_file.dip.id %}">{{ digital_file.dip.identifier }}</a></td>
+        <td><a href="{% url 'digital_file' digital_file.meta.id %}"><button class="btn btn-primary">View</button></a></td>
       </tr>
     {% endfor %}
     </table>

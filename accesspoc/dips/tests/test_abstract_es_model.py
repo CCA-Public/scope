@@ -17,7 +17,7 @@ class AemNoProperty(AbstractEsModel):
         abstract = True
 
     def get_es_data(self):
-        return {}
+        """Implemented"""
 
 
 class AemOkay(AbstractEsModel):

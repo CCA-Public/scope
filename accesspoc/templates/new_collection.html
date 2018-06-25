@@ -12,7 +12,8 @@
 {% block content %}
   <form method="post" novalidate>
     {% csrf_token %}
-    {% include 'includes/form.html' %}
+    {% include 'includes/form.html' with form=dc_form %}
+    {% include 'includes/form.html' with form=collection_form %}
     <button type="submit" class="btn btn-success">Submit</button>
   </form>
 {% endblock %}

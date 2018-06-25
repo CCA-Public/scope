@@ -14,6 +14,7 @@ from django.contrib.auth.models import AbstractUser
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 from search.functions import delete_document
+from .helpers import add_if_not_empty
 
 
 class User(AbstractUser):
@@ -67,82 +68,88 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
         )
 
 
-class Collection(AbstractEsModel):
-    identifier = models.CharField(max_length=50, primary_key=True)
+class DublinCore(models.Model):
+    identifier = models.CharField(max_length=50)
     title = models.CharField(max_length=200, blank=True)
     creator = models.CharField(max_length=200, blank=True)
     subject = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True)
     publisher = models.CharField(max_length=200, blank=True)
     contributor = models.CharField(max_length=200, blank=True)
     date = models.CharField(max_length=21, blank=True)
-    dctype = models.CharField(max_length=200, blank=True)
-    dcformat = models.TextField(blank=True, null=True)
+    type = models.CharField(max_length=200, blank=True)
+    format = models.TextField(blank=True)
     source = models.CharField(max_length=200, blank=True)
     language = models.CharField(max_length=20, blank=True)
     coverage = models.CharField(max_length=200, blank=True)
     rights = models.CharField(max_length=200, blank=True)
-    link = models.URLField(blank=True)
 
     def __str__(self):
         return self.identifier
+
+    def get_es_inner_data(self):
+        data = {'identifier': self.identifier}
+        add_if_not_empty(data, 'title', self.title)
+        add_if_not_empty(data, 'date', self.date)
+        add_if_not_empty(data, 'description', self.description)
+
+        return data
+
+
+class Collection(AbstractEsModel):
+    link = models.URLField(blank=True)
+    dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return str(self.dc) or str(self.pk)
 
     es_doc = CollectionDoc
 
     def get_es_data(self):
-        return {
+        data = {
             '_id': self.pk,
-            'identifier': self.identifier,
-            'title': self.title,
-            'date': self.date,
-            'description': self.description,
         }
+
+        if self.dc:
+            data['dc'] = self.dc.get_es_inner_data()
+
+        return data
 
 
 class DIP(AbstractEsModel):
-    identifier = models.CharField(max_length=50, primary_key=True)
-    ispartof = models.ForeignKey(Collection, related_name='dips')
-    title = models.CharField(max_length=200, blank=True)
-    creator = models.CharField(max_length=200, blank=True)
-    subject = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True, null=True)
-    publisher = models.CharField(max_length=200, blank=True)
-    contributor = models.CharField(max_length=200, blank=True)
-    date = models.CharField(max_length=21, blank=True)
-    dctype = models.CharField(max_length=200, blank=True)
-    dcformat = models.TextField(blank=True, null=True)
-    source = models.CharField(max_length=200, blank=True)
-    language = models.CharField(max_length=20, blank=True)
-    coverage = models.CharField(max_length=200, blank=True)
-    rights = models.CharField(max_length=200, blank=True)
     objectszip = models.FileField()
     uploaded = models.DateTimeField(auto_now_add=True)
+    collection = models.ForeignKey(Collection, related_name='dips')
+    dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return self.identifier
+        return str(self.dc) or str(self.pk)
 
     es_doc = DIPDoc
 
     def get_es_data(self):
-        return {
+        data = {
             '_id': self.pk,
-            'identifier': self.identifier,
-            'title': self.title,
-            'date': self.date,
-            'description': self.description,
-            'ispartof': {
-                'identifier': self.ispartof.identifier,
-                'title': self.ispartof.title,
-            }
         }
+
+        if self.dc:
+            data['dc'] = self.dc.get_es_inner_data()
+
+        if self.collection.dc:
+            data['collection'] = {
+                'id': self.collection.pk,
+                'identifier': self.collection.dc.identifier,
+            }
+
+        return data
 
 
 class DigitalFile(AbstractEsModel):
-    uuid = models.CharField(max_length=32, primary_key=True)
+    uuid = models.CharField(max_length=36, primary_key=True)
     filepath = models.TextField()
     fileformat = models.CharField(max_length=200)
     formatversion = models.CharField(max_length=200, blank=True, null=True)
-    size_bytes = models.IntegerField()
+    size_bytes = models.BigIntegerField()
     size_human = models.CharField(max_length=10, blank=True)
     datemodified = models.CharField(max_length=30, blank=True)
     puid = models.CharField(max_length=11, blank=True)
@@ -157,22 +164,26 @@ class DigitalFile(AbstractEsModel):
     es_doc = DigitalFileDoc
 
     def get_es_data(self):
-        return {
+        data = {
             '_id': self.pk,
             'uuid': self.uuid,
             'filepath': self.filepath,
             'fileformat': self.fileformat,
             'size_bytes': self.size_bytes,
-            'datemodified': self.datemodified,
-            'dip': {
-                'identifier': self.dip.identifier,
-                'title': self.dip.title,
-            }
         }
+        add_if_not_empty(data, 'datemodified', self.datemodified)
+
+        if self.dip.dc:
+            data['dip'] = {
+                'id': self.dip.pk,
+                'identifier': self.dip.dc.identifier,
+            }
+
+        return data
 
 
 class PREMISEvent(models.Model):
-    uuid = models.CharField(max_length=32, primary_key=True)
+    uuid = models.CharField(max_length=36, primary_key=True)
     eventtype = models.CharField(max_length=200, blank=True)
     datetime = models.CharField(max_length=50, blank=True)
     detail = models.TextField(blank=True, null=True)

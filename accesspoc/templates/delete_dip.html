@@ -5,7 +5,10 @@
 {% block title %}Delete Folder{% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'home' %}">Folder</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection }}</a></li>
+  <li class="breadcrumb-item">Folder</li>
+  <li class="breadcrumb-item"><a href="{% url 'dip' dip.pk %}">{{ dip }}</a></li>
   <li class="breadcrumb-item active">Delete</li>
 {% endblock %}
 

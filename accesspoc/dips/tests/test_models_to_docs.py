@@ -9,37 +9,41 @@ class ModelsToDocsTests(TestCase):
 
     def test_collection(self):
         # Test data transformation
-        collection = Collection.objects.get(identifier='123')
+        collection = Collection.objects.get(pk=1)
         doc_dict = {
-            '_id': '123',
-            'identifier': '123',
-            'title': 'Example collection',
-            'date': 'Example date',
-            'description': 'Example description',
+            '_id': 1,
+            'dc': {
+                'identifier': '123',
+                'title': 'Example collection',
+                'date': 'Example date',
+                'description': 'Example description',
+            },
         }
         self.assertEqual(doc_dict, collection.get_es_data())
 
         # Verify DocType creation, avoid already tested transformation
         with patch.object(Collection, 'get_es_data', return_value=doc_dict):
             doc = collection.to_es_doc()
-            self.assertEqual(collection.identifier, doc.meta.id)
+            self.assertEqual(collection.pk, doc.meta.id)
             self.assertEqual(
                 repr(doc),
-                "CollectionDoc(index='accesspoc_collections', id='123')"
+                "CollectionDoc(index='accesspoc_collections', id=1)"
             )
 
     def test_dip(self):
         # Test data transformation
-        dip = DIP.objects.get(identifier='ABC')
+        dip = DIP.objects.get(pk=1)
         doc_dict = {
-            '_id': 'ABC',
-            'identifier': 'ABC',
-            'title': 'Example DIP',
-            'date': 'Example date',
-            'description': 'Example description',
-            'ispartof': {
+            '_id': 1,
+            'dc': {
+                'identifier': 'ABC',
+                'title': 'Example DIP',
+                'date': 'Example date',
+                'description': 'Example description',
+            },
+            'collection': {
+                'id': 1,
                 'identifier': '123',
-                'title': 'Example collection',
             }
         }
         self.assertEqual(doc_dict, dip.get_es_data())
@@ -47,10 +51,10 @@ class ModelsToDocsTests(TestCase):
         # Verify DocType creation, avoid already tested transformation
         with patch.object(DIP, 'get_es_data', return_value=doc_dict):
             doc = dip.to_es_doc()
-            self.assertEqual(dip.identifier, doc.meta.id)
+            self.assertEqual(dip.pk, doc.meta.id)
             self.assertEqual(
                 repr(doc),
-                "DIPDoc(index='accesspoc_dips', id='ABC')"
+                "DIPDoc(index='accesspoc_dips', id=1)"
             )
 
     def test_digital_file(self):
@@ -66,8 +70,8 @@ class ModelsToDocsTests(TestCase):
             'size_bytes': 1080282,
             'datemodified': '2018-02-08T20:00:57',
             'dip': {
+                'id': 1,
                 'identifier': 'ABC',
-                'title': 'Example DIP',
             }
         }
         self.assertEqual(doc_dict, digital_file.get_es_data())

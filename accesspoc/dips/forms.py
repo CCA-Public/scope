@@ -2,74 +2,18 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
-from .models import User, Collection, DIP
+from .models import User, DublinCore
 
 
-class CollectionForm(forms.ModelForm):
-    dcformat = forms.CharField(
-        widget=forms.Textarea(), label="Format",
-        max_length=4000, required=False,
-    )
-    description = forms.CharField(
-        widget=forms.Textarea(),
-        max_length=4000, required=False,
-    )
-
+class DeleteByDublinCoreForm(forms.ModelForm):
     class Meta:
-        model = Collection
-        fields = [
-            'identifier', 'title', 'creator',
-            'subject', 'description', 'publisher', 'contributor',
-            'date', 'dctype', 'dcformat', 'source', 'language',
-            'coverage', 'rights', 'link',
-        ]
-        labels = {
-            "dctype": "Type",
-        }
-
-
-class EditDIPForm(forms.ModelForm):
-    dcformat = forms.CharField(
-        widget=forms.Textarea(), label="Format",
-        max_length=4000, required=False,
-    )
-    description = forms.CharField(
-        widget=forms.Textarea(),
-        max_length=4000, required=False,
-    )
-
-    class Meta:
-        model = DIP
-        fields = [
-            'title', 'creator', 'subject', 'description',
-            'publisher', 'contributor', 'date', 'dctype',
-            'dcformat', 'source', 'language', 'coverage', 'rights',
-        ]
-        labels = {
-            "dctype": "Type",
-        }
-
-
-class NewDIPForm(forms.ModelForm):
-    class Meta:
-        model = DIP
-        fields = ['identifier', 'ispartof', 'objectszip']
-        labels = {
-            "ispartof": "Collection",
-            "objectszip": "Objects zip file",
-        }
-
-
-class DeleteCollectionForm(forms.ModelForm):
-    class Meta:
-        model = Collection
+        model = DublinCore
         fields = ['identifier']
 
-
-class DeleteDIPForm(forms.ModelForm):
-    class Meta:
-        model = DIP
-        fields = ['identifier']
+    def clean_identifier(self):
+        if self.instance.identifier != self.cleaned_data['identifier']:
+            raise forms.ValidationError('Identifier does not match')
+        return self.cleaned_data['identifier']
 
 
 class UserCreationForm(UserCreationForm):

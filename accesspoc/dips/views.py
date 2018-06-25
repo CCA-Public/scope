@@ -1,9 +1,10 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.forms import modelform_factory
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User, Collection, DIP, DigitalFile
-from .forms import CollectionForm, EditDIPForm, NewDIPForm, DeleteCollectionForm, DeleteDIPForm, UserCreationForm, UserChangeForm
+from .models import User, Collection, DIP, DigitalFile, DublinCore
+from .forms import DeleteByDublinCoreForm, UserCreationForm, UserChangeForm
 from .parsemets import METS
 
 import os
@@ -15,7 +16,7 @@ import zipfile
 
 @login_required(login_url='/login/')
 def home(request):
-    collections = Collection.es_doc.search().sort('identifier.raw')
+    collections = Collection.es_doc.search().sort('dc.identifier.raw')
     return render(request, 'home.html', {'collections': collections})
 
 
@@ -119,37 +120,35 @@ def edit_user(request, pk):
 
 @login_required(login_url='/login/')
 def search(request):
-    digital_files = DigitalFile.es_doc.search()
+    digital_files = DigitalFile.es_doc.search().sort('filepath.raw')
     return render(request, 'search.html', {'digital_files': digital_files})
 
 
 @login_required(login_url='/login/')
-def collection(request, identifier):
-    collection = get_object_or_404(Collection, identifier=identifier)
+def collection(request, pk):
+    collection = get_object_or_404(Collection, pk=pk)
     dips = DIP.es_doc.search().query(
         'match',
-        **{'ispartof.identifier': identifier},
-    ).sort('identifier.raw')
+        **{'collection.id': pk},
+    ).sort('dc.identifier.raw')
     return render(request, 'collection.html', {'collection': collection, 'dips': dips})
 
 
 @login_required(login_url='/login/')
-def dip(request, identifier):
-    dip = get_object_or_404(DIP, identifier=identifier)
+def dip(request, pk):
+    dip = get_object_or_404(DIP, pk=pk)
     digital_files = DigitalFile.es_doc.search().query(
         'match',
-        **{'dip.identifier': identifier},
+        **{'dip.id': pk},
     ).sort('filepath.raw')
     return render(request, 'dip.html', {'dip': dip, 'digital_files': digital_files})
 
 
 @login_required(login_url='/login/')
-def digital_file(request, uuid):
-    digitalfile = get_object_or_404(DigitalFile, uuid=uuid)
-    dip = DIP.objects.get(identifier=digitalfile.dip)
+def digital_file(request, pk):
+    digitalfile = get_object_or_404(DigitalFile, pk=pk)
     return render(request, 'digitalfile.html', {
         'digitalfile': digitalfile,
-        'dip': dip,
     })
 
 
@@ -160,16 +159,23 @@ def new_collection(request):
     if not request.user.is_editor():
         return redirect('home')
 
-    if not request.method == 'POST':
-        form = CollectionForm(request.POST)
-        return render(request, 'new_collection.html', {'form': form})
+    CollectionForm = modelform_factory(Collection, fields=('link',))
+    collection_form = CollectionForm(request.POST or None)
+    DublinCoreForm = modelform_factory(DublinCore, exclude=())
+    dc_form = DublinCoreForm(request.POST or None)
 
-    form = CollectionForm(request.POST)
-    if form.is_valid():
-        form.save()
+    if request.method == 'POST' and collection_form.is_valid() and dc_form.is_valid():
+        collection = collection_form.save(commit=False)
+        collection.dc = dc_form.save()
+        collection.save()
+
         return redirect('home')
 
-    return render(request, 'new_collection.html', {'form': form})
+    return render(
+        request,
+        'new_collection.html',
+        {'collection_form': collection_form, 'dc_form': dc_form}
+    )
 
 
 @login_required(login_url='/login/')
@@ -179,13 +185,20 @@ def new_dip(request):
     if not request.user.is_editor():
         return redirect('home')
 
-    if not request.method == 'POST':
-        form = NewDIPForm()
-        return render(request, 'new_dip.html', {'form': form})
+    DIPForm = modelform_factory(
+        DIP,
+        fields=('collection', 'objectszip',),
+        labels={'objectszip': 'Objects zip file'},
+    )
+    dip_form = DIPForm(request.POST or None, request.FILES or None)
+    DublinCoreForm = modelform_factory(DublinCore, fields=('identifier',))
+    dc_form = DublinCoreForm(request.POST or None)
 
-    form = NewDIPForm(request.POST, request.FILES)
-    if form.is_valid():
-        form.save()
+    if request.method == 'POST' and dip_form.is_valid() and dc_form.is_valid():
+        dip = dip_form.save(commit=False)
+        dip.dc = dc_form.save()
+        dip.save()
+
         # Extract METS file from DIP objects zip
         tmpdir = tempfile.mkdtemp()
         if not os.path.isdir(tmpdir):
@@ -198,72 +211,105 @@ def new_dip(request):
                 print('METS file to extract:', info.filename)
                 metsfile = zip.extract(info, tmpdir)
         # Parse METS file
-        mets = METS(os.path.abspath(metsfile), request.POST.get('identifier'))
+        mets = METS(os.path.abspath(metsfile), dip.pk)
         mets.parse_mets()
         # Delete extracted METS file
         shutil.rmtree(tmpdir)
+
         return redirect('home')
 
-    return render(request, 'new_dip.html', {'form': form})
+    return render(
+        request,
+        'new_dip.html',
+        {'dip_form': dip_form, 'dc_form': dc_form}
+    )
 
 
 @login_required(login_url='/login/')
-def edit_collection(request, identifier):
+def edit_collection(request, pk):
     # Only admins and users in group "Editors"
     # can edit collections
     if not request.user.is_editor():
-        return redirect('collection', identifier=identifier)
+        return redirect('collection', pk=pk)
 
-    instance = get_object_or_404(Collection, identifier=identifier)
-    form = CollectionForm(request.POST or None, instance=instance)
-    if form.is_valid():
-        form.save()
-        return redirect('collection', identifier=identifier)
+    collection = get_object_or_404(Collection, pk=pk)
+    CollectionForm = modelform_factory(Collection, fields=('link',))
+    collection_form = CollectionForm(request.POST or None, instance=collection)
+    DublinCoreForm = modelform_factory(DublinCore, exclude=())
+    dc_form = DublinCoreForm(request.POST or None, instance=collection.dc)
 
-    return render(request, 'edit_collection.html', {'form': form, 'collection': instance})
+    if request.method == 'POST' and collection_form.is_valid() and dc_form.is_valid():
+        dc_form.save()
+        collection_form.save()
+
+        return redirect('collection', pk=pk)
+
+    return render(
+        request,
+        'edit_collection.html',
+        {'collection_form': collection_form, 'dc_form': dc_form, 'collection': collection}
+    )
 
 
 @login_required(login_url='/login/')
-def edit_dip(request, identifier):
+def edit_dip(request, pk):
     # Only admins and users in group "Editors"
     # can edit DIPs
     if not request.user.is_editor():
-        return redirect('dip', identifier=identifier)
+        return redirect('dip', pk=pk)
 
-    instance = get_object_or_404(DIP, identifier=identifier)
-    form = EditDIPForm(request.POST or None, instance=instance)
-    if form.is_valid():
-        form.save()
-        return redirect('dip', identifier=identifier)
+    dip = get_object_or_404(DIP, pk=pk)
+    DublinCoreForm = modelform_factory(DublinCore, exclude=())
+    dc_form = DublinCoreForm(request.POST or None, instance=dip.dc)
 
-    return render(request, 'edit_dip.html', {'form': form, 'dip': instance})
+    if request.method == 'POST' and dc_form.is_valid():
+        dc_form.save()
+        # Trigger ES update
+        dip.save()
+        return redirect('dip', pk=pk)
+
+    return render(request, 'edit_dip.html', {'form': dc_form, 'dip': dip})
 
 
 @login_required(login_url='/login/')
-def delete_collection(request, identifier):
+def delete_collection(request, pk):
     # Only admins can delete collections
     if not request.user.is_superuser:
-        return redirect('collection', identifier=identifier)
+        return redirect('collection', pk=pk)
 
-    instance = get_object_or_404(Collection, identifier=identifier)
-    form = DeleteCollectionForm(request.POST or None, instance=instance)
+    collection = get_object_or_404(Collection, pk=pk)
+    dc = get_object_or_404(DublinCore, pk=collection.dc_id)
+    form = DeleteByDublinCoreForm(
+        request.POST or None,
+        instance=dc,
+        initial={'identifier': ''},
+    )
     if form.is_valid():
-        instance.delete()
+        collection.delete()
         return redirect('home')
 
-    return render(request, 'delete_collection.html', {'form': form})
+    return render(
+        request,
+        'delete_collection.html',
+        {'form': form, 'collection': collection},
+    )
 
 
 @login_required(login_url='/login/')
-def delete_dip(request, identifier):
+def delete_dip(request, pk):
     # Only admins can delete DIPs
     if not request.user.is_superuser:
-        return redirect('dip', identifier=identifier)
+        return redirect('dip', pk=pk)
 
-    instance = get_object_or_404(DIP, identifier=identifier)
-    form = DeleteDIPForm(request.POST or None, instance=instance)
+    dip = get_object_or_404(DIP, pk=pk)
+    dc = get_object_or_404(DublinCore, pk=dip.dc_id)
+    form = DeleteByDublinCoreForm(
+        request.POST or None,
+        instance=dc,
+        initial={'identifier': ''},
+    )
     if form.is_valid():
-        instance.delete()
+        dip.delete()
         return redirect('home')
 
-    return render(request, 'delete_dip.html', {'form': form})
+    return render(request, 'delete_dip.html', {'form': form, 'dip': dip})

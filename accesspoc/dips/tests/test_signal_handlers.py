@@ -1,7 +1,7 @@
 from django.test import TestCase
 from unittest.mock import patch
 
-from dips.models import Collection, DIP, DigitalFile
+from dips.models import Collection, DIP, DigitalFile, DublinCore
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 
 
@@ -9,10 +9,12 @@ class SignalHandlerTests(TestCase):
     @patch('elasticsearch_dsl.DocType.save')
     def setUp(self, patch):
         # Create resources
-        self.collection = Collection.objects.create(identifier='1')
+        dc = DublinCore.objects.create(identifier='1')
+        self.collection = Collection.objects.create(dc=dc)
+        dc = DublinCore.objects.create(identifier='A')
         self.dip = DIP.objects.create(
-            identifier='A',
-            ispartof=self.collection,
+            dc=dc,
+            collection=self.collection,
             objectszip='/path/to/fake.zip',
         )
         self.digital_file = DigitalFile.objects.create(
@@ -23,14 +25,16 @@ class SignalHandlerTests(TestCase):
 
     @patch.object(CollectionDoc, 'save')
     def test_collection_post_save(self, mock):
-        Collection.objects.create(identifier='2')
+        dc = DublinCore.objects.create(identifier='2')
+        Collection.objects.create(dc=dc)
         mock.assert_called()
 
     @patch.object(DIPDoc, 'save')
     def test_dip_post_save(self, mock):
+        dc = DublinCore.objects.create(identifier='B')
         DIP.objects.create(
-            identifier='B',
-            ispartof=self.collection,
+            dc=dc,
+            collection=self.collection,
             objectszip='/path/to/fake.zip',
         )
         mock.assert_called()
@@ -56,20 +60,20 @@ class SignalHandlerTests(TestCase):
 
     @patch('dips.models.delete_document')
     def test_dip_pre_delete(self, mock):
-        identifier = self.dip.identifier
+        pk = self.dip.pk
         self.dip.delete()
         mock.assert_called_with(
             index=DIP.es_doc._doc_type.index,
             doc_type=DIP.es_doc._doc_type.name,
-            id=identifier,
+            id=pk,
         )
 
     @patch('dips.models.delete_document')
     def test_collection_pre_delete(self, mock):
-        identifier = self.collection.identifier
+        pk = self.collection.pk
         self.collection.delete()
         mock.assert_called_with(
             index=Collection.es_doc._doc_type.index,
             doc_type=Collection.es_doc._doc_type.name,
-            id=identifier,
+            id=pk,
         )

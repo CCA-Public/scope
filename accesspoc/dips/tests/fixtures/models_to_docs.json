@@ -1,8 +1,9 @@
 [
 {
-  "model": "dips.collection",
-  "pk": "123",
+  "model": "dips.dublincore",
+  "pk": 1,
   "fields": {
+    "identifier": "123",
     "title": "Example collection",
     "creator": "Example creator",
     "subject": "Example subject",
@@ -10,20 +11,19 @@
     "publisher": "Example publisher",
     "contributor": "Example contributor",
     "date": "Example date",
-    "dctype": "Example type",
-    "dcformat": "Example format",
+    "type": "Example type",
+    "format": "Example format",
     "source": "Example source",
     "language": "Example language",
     "coverage": "Example coverage",
-    "rights": "Example rights",
-    "link": "http://example.com"
+    "rights": "Example rights"
   }
 },
 {
-  "model": "dips.dip",
-  "pk": "ABC",
+  "model": "dips.dublincore",
+  "pk": 2,
   "fields": {
-    "ispartof": "123",
+    "identifier": "ABC",
     "title": "Example DIP",
     "creator": "Example creator",
     "subject": "Example subject",
@@ -31,12 +31,28 @@
     "publisher": "Example publisher",
     "contributor": "Example contributor",
     "date": "Example date",
-    "dctype": "Example type",
-    "dcformat": "Example format",
+    "type": "Example type",
+    "format": "Example format",
     "source": "Example source",
     "language": "Example language",
     "coverage": "Example coverage",
-    "rights": "Example rights",
+    "rights": "Example rights"
+  }
+},
+{
+  "model": "dips.collection",
+  "pk": 1,
+  "fields": {
+    "dc": 1,
+    "link": "http://example.com"
+  }
+},
+{
+  "model": "dips.dip",
+  "pk": 1,
+  "fields": {
+    "collection": 1,
+    "dc": 2,
     "objectszip": "example.zip",
     "uploaded": "2018-06-12T05:09:47.368Z"
   }
@@ -55,7 +71,7 @@
     "amdsec": "amdSec_3",
     "hashtype": "sha256",
     "hashvalue": "c0fa53ae576cc4381890099a48d5dc3f40733a3415965fb477e79503d7653b5c",
-    "dip": "ABC"
+    "dip": 1
   }
 },
 {

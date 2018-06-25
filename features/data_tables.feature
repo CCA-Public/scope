@@ -25,11 +25,13 @@ Feature: Data tables
       | column_name | es_field       |
       | Identifier  | identifier     |
       | Title       | dc.title       |
+      | Date        | dc.date        |
       | Description | dc.description |
     And the search form will query over the following fields
       | es_field       |
       | identifier     |
       | dc.title       |
+      | dc.date       |
       | dc.description |
     And the table header will show sort options for the following columns
       | column_name |

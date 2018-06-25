@@ -1,11 +1,16 @@
-from elasticsearch_dsl import DocType, Keyword, Long, MetaField, Object, Text
+from elasticsearch_dsl import DocType, InnerDoc, Keyword, Long, \
+    MetaField, Object, Text, Integer
 
 
-class CollectionDoc(DocType):
+class DublinCoreDoc(InnerDoc):
     identifier = Text(fields={'raw': Keyword()})
     title = Text()
     date = Text()
     description = Text()
+
+
+class CollectionDoc(DocType):
+    dc = Object(DublinCoreDoc)
 
     class Meta:
         index = 'accesspoc_collections'
@@ -13,13 +18,10 @@ class CollectionDoc(DocType):
 
 
 class DIPDoc(DocType):
-    identifier = Text(fields={'raw': Keyword()})
-    title = Text()
-    date = Text()
-    description = Text()
-    ispartof = Object(properties={
+    dc = Object(DublinCoreDoc)
+    collection = Object(properties={
+        'id': Integer(),
         'identifier': Text(),
-        'title': Text(),
     })
 
     class Meta:
@@ -34,8 +36,8 @@ class DigitalFileDoc(DocType):
     size_bytes = Long()
     datemodified = Text()
     dip = Object(properties={
+        'id': Integer(),
         'identifier': Text(),
-        'title': Text(),
     })
 
     class Meta:

@@ -6,9 +6,9 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'collection' dip.ispartof %}">{{ dip.ispartof }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection }}</a></li>
   <li class="breadcrumb-item">Folder</li>
-  <li class="breadcrumb-item"><a href="{% url 'dip' dip.identifier %}">{{ dip.identifier }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'dip' dip.pk %}">{{ dip }}</a></li>
   <li class="breadcrumb-item active">Edit</li>
 {% endblock %}
 

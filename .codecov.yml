@@ -10,7 +10,7 @@ coverage:
 
   status:
     project: yes
-    patch: yes
+    patch: no
     changes: yes
 
 parsers:

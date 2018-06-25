@@ -15,15 +15,17 @@
       <tr>
         <td><strong>Identifier</strong></td>
         <td><strong>Title</strong></td>
+        <td><strong>Date</strong></td>
         <td><strong>Description</strong></td>
         <td><strong>Details</strong></td>
       </tr>
     {% for collection in collections %}
       <tr>
-        <td>{{ collection.identifier }}</td>
-        <td>{{ collection.title }}, {{ collection.date }}</td>
-        <td>{{ collection.description|safe }}</td>
-        <td><a href="{% url 'collection' collection.identifier %}"><button class="btn btn-primary">View</button></a></td>
+        <td>{{ collection.dc.identifier }}</td>
+        <td>{{ collection.dc.title|default:'' }}</td>
+        <td>{{ collection.dc.date|default:'' }}</td>
+        <td>{{ collection.dc.description|default:''|safe }}</td>
+        <td><a href="{% url 'collection' collection.meta.id %}"><button class="btn btn-primary">View</button></a></td>
       </tr>
     {% endfor %}
     </table>

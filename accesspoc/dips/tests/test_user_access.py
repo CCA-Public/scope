@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from unittest.mock import patch
 
-from dips.models import User, Collection, DIP, DigitalFile
+from dips.models import User, Collection, DIP, DigitalFile, DublinCore
 
 import os
 
@@ -132,10 +132,12 @@ class UserAccessTests(TestCase):
 
         # Create editable resources
         self.user = User.objects.create_user('test', 'test@example.com', 'test')
-        self.collection = Collection.objects.create(identifier='1')
+        self.collection = Collection.objects.create(
+            dc=DublinCore.objects.create(identifier='1'),
+        )
         self.dip = DIP.objects.create(
-            identifier='A',
-            ispartof=self.collection,
+            dc=DublinCore.objects.create(identifier='A'),
+            collection=self.collection,
             objectszip=os.path.join(settings.MEDIA_ROOT, 'fake.zip'),
         )
         self.digital_file = DigitalFile.objects.create(
@@ -154,11 +156,11 @@ class UserAccessTests(TestCase):
             if page in ['edit_user']:
                 url = reverse(page, kwargs={'pk': self.user.pk})
             elif page in ['collection', 'edit_collection', 'delete_collection']:
-                url = reverse(page, kwargs={'identifier': self.collection.identifier})
+                url = reverse(page, kwargs={'pk': self.collection.pk})
             elif page in ['dip', 'edit_dip', 'delete_dip']:
-                url = reverse(page, kwargs={'identifier': self.dip.identifier})
+                url = reverse(page, kwargs={'pk': self.dip.pk})
             elif page in ['digital_file']:
-                url = reverse(page, kwargs={'uuid': self.digital_file.uuid})
+                url = reverse(page, kwargs={'pk': self.digital_file.pk})
             else:
                 url = reverse(page)
 
@@ -280,13 +282,13 @@ class UserAccessTests(TestCase):
         new_data_2 = {
             'identifier': '3',
         }
-        edit_url = reverse('edit_collection', kwargs={'identifier': self.collection.identifier})
+        edit_url = reverse('edit_collection', kwargs={'pk': self.collection.pk})
         edit_data = {
-            'identifier': '2',
+            'identifier': '1',
             'title': 'test_collection_2',
         }
         edit_data_2 = {
-            'identifier': '3',
+            'identifier': '1',
             'title': 'test_collection_3',
         }
 
@@ -300,9 +302,9 @@ class UserAccessTests(TestCase):
         # Unauthenticated, edit
         response = self.client.post(edit_url, edit_data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/login/?next=/collection/%s/edit/' % self.collection.identifier
+        next_url = '/login/?next=/collection/%s/edit/' % self.collection.pk
         self.assertEqual(response.url, next_url)
-        self.assertFalse(Collection.objects.filter(title='test_collection_2').exists())
+        self.assertFalse(Collection.objects.filter(dc__title='test_collection_2').exists())
 
         # Basic, create
         self.client.login(username='basic', password='basic')
@@ -315,8 +317,8 @@ class UserAccessTests(TestCase):
         # Basic, edit
         response = self.client.post(edit_url, edit_data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/collection/%s/' % self.collection.identifier)
-        self.assertFalse(Collection.objects.filter(title='test_collection_2').exists())
+        self.assertEqual(response.url, '/collection/%s/' % self.collection.pk)
+        self.assertFalse(Collection.objects.filter(dc__title='test_collection_2').exists())
         self.client.logout()
 
         # Editor, create
@@ -330,14 +332,14 @@ class UserAccessTests(TestCase):
         # Editor, edit
         response = self.client.post(edit_url, edit_data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/collection/%s/' % self.collection.identifier)
-        self.assertTrue(Collection.objects.filter(title='test_collection_2').exists())
+        self.assertEqual(response.url, '/collection/%s/' % self.collection.pk)
+        self.assertTrue(Collection.objects.filter(dc__title='test_collection_2').exists())
         self.client.logout()
 
         # Manager, create
         self.client.login(username='manager', password='manager')
         before_count = len(Collection.objects.all())
-        response = self.client.post(new_url, new_data)
+        response = self.client.post(new_url, new_data_2)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/')
         after_count = len(Collection.objects.all())
@@ -345,8 +347,8 @@ class UserAccessTests(TestCase):
         # Manager, edit
         response = self.client.post(edit_url, edit_data_2)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/collection/%s/' % self.collection.identifier)
-        self.assertFalse(Collection.objects.filter(title='test_collection_3').exists())
+        self.assertEqual(response.url, '/collection/%s/' % self.collection.pk)
+        self.assertFalse(Collection.objects.filter(dc__title='test_collection_3').exists())
         self.client.logout()
 
         # Admin, create
@@ -360,8 +362,8 @@ class UserAccessTests(TestCase):
         # Admin, edit
         response = self.client.post(edit_url, edit_data_2)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/collection/%s/' % self.collection.identifier)
-        self.assertTrue(Collection.objects.filter(title='test_collection_3').exists())
+        self.assertEqual(response.url, '/collection/%s/' % self.collection.pk)
+        self.assertTrue(Collection.objects.filter(dc__title='test_collection_3').exists())
         self.client.logout()
 
     @patch('elasticsearch_dsl.DocType.save')
@@ -373,18 +375,16 @@ class UserAccessTests(TestCase):
         new_url = reverse('new_dip')
         new_data = {
             'identifier': 'B',
-            'ispartof': self.collection.identifier,
+            'collection': self.collection.pk,
         }
-        edit_url = reverse('edit_dip', kwargs={'identifier': self.dip.identifier})
+        edit_url = reverse('edit_dip', kwargs={'pk': self.dip.pk})
         edit_data = {
             'identifier': 'A',
             'title': 'test_dip_2',
-            'ispartof': self.collection.identifier,
         }
         edit_data_2 = {
             'identifier': 'A',
             'title': 'test_dip_3',
-            'ispartof': self.collection.identifier,
         }
 
         # Unauthenticated, create
@@ -397,9 +397,9 @@ class UserAccessTests(TestCase):
         # Unauthenticated, edit
         response = self.client.post(edit_url, edit_data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/login/?next=/folder/%s/edit/' % self.dip.identifier
+        next_url = '/login/?next=/folder/%s/edit/' % self.dip.pk
         self.assertEqual(response.url, next_url)
-        self.assertFalse(DIP.objects.filter(title='test_dip_2').exists())
+        self.assertFalse(DIP.objects.filter(dc__title='test_dip_2').exists())
 
         # Basic, create
         self.client.login(username='basic', password='basic')
@@ -412,8 +412,8 @@ class UserAccessTests(TestCase):
         # Basic, edit
         response = self.client.post(edit_url, edit_data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/folder/%s/' % self.dip.identifier)
-        self.assertFalse(DIP.objects.filter(title='test_dip_2').exists())
+        self.assertEqual(response.url, '/folder/%s/' % self.dip.pk)
+        self.assertFalse(DIP.objects.filter(dc__title='test_dip_2').exists())
         self.client.logout()
 
         # Editor, create
@@ -421,14 +421,14 @@ class UserAccessTests(TestCase):
         # To avoid testing the file upload in here, the form validation
         # should fail, returnnig a 200 status code with errors in the form.
         response = self.client.post(new_url, new_data)
-        form = response.context.get('form')
+        form = response.context.get('dip_form')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(form.errors)
+        self.assertTrue(form.fields['objectszip'].error_messages)
         # Editor, edit
         response = self.client.post(edit_url, edit_data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/folder/%s/' % self.dip.identifier)
-        self.assertTrue(DIP.objects.filter(title='test_dip_2').exists())
+        self.assertEqual(response.url, '/folder/%s/' % self.dip.pk)
+        self.assertTrue(DIP.objects.filter(dc__title='test_dip_2').exists())
         self.client.logout()
 
         # Manager, create
@@ -442,8 +442,8 @@ class UserAccessTests(TestCase):
         # Manager, edit
         response = self.client.post(edit_url, edit_data_2)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/folder/%s/' % self.dip.identifier)
-        self.assertFalse(DIP.objects.filter(title='test_dip_3').exists())
+        self.assertEqual(response.url, '/folder/%s/' % self.dip.pk)
+        self.assertFalse(DIP.objects.filter(dc__title='test_dip_3').exists())
         self.client.logout()
 
         # Admin, create
@@ -451,14 +451,14 @@ class UserAccessTests(TestCase):
         # To avoid testing the file upload in here, the form validation
         # should fail, returnnig a 200 status code with errors in the form.
         response = self.client.post(new_url, new_data)
-        form = response.context.get('form')
+        form = response.context.get('dip_form')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(form.errors)
+        self.assertTrue(form.fields['objectszip'].error_messages)
         # Admin, edit
         response = self.client.post(edit_url, edit_data_2)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/folder/%s/' % self.dip.identifier)
-        self.assertTrue(DIP.objects.filter(title='test_dip_3').exists())
+        self.assertEqual(response.url, '/folder/%s/' % self.dip.pk)
+        self.assertTrue(DIP.objects.filter(dc__title='test_dip_3').exists())
         self.client.logout()
 
     @patch('dips.models.delete_document')
@@ -467,7 +467,7 @@ class UserAccessTests(TestCase):
         Makes post request to delete a DIP with different
         user types logged in and verifies the results.
         """
-        url = reverse('delete_dip', kwargs={'identifier': self.dip.identifier})
+        url = reverse('delete_dip', kwargs={'pk': self.dip.pk})
         data = {
             'identifier': 'A',
         }
@@ -476,7 +476,7 @@ class UserAccessTests(TestCase):
         before_count = len(DIP.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/login/?next=/folder/%s/delete/' % self.dip.identifier
+        next_url = '/login/?next=/folder/%s/delete/' % self.dip.pk
         self.assertEqual(response.url, next_url)
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count)
@@ -486,7 +486,7 @@ class UserAccessTests(TestCase):
         before_count = len(DIP.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/folder/%s/' % self.dip.identifier
+        next_url = '/folder/%s/' % self.dip.pk
         self.assertEqual(response.url, next_url)
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count)
@@ -496,7 +496,7 @@ class UserAccessTests(TestCase):
         before_count = len(DIP.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/folder/%s/' % self.dip.identifier
+        next_url = '/folder/%s/' % self.dip.pk
         self.assertEqual(response.url, next_url)
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count)
@@ -506,7 +506,7 @@ class UserAccessTests(TestCase):
         before_count = len(DIP.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/folder/%s/' % self.dip.identifier
+        next_url = '/folder/%s/' % self.dip.pk
         self.assertEqual(response.url, next_url)
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count)
@@ -526,7 +526,7 @@ class UserAccessTests(TestCase):
         Makes post request to delete a collection with different
         user types logged in and verifies the results.
         """
-        url = reverse('delete_collection', kwargs={'identifier': self.collection.identifier})
+        url = reverse('delete_collection', kwargs={'pk': self.collection.pk})
         data = {
             'identifier': '1',
         }
@@ -535,7 +535,7 @@ class UserAccessTests(TestCase):
         before_count = len(Collection.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/login/?next=/collection/%s/delete/' % self.collection.identifier
+        next_url = '/login/?next=/collection/%s/delete/' % self.collection.pk
         self.assertEqual(response.url, next_url)
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count, after_count)
@@ -545,7 +545,7 @@ class UserAccessTests(TestCase):
         before_count = len(Collection.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/collection/%s/' % self.collection.identifier
+        next_url = '/collection/%s/' % self.collection.pk
         self.assertEqual(response.url, next_url)
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count, after_count)
@@ -555,7 +555,7 @@ class UserAccessTests(TestCase):
         before_count = len(Collection.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/collection/%s/' % self.collection.identifier
+        next_url = '/collection/%s/' % self.collection.pk
         self.assertEqual(response.url, next_url)
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count, after_count)
@@ -565,7 +565,7 @@ class UserAccessTests(TestCase):
         before_count = len(Collection.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        next_url = '/collection/%s/' % self.collection.identifier
+        next_url = '/collection/%s/' % self.collection.pk
         self.assertEqual(response.url, next_url)
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count, after_count)
