@@ -1,6 +1,6 @@
 Feature: Internationalization
   The CCA DIP access application will have an interface that can be shown in
-  different languages, being English the source language. On this first iteration
+  different languages, with English as the default language. On this first iteration
   of the feature, the translation process won't include configuration/tasks to
   integrate with translation web services like Transifex or Pootle and it will
   only include English and French languages. This feature only defines the
@@ -10,9 +10,9 @@ Feature: Internationalization
 
   Scenario: Application user
     Given an instance running with the internationalization system setup
-    When a user access the interface
-    Then the interface will appear in the user browser default language
-      But it will fallback to English if that language is not available
+    When an application user accesses the interface
+    Then the interface will appear in the user's browser default language
+      But the language will default to English if the user browser's default language is not available
     And a drop-down menu will be shown in the header with the available languages
     And the user will be able to switch the interface to a different language
 
