@@ -1,5 +1,5 @@
 Feature: User management and permissions
-  The CCA DIP access application has five major user types:
+  SCOPE has five major user types:
     - Administrators: Administrators in user stories.
     - Managers: Reference librarians in user stories.
     - Editors: Processing Archivist in user stories.

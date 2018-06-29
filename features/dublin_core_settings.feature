@@ -1,7 +1,6 @@
 Feature: Dublin Core settings
-  The CCA DIP access application will include a setting page, initially with
-  a couple of settings to configure the Dublin Core metadata fields used for
-  Collections and Folders.
+  SCOPE will include a setting page, initially with a couple of settings to
+  configure the Dublin Core metadata fields used for Collections and Folders.
 
   Scenario: Setting page
     Given an instance running

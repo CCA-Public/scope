@@ -1,12 +1,11 @@
 Feature: Internationalization
-  The CCA DIP access application will have an interface that can be shown in
-  different languages, with English as the default language. On this first iteration
-  of the feature, the translation process won't include configuration/tasks to
-  integrate with translation web services like Transifex or Pootle and it will
-  only include English and French languages. This feature only defines the
-  internationalization of the interface, it doesn't add the ability to translate
-  the Collection, Folder and DigitalFile metadata in the database and Elasticseach
-  indexes.
+  SCOPE will have an interface that can be shown in different languages,
+  with English as the default language. On this first iteration of the feature,
+  the translation process won't include configuration/tasks to integrate with
+  translation web services like Transifex or Pootle and it will only include English
+  and French languages. This feature only defines the internationalization of the interface,
+  it doesn't add the ability to translate the Collection, Folder and DigitalFile metadata
+  in the database and Elasticseach indexes.
 
   Scenario: Application user
     Given an instance running with the internationalization system setup

@@ -1,8 +1,7 @@
 Feature: Storage of DIP ZIP files
-  The CCA DIP access application will have the option to split the storage of the
-  uploaded DIPs into different locations of the local filesystem. Each location
-  will store a configurable amount of data. This configuration will be made via
-  two environment variables:
+  SCOPE will have the option to split the storage of the uploaded DIPs into different
+  locations of the local filesystem. Each location will store a configurable amount of data.
+  This configuration will be made via two environment variables:
     - STORAGE_LOCATIONS: list of locations paths separated by comma.
     - STORAGE_LOCATION_SIZE: maximun size of each location.
 

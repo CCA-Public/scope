@@ -1,8 +1,8 @@
 Feature: Asynchronous processes
-  The CCA DIP access application will use an asynchronous worker to execute long
-  running processes in the background. This worker will be implemented using Celery
-  and it will be initially used to extract and parse the METS file in the Folder
-  creation process after the DIP ZIP file is uploaded.
+  SCOPE will use an asynchronous worker to execute long running processes in the
+  background. This worker will be implemented using Celery and it will be initially
+  used to extract and parse the METS file in the Folder creation process after the
+  DIP ZIP file is uploaded.
 
   Scenario: Folder creation
     Given an instance running with the asynchronous worker setup
