@@ -19,8 +19,8 @@ Feature: Storage of DIP ZIP files
 
   Scenario: Behavior
     Given an instance running
-    When a new Folder is created
+    When a user with permissions creates a new Folder
     And the ZIP file is uploaded
-    Then the instance will chech the list of storage locations from the STORAGE_LOCATIONS env. var.
+    Then the instance will check the list of storage locations from the STORAGE_LOCATIONS env. var.
     And the instance will save the ZIP on the first location with enough free space to hold the ZIP without passing the STORAGE_LOCATION_SIZE env. var. value
     And the instance will fail to create the Folder and it will show an error message if there is not enough space in any location

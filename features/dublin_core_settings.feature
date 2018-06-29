@@ -1,6 +1,6 @@
 Feature: Dublin Core settings
-  SCOPE will include a setting page, initially with a couple of settings to
-  configure the Dublin Core metadata fields used for Collections and Folders.
+  SCOPE will include a setting page, initially with the ability to configure
+  the Dublin Core metadata fields used for Collections and Folders.
 
   Scenario: Setting page
     Given an instance running
@@ -43,8 +43,7 @@ Feature: Dublin Core settings
       | View Collection |
       | Edit Folder     |
       | View Folder     |
-    Then the page will check the Optional DC fields setting
-    And the new and edit forms will only include the fields selected in the setting
+    Then the new and edit forms will only include the fields selected in the setting
     And the view pages will only show the fields selected in the setting
 
   Scenario: Hide empty DC fields setting behavior
@@ -53,6 +52,5 @@ Feature: Dublin Core settings
       | pages:          |
       | View Collection |
       | View Folder     |
-    Then the page will check the Hide empty DC fields setting
-    And the page will only show the optional DC fields that have data if the setting is checked
+    Then the page will only show the optional DC fields that have data if the setting is checked
     And the page will show all optional DC fields if the setting is not checked
