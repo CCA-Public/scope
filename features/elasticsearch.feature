@@ -1,9 +1,9 @@
 Feature: Elasticsearch integration
-  The CCA DIP access application uses Elasticsearch 6.x to improve the search capabilities
-  of the application. The database is the persistent data storage service and a CLI task is
-  defined to index the data in three different indexes for Collections, Folders and Digital
-  Files. The configuration for the connection between the application and Elasticsearch is
-  defined by the following environment variables:
+  SCOPE uses Elasticsearch 6.x to improve the search capabilities of the application.
+  The database is the persistent data storage service and a CLI task is defined to index
+  the data in three different indexes for Collections, Folders and Digital Files. The
+  configuration for the connection between the application and Elasticsearch is defined
+  by the following environment variables:
     - ES_HOSTS: (REQUIRED) List of Elasticsearch hosts separated by comma. RFC-1738 formatted
       URLs can be used. E.g.: https://user:secret@host:443/.
     - ES_TIMEOUT: Timeout in seconds for Elasticsearch requests. Default: 10.

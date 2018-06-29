@@ -1,5 +1,5 @@
 Feature: Data tables
-  The CCA DIP access application uses four types of tables to display its metadata:
+  SCOPE uses four types of tables to display its metadata:
     - Collections: used in the home page.
     - Folders: used in the Collection page.
     - All Digital Files: used in the search page.
