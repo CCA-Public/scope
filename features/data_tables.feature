@@ -1,6 +1,6 @@
 Feature: Data tables
   SCOPE uses four types of tables to display its metadata:
-    - Collections: used in the home page.
+    - Collections: used in the home page and Collections page.
     - Folders: used in the Collection page.
     - All Digital Files: used in the search page.
     - Folder Digital Files: used in the Folder page.
@@ -12,14 +12,14 @@ Feature: Data tables
     Then the page will use the Elasticsearch indexes to fetch the table data
     And the table will show a search field and button on top to filter the results
     And the table will show ten results
-      And the total results and the range being shown will appear at the botton
+      And the total results and the range being shown will appear at the bottom
       And a pager will be shown at the bottom to go to a different range of results
     And some of the table headers will have the option to sort in both directions
     And the table will have a column with a button to view each result
 
   Scenario: Collections table
     Given an instance running with some Collections created
-    When a user visits the home page
+    When a user visits the home page or Collections page
     Then the page will use the Collections Elasticsearch index
     And the table will show the following columns and fields
       | column_name | es_field       |
@@ -37,6 +37,7 @@ Feature: Data tables
       | column_name |
       | Identifier  |
       | Title       |
+    And the table will include a column containing a link to the Collection detail page
 
   Scenario: Folders table
     Given an instance running with some Folders created
@@ -59,18 +60,20 @@ Feature: Data tables
       | column_name |
       | Identifier  |
       | Title       |
+    And the table will include a column containing a link to the Folder detail page
 
   Scenario: All Digital Files table
     Given an instance running with some Digital Files created
     When a user visits the search page
     Then the page will use the Digital Files Elasticsearch index
     And the table will show the following columns and fields
-      | column_name   | es_field       |
-      | Filepath      | filepath       |
-      | Format        | fileformat     |
-      | Size (bytes)  | size_bytes     |
-      | Last modified | datemodified   |
-      | Folder        | dip.identifier | # link to Folder
+      | column_name   | es_field              |
+      | Filepath      | filepath              |
+      | Format        | fileformat            |
+      | Size (bytes)  | size_bytes            |
+      | Last modified | datemodified          |
+      | Folder        | dip.identifier        | # link to Folder
+      | Collection    | collection.identifier | # link to Collection
     And the search form will query over the following fields
       | es_field       |
       | filepath       |
@@ -78,10 +81,12 @@ Feature: Data tables
       | datemodified   |
       | dip.identifier |
     And the table header will show sort options for the following columns
-      | column_name  |
-      | Filepath     |
-      | Format       |
-      | Size (bytes) |
+      | column_name   |
+      | Filepath      |
+      | Format        |
+      | Size (bytes)  |
+      | Last modified |
+    And the table will include a column containing a link to the Digital File detail page
 
   Scenario: Folder Digital Files table
     Given an instance running with some Digital Files created
@@ -104,3 +109,4 @@ Feature: Data tables
       | Filepath     |
       | Format       |
       | Size (bytes) |
+    And the table will include a column containing a link to the Digital File detail page

@@ -14,7 +14,7 @@ Feature: Elasticsearch integration
   Scenario: Installation
     Given an instance being installed after the database has been initialized
     And at least the required variable "ES_HOSTS" has been defined in the environment
-    When a system administrator installing the application runs the "inde_data" CLI task
+    When a system administrator installing the application runs the "index_data" CLI task
     Then the task will create three indexes in the configured Elasticsearch instance
     And the task will show that there are no Collections, Folders or Digital Tiles to index
 
@@ -22,9 +22,9 @@ Feature: Elasticsearch integration
     Given an instance installed
     And with Collection, Folder or Digital File data in the database
     And at least the required variable "ES_HOSTS" defined in the environment
-    When a system administrator runs the "inde_data" CLI task
+    When a system administrator runs the "index_data" CLI task
     Then the task will re-create the three indexes in the configured Elasticsearch instance
-    And the task will add all Collections, Folders and Digital Tiles to their indexes
+    And the task will add all Collections, Folders and Digital Files to their indexes
     And the task will show indication of the progress
 
   Scenario: Model changes

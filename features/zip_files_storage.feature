@@ -3,7 +3,7 @@ Feature: Storage of DIP ZIP files
   locations of the local filesystem. Each location will store a configurable amount of data.
   This configuration will be made via two environment variables:
     - STORAGE_LOCATIONS: list of locations paths separated by comma.
-    - STORAGE_LOCATION_SIZE: maximun size of each location.
+    - STORAGE_LOCATION_SIZE: maximum size of each location.
 
   Scenario: Default configuration
     Given an instance running

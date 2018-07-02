@@ -33,7 +33,7 @@ Feature: User management and permissions
     Given an instance running
     And a user that belongs to the "Editors" group created in the application
     When an editor logs in the application with that user credentials
-    Then the editor can't view or manage users
+    Then the editor can't view or manage users except their own user account
     And the editor can't access the setting page
     And the editor can create and edit Collections and Folders but not delete them
     And the editor has access to all the view parts of the application
@@ -46,7 +46,7 @@ Feature: User management and permissions
     And the viewer can browse and view Folders
     And the viewer can browse and view Digital Files
     And the viewer can download the Folders ZIP files
-    And the viewer cannot manage users
+    And the viewer cannot manage users except their own user account
     And the viewer cannot access the setting page
     And the viewer cannot create, edit or delete Collections or Folders
 
