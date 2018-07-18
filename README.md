@@ -15,6 +15,7 @@
   * [Setup](#setup)
   * [Serve](#serve)
 * [Development](#development)
+* [Credit](#credit)
 
 ## Overview
 
@@ -324,3 +325,13 @@ docker-compose logs -f accesspoc elasticsearch
 ```
 
 To access the application with the default options visit http://localhost:43430 in the browser.
+
+## Credit
+
+The Digital Archives Access Interface was produced by the Canadian Centre for Architecture (CCA) and developed by Artefactual Systems, based on an project initially conceived by Tim Walsh, digital archivist at CCA from June 2015 to May 2018. 
+
+The Digital Archives Access Interface is a project financed within the framework of the Montreal Cultural Development grant awarded by the City of Montreal and the Quebec Department of Culture and Communications.
+
+L’Interface d'accès aux archives numériques a été conçue par le Centre Canadien pour l'Architecture (CCA) et développée par Artefactual Systems, à partir d’un concept initialement élaboré par Tim Walsh, archiviste numérique au CCA, de juin 2015 à mai 2018.
+ 
+L’Interface d’accès aux archives numériques est un projet financé dans le cadre de l’Entente sur le développement culturel de Montréal par la Ville de Montréal et le ministère de la Culture et des Communications.
