@@ -147,7 +147,8 @@ class UserAccessTests(TestCase):
         )
 
     @patch('elasticsearch_dsl.Search.execute')
-    def test_get_pages(self, patch):
+    @patch('elasticsearch_dsl.Search.count', return_value=0)
+    def test_get_pages(self, patch, patch_2):
         """
         Makes get requests to pages with different user types logged in
         and verifies if the user can see the page or gets redirected.

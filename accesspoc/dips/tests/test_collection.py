@@ -24,7 +24,8 @@ class CollectionTests(TestCase):
         )
 
     @patch('elasticsearch_dsl.Search.execute')
-    def test_collection_view_success_status_code(self, patch):
+    @patch('elasticsearch_dsl.Search.count', return_value=0)
+    def test_collection_view_success_status_code(self, patch, patch_2):
         url = reverse('collection', kwargs={'pk': self.collection.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

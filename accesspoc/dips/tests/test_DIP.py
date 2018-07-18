@@ -33,7 +33,8 @@ class DIPTests(TestCase):
         )
 
     @patch('elasticsearch_dsl.Search.execute')
-    def test_dip_view_success_status_code(self, patch):
+    @patch('elasticsearch_dsl.Search.count', return_value=0)
+    def test_dip_view_success_status_code(self, patch, patch_2):
         url = reverse('dip', kwargs={'pk': self.dip.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

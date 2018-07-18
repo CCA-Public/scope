@@ -32,24 +32,25 @@
   </div>
   <br>
   <h2>Digital files in this folder</h2>
-  <br>
+  {% include 'includes/table_form.html' %}
   <div class="table-responsive">
-    <table class="table table-striped table-bordered table-condensed sortable" id="fancyTable">
-      <tr>
-        <td><strong>Filepath</strong></td>
-        <td><strong>Format</strong></td>
-        <td><strong>Size (bytes)</strong></td>
-        <td><strong>Last modified</strong></td>
-        <td><strong>Details</strong></td>
-      </tr>
-    {% for digital_file in digital_files %}
-      <tr>
-        <td>{{ digital_file.filepath }}</td>
-        <td>{{ digital_file.fileformat }}</td>
-        <td>{{ digital_file.size_bytes }}</td>
-        <td>{{ digital_file.datemodified|default:'' }}</td>
-        <td><a href="{% url 'digital_file' digital_file.meta.id %}"><button class="btn btn-primary">View</button></a></td>
-      </tr>
-    {% endfor %}
+    <table class="table table-striped table-bordered table-condensed">
+      {% include 'includes/table_header.html' with headers=table_headers %}
+      {% if not digital_files %}
+        <tr>
+          <td colspan="5" class="text-center">No matching records found</td>
+        </tr>
+      {% endif %}
+      {% for digital_file in digital_files %}
+        <tr>
+          <td>{{ digital_file.filepath }}</td>
+          <td>{{ digital_file.fileformat }}</td>
+          <td>{{ digital_file.size_bytes }}</td>
+          <td>{{ digital_file.datemodified|default:'' }}</td>
+          <td><a href="{% url 'digital_file' digital_file.meta.id %}"><button class="btn btn-sm btn-primary">View</button></a></td>
+        </tr>
+      {% endfor %}
     </table>
+  </div>
+  {% include 'includes/table_pager.html' %}
 {% endblock %}

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Collection, DIP, DigitalFile, DublinCore
@@ -14,10 +16,98 @@ import tempfile
 import zipfile
 
 
+def get_sort_params(request, options, default):
+    """
+    Get sort option and direction from request. Check options dict. for
+    available choices and use default if no option is passed on the request
+    or if the option is not valid. Defaults to asc. sort direction.
+    """
+    option = default
+    if 'sort' in request.GET and request.GET['sort'] in list(options.keys()):
+        option = request.GET['sort']
+
+    direction = 'asc'
+    if 'sort_dir' in request.GET and request.GET['sort_dir'] in ['asc', 'desc']:
+        direction = request.GET['sort_dir']
+
+    return (option, direction)
+
+
+def add_query_to_search(search, request, fields):
+    """
+    Check if a `query` parameter has been sent in the request and add a
+    `simple_query_string` to the search over a given list of fields.
+    """
+    if 'query' in request.GET and request.GET['query']:
+        search = search.query(
+            'simple_query_string',
+            query=request.GET['query'],
+            default_operator='and',
+            fields=fields,
+        )
+
+    return search
+
+
+def get_page_from_search(search, request):
+    """
+    Create paginator and return current page based on the current search
+    and the page and limit request parameters. Limit defaults to 10 and
+    can't be set over 100.
+    """
+    try:
+        limit = int(request.GET.get('limit', 10))
+        if limit <= 0 or limit > 100:
+            raise ValueError
+    except ValueError:
+        limit = 10
+
+    paginator = Paginator(search, limit)
+    page_no = request.GET.get('page')
+    try:
+        page = paginator.page(page_no)
+    except PageNotAnInteger:
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+
+    return page
+
+
 @login_required(login_url='/login/')
 def home(request):
-    collections = Collection.es_doc.search().sort('dc.identifier.raw')
-    return render(request, 'home.html', {'collections': collections})
+    # Sort options
+    sort_options = {
+        'identifier': 'dc.identifier.raw',
+        'title': 'dc.title.raw',
+    }
+    sort_option, sort_dir = get_sort_params(request, sort_options, 'identifier')
+    sort_field = sort_options.get(sort_option)
+
+    # Search
+    search = Collection.es_doc.search()
+    search = add_query_to_search(search, request, ['dc.*'])
+    search = search.sort({sort_field: {'order': sort_dir}})
+
+    # Pagination
+    page = get_page_from_search(search, request)
+    collections = page.object_list.execute()
+
+    table_headers = [
+        ('Identifier', 'identifier'),
+        ('Title', 'title'),
+        ('Date', None),
+        ('Description', None),
+        ('Details', None),
+    ]
+
+    return render(request, 'home.html', {
+        'collections': collections,
+        'table_headers': table_headers,
+        'sort_option': sort_option,
+        'sort_dir': sort_dir,
+        'page': page,
+    })
 
 
 def faq(request):
@@ -29,8 +119,54 @@ def users(request):
     # Only admins or managers can see users
     if not request.user.is_manager():
         return redirect('home')
-    users = User.objects.all()
-    return render(request, 'users.html', {'users': users})
+
+    # Sort options
+    sort_options = {
+        'username': 'username',
+        'first_name': 'first_name',
+        'last_name': 'last_name',
+        'email': 'email',
+    }
+    sort_option, sort_dir = get_sort_params(request, sort_options, 'username')
+    sort_field = sort_options.get(sort_option)
+    if sort_dir == 'desc':
+        sort_field = '-%s' % sort_field
+
+    # Search
+    if 'query' in request.GET and request.GET['query']:
+        query = request.GET['query']
+        users = User.objects.order_by(sort_field).filter(
+            Q(username__icontains=query) |
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(groups__name__icontains=query)
+        )
+    else:
+        users = User.objects.order_by(sort_field).all()
+
+    # Pagination
+    page = get_page_from_search(users, request)
+    users = page.object_list
+
+    table_headers = [
+        ('Username', 'username'),
+        ('First name', 'first_name'),
+        ('Last name', 'last_name'),
+        ('Email', 'email'),
+        ('Groups', None),
+        ('Active', None),
+        ('Admin', None),
+        ('Edit', None),
+    ]
+
+    return render(request, 'users.html', {
+        'users': users,
+        'table_headers': table_headers,
+        'sort_option': sort_option,
+        'sort_dir': sort_dir,
+        'page': page,
+    })
 
 
 @login_required(login_url='/login/')
@@ -120,28 +256,129 @@ def edit_user(request, pk):
 
 @login_required(login_url='/login/')
 def search(request):
-    digital_files = DigitalFile.es_doc.search().sort('filepath.raw')
-    return render(request, 'search.html', {'digital_files': digital_files})
+    # Sort options
+    sort_options = {
+        'path': 'filepath.raw',
+        'format': 'fileformat.raw',
+        'size': 'size_bytes',
+        'date': 'datemodified.raw',
+    }
+    sort_option, sort_dir = get_sort_params(request, sort_options, 'path')
+    sort_field = sort_options.get(sort_option)
+
+    # Search
+    search = DigitalFile.es_doc.search()
+    fields = ['filepath', 'fileformat', 'datemodified', 'dip.identifier']
+    search = add_query_to_search(search, request, fields)
+    search = search.sort({sort_field: {'order': sort_dir}})
+
+    # Pagination
+    page = get_page_from_search(search, request)
+    digital_files = page.object_list.execute()
+
+    table_headers = [
+        ('Filepath', 'path'),
+        ('Format', 'format'),
+        ('Size (bytes)', 'size'),
+        ('Last modified', 'date'),
+        ('Folder', None),
+        ('Details', None),
+    ]
+
+    return render(request, 'search.html', {
+        'digital_files': digital_files,
+        'table_headers': table_headers,
+        'sort_option': sort_option,
+        'sort_dir': sort_dir,
+        'page': page,
+    })
 
 
 @login_required(login_url='/login/')
 def collection(request, pk):
     collection = get_object_or_404(Collection, pk=pk)
-    dips = DIP.es_doc.search().query(
+
+    # Sort options
+    sort_options = {
+        'identifier': 'dc.identifier.raw',
+        'title': 'dc.title.raw',
+    }
+    sort_option, sort_dir = get_sort_params(request, sort_options, 'identifier')
+    sort_field = sort_options.get(sort_option)
+
+    # Search
+    search = DIP.es_doc.search().query(
         'match',
         **{'collection.id': pk},
-    ).sort('dc.identifier.raw')
-    return render(request, 'collection.html', {'collection': collection, 'dips': dips})
+    )
+    search = add_query_to_search(search, request, ['dc.*'])
+    search = search.sort({sort_field: {'order': sort_dir}})
+
+    # Pagination
+    page = get_page_from_search(search, request)
+    dips = page.object_list.execute()
+
+    table_headers = [
+        ('Identifier', 'identifier'),
+        ('Title', 'title'),
+        ('Date', None),
+        ('Description', None),
+        ('Details', None),
+    ]
+
+    return render(request, 'collection.html', {
+        'collection': collection,
+        'dips': dips,
+        'table_headers': table_headers,
+        'sort_option': sort_option,
+        'sort_dir': sort_dir,
+        'page': page,
+    })
 
 
 @login_required(login_url='/login/')
 def dip(request, pk):
     dip = get_object_or_404(DIP, pk=pk)
-    digital_files = DigitalFile.es_doc.search().query(
+
+    # Sort options
+    sort_options = {
+        'path': 'filepath.raw',
+        'format': 'fileformat.raw',
+        'size': 'size_bytes',
+        'date': 'datemodified.raw',
+    }
+    sort_option, sort_dir = get_sort_params(request, sort_options, 'path')
+    sort_field = sort_options.get(sort_option)
+
+    # Search
+    search = DigitalFile.es_doc.search().query(
         'match',
         **{'dip.id': pk},
-    ).sort('filepath.raw')
-    return render(request, 'dip.html', {'dip': dip, 'digital_files': digital_files})
+    )
+    fields = ['filepath', 'fileformat', 'datemodified', 'dip.identifier']
+    search = add_query_to_search(search, request, fields)
+    search = search.sort({sort_field: {'order': sort_dir}})
+
+    # Pagination
+    page = get_page_from_search(search, request)
+    digital_files = page.object_list.execute()
+
+    table_headers = [
+        ('Filepath', 'path'),
+        ('Format', 'format'),
+        ('Size (bytes)', 'size'),
+        ('Last modified', 'date'),
+        ('Details', None),
+    ]
+
+    return render(request, 'dip.html', {
+        'dip': dip,
+        'digital_files': digital_files,
+        'table_headers': table_headers,
+        'sort_option': sort_option,
+        'sort_dir': sort_dir,
+        'page': page,
+    })
 
 
 @login_required(login_url='/login/')

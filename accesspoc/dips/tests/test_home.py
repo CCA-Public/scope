@@ -14,7 +14,8 @@ class HomeTests(TestCase):
         self.client.login(username='temp', password='temp')
 
     @patch('elasticsearch_dsl.Search.execute')
-    def test_home_view_status_code(self, patch):
+    @patch('elasticsearch_dsl.Search.count', return_value=0)
+    def test_home_view_status_code(self, patch, patch_2):
         url = reverse('home')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

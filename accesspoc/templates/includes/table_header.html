@@ -1,0 +1,20 @@
+{% load custom_tags %}
+
+<tr>
+  {% for header, option in headers %}
+    {% if option %}
+      <th>
+        <span>{{ header }}</span>
+        {% if option == sort_option and sort_dir == 'desc' %}
+          <a href="?{% update_and_encode_params request.GET sort=option sort_dir='asc' page=None %}" class="active"><i class="fas fa-sort-down"></i></a>
+        {% elif option == sort_option %}
+          <a href="?{% update_and_encode_params request.GET sort=option sort_dir='desc' page=None %}" class="active"><i class="fas fa-sort-up"></i></a>
+        {% else %}
+          <a href="?{% update_and_encode_params request.GET sort=option sort_dir=None page=None %}"><i class="fas fa-sort"></i></a>
+        {% endif %}
+      </th>
+    {% else %}
+      <th>{{ header }}</th>
+    {% endif %}
+  {% endfor %}
+</tr>
