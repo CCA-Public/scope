@@ -326,7 +326,7 @@ docker-compose logs -f accesspoc elasticsearch
 
 To access the application with the default options visit http://localhost:43430 in the browser.
 
-## Credit
+## Credits
 
 The Digital Archives Access Interface was produced by the Canadian Centre for Architecture (CCA) and developed by Artefactual Systems, based on an project initially conceived by Tim Walsh, digital archivist at CCA from June 2015 to May 2018. 
 
