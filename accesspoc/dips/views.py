@@ -5,6 +5,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.translation import gettext as _
 from .models import User, Collection, DIP, DigitalFile, DublinCore
 from .forms import DeleteByDublinCoreForm, UserCreationForm, UserChangeForm
 from .parsemets import METS
@@ -94,11 +95,11 @@ def home(request):
     collections = page.object_list.execute()
 
     table_headers = [
-        ('Identifier', 'identifier'),
-        ('Title', 'title'),
-        ('Date', None),
-        ('Description', None),
-        ('Details', None),
+        (_('Identifier'), 'identifier'),
+        (_('Title'), 'title'),
+        (_('Date'), None),
+        (_('Description'), None),
+        (_('Details'), None),
     ]
 
     return render(request, 'home.html', {
@@ -150,14 +151,14 @@ def users(request):
     users = page.object_list
 
     table_headers = [
-        ('Username', 'username'),
-        ('First name', 'first_name'),
-        ('Last name', 'last_name'),
-        ('Email', 'email'),
-        ('Groups', None),
-        ('Active', None),
-        ('Admin', None),
-        ('Edit', None),
+        (_('Username'), 'username'),
+        (_('First name'), 'first_name'),
+        (_('Last name'), 'last_name'),
+        (_('Email'), 'email'),
+        (_('Groups'), None),
+        (_('Active'), None),
+        (_('Admin'), None),
+        (_('Edit'), None),
     ]
 
     return render(request, 'users.html', {
@@ -277,12 +278,12 @@ def search(request):
     digital_files = page.object_list.execute()
 
     table_headers = [
-        ('Filepath', 'path'),
-        ('Format', 'format'),
-        ('Size (bytes)', 'size'),
-        ('Last modified', 'date'),
-        ('Folder', None),
-        ('Details', None),
+        (_('Filepath'), 'path'),
+        (_('Format'), 'format'),
+        (_('Size (bytes)'), 'size'),
+        (_('Last modified'), 'date'),
+        (_('View parent folder'), None),
+        (_('File details'), None),
     ]
 
     return render(request, 'search.html', {
@@ -319,11 +320,11 @@ def collection(request, pk):
     dips = page.object_list.execute()
 
     table_headers = [
-        ('Identifier', 'identifier'),
-        ('Title', 'title'),
-        ('Date', None),
-        ('Description', None),
-        ('Details', None),
+        (_('Identifier'), 'identifier'),
+        (_('Title'), 'title'),
+        (_('Date'), None),
+        (_('Description'), None),
+        (_('Details'), None),
     ]
 
     return render(request, 'collection.html', {
@@ -364,11 +365,11 @@ def dip(request, pk):
     digital_files = page.object_list.execute()
 
     table_headers = [
-        ('Filepath', 'path'),
-        ('Format', 'format'),
-        ('Size (bytes)', 'size'),
-        ('Last modified', 'date'),
-        ('Details', None),
+        (_('Filepath'), 'path'),
+        (_('Format'), 'format'),
+        (_('Size (bytes)'), 'size'),
+        (_('Last modified'), 'date'),
+        (_('Details'), None),
     ]
 
     return render(request, 'dip.html', {
@@ -425,7 +426,6 @@ def new_dip(request):
     DIPForm = modelform_factory(
         DIP,
         fields=('collection', 'objectszip',),
-        labels={'objectszip': 'Objects zip file'},
     )
     dip_form = DIPForm(request.POST or None, request.FILES or None)
     DublinCoreForm = modelform_factory(DublinCore, fields=('identifier',))

@@ -1,21 +1,20 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% load i18n %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item active">Collections</li>
-{% endblock %}
+{% block title %}{% trans "Home" %}{% endblock %}
 
 {% block content %}
-  <h2>Collections</h2>
-  <p><em>Select an archive/collection with available born-digital content from the list below, or search across digital files in all available collections by selecting "Search" from the menu bar above.</em></p>
-  {% include 'includes/table_form.html' %}
+  <h2>{% trans "Browse collections" %}</h2>
+  <p><em>{% trans "To access born digital content within an archive/collection, select \"See more\" from the list below. To search digital files across all collections, select \"Search\" from the menu above." %}</em></p>
+  {% trans "Search collection titles" as placeholder %}
+  {% include 'includes/table_form.html' with placeholder=placeholder %}
   <div class="table-responsive">
     <table class="table table-striped table-bordered table-condensed">
       {% include 'includes/table_header.html' with headers=table_headers %}
       {% if not collections %}
         <tr>
-          <td colspan="5" class="text-center">No matching records found</td>
+          <td colspan="5" class="text-center">{% trans "No matching records found" %}</td>
         </tr>
       {% endif %}
       {% for collection in collections %}
@@ -24,7 +23,7 @@
           <td>{{ collection.dc.title|default:'' }}</td>
           <td>{{ collection.dc.date|default:'' }}</td>
           <td>{{ collection.dc.description|default:''|safe }}</td>
-          <td><a href="{% url 'collection' collection.meta.id %}"><button class="btn btn-sm btn-primary">View</button></a></td>
+          <td><a href="{% url 'collection' collection.meta.id %}"><button class="btn btn-sm btn-primary">{% trans "See more" %}</button></a></td>
         </tr>
       {% endfor %}
     </table>

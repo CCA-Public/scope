@@ -64,6 +64,7 @@ The following steps are just an example of how to run the application in a produ
 
 * Python 3.4 or higher
 * Elasticsearch 6.x
+* gettext
 
 ### Environment
 
@@ -157,31 +158,38 @@ source venv/bin/activate
 pip install -r requirements/production.txt
 ```
 
-Export the environment for the `manage.py` commands:
+Export the environment for the `manage.py` commands and go to the 'accesspoc' directory:
 
 ```
 export $(cat ~/accesspoc-env)
+cd accesspoc
 ```
 
 Initialize the database:
 
 ```
-accesspoc/manage.py migrate
+./manage.py migrate
 ```
 
 Create search indexes:
 
 ```
-accesspoc/manage.py index_data
+./manage.py index_data
 ```
 
 Add a superuser:
 
 ```
-accesspoc/manage.py createsuperuser
+./manage.py createsuperuser
 ```
 
 Follow the instructions to create a user with full admin rights.
+
+Compile translation files:
+
+```
+./manage.py compilemessages
+```
 
 You can now deactivate the environment and go back to the root session:
 
@@ -311,6 +319,12 @@ docker-compose exec accesspoc ./manage.py createsuperuser
 
 Follow the instructions to create a user with full admin rights.
 
+Compile translation files:
+
+```
+docker-compose exec accesspoc ./manage.py compilemessages
+```
+
 To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
 
 ```
@@ -328,10 +342,10 @@ To access the application with the default options visit http://localhost:43430 
 
 ## Credits
 
-The Digital Archives Access Interface was produced by the Canadian Centre for Architecture (CCA) and developed by Artefactual Systems, based on an project initially conceived by Tim Walsh, digital archivist at CCA from June 2015 to May 2018. 
+The Digital Archives Access Interface was produced by the Canadian Centre for Architecture (CCA) and developed by Artefactual Systems, based on an project initially conceived by Tim Walsh, digital archivist at CCA from June 2015 to May 2018.
 
 The Digital Archives Access Interface is a project financed within the framework of the Montreal Cultural Development grant awarded by the City of Montreal and the Quebec Department of Culture and Communications.
 
 L’Interface d'accès aux archives numériques a été conçue par le Centre Canadien pour l'Architecture (CCA) et développée par Artefactual Systems, à partir d’un concept initialement élaboré par Tim Walsh, archiviste numérique au CCA, de juin 2015 à mai 2018.
- 
+
 L’Interface d’accès aux archives numériques est un projet financé dans le cadre de l’Entente sur le développement culturel de Montréal par la Ville de Montréal et le ministère de la Culture et des Communications.

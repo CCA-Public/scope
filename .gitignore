@@ -20,3 +20,6 @@ accesspoc/media/
 .coverage
 .coverage\.*
 coverage.xml
+
+# Compiled translation files
+*.mo

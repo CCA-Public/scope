@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}New User{% endblock %}
+{% load i18n %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'users' %}">Users</a></li>
-  <li class="breadcrumb-item active">New User</li>
-{% endblock %}
+{% block title %}{% trans "New User" %}{% endblock %}
 
 {% block content %}
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'users' %}">{% trans "Users" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "New User" %}</li>
+  </ol>
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
   </form>
 {% endblock %}

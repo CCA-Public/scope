@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 
 {% load widget_tweaks %}
+{% load i18n %}
 
-{% block title %}Delete Collection{% endblock %}
-
-{% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'collection' collection.pk %}">{{ collection }}</a></li>
-  <li class="breadcrumb-item active">Delete</li>
-{% endblock %}
+{% block title %}{% trans "Delete Collection" %}{% endblock %}
 
 {% block content %}
-  <h3>Confirm Deletion</h3>
-  <p>Note: Deleting this Collection will also delete all child records (DIPs, digital files, and PREMIS events).</p>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Collections" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collection' collection.pk %}">{{ collection }}</a></li>
+    <li class="breadcrumb-item active">{% trans "Delete" %}</li>
+  </ol>
+  <h3>{% trans "Confirm Deletion" %}</h3>
+  <p>{% trans "Note: Deleting this Collection will also delete all child records (DIPs, digital files, and PREMIS events)." %}</p>
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
   </form>
 {% endblock %}

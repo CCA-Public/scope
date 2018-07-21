@@ -4,7 +4,6 @@
   {% for header, option in headers %}
     {% if option %}
       <th>
-        <span>{{ header }}</span>
         {% if option == sort_option and sort_dir == 'desc' %}
           <a href="?{% update_and_encode_params request.GET sort=option sort_dir='asc' page=None %}" class="active"><i class="fas fa-sort-down"></i></a>
         {% elif option == sort_option %}
@@ -12,6 +11,7 @@
         {% else %}
           <a href="?{% update_and_encode_params request.GET sort=option sort_dir=None page=None %}"><i class="fas fa-sort"></i></a>
         {% endif %}
+        <span>{{ header }}</span>
       </th>
     {% else %}
       <th>{{ header }}</th>

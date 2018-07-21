@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
+from django.utils.translation import gettext_lazy as _
 from django import forms
 from .models import User, DublinCore
 
@@ -9,28 +10,32 @@ class DeleteByDublinCoreForm(forms.ModelForm):
     class Meta:
         model = DublinCore
         fields = ['identifier']
+        labels = {
+            'identifier': _('Identifier'),
+        }
 
     def clean_identifier(self):
         if self.instance.identifier != self.cleaned_data['identifier']:
-            raise forms.ValidationError('Identifier does not match')
+            raise forms.ValidationError(_('Identifier does not match'))
         return self.cleaned_data['identifier']
 
 
 class UserCreationForm(UserCreationForm):
-    is_superuser = forms.BooleanField(label='Administrator', required=False)
+    is_superuser = forms.BooleanField(required=False, label=_('Administrator'))
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         self.fields['groups'] = forms.MultipleChoiceField(
             choices=Group.objects.all().values_list('id', 'name'),
             required=False,
-            help_text='Ctrl + Click to select multiple or unselect.',
+            label=_('Groups'),
+            help_text=_('Ctrl + Click to select multiple or unselect.'),
         )
 
     def clean_password1(self):
         data = self.cleaned_data['password1']
         if data != '' and len(data) < 8:
-            raise forms.ValidationError('Password should be at least 8 characters long')
+            raise forms.ValidationError(_('Password should be at least 8 characters long'))
         return data
 
     def save(self, commit=True):
@@ -50,7 +55,7 @@ class UserCreationForm(UserCreationForm):
 class UserChangeForm(UserChangeForm):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     password_confirmation = forms.CharField(widget=forms.PasswordInput, required=False)
-    is_superuser = forms.BooleanField(label='Administrator', required=False)
+    is_superuser = forms.BooleanField(required=False, label=_('Administrator'))
 
     def __init__(self, *args, **kwargs):
         suppress_administrator_toggle = kwargs.get('suppress_administrator_toggle', False)
@@ -64,7 +69,8 @@ class UserChangeForm(UserChangeForm):
         self.fields['groups'] = forms.MultipleChoiceField(
             choices=Group.objects.all().values_list('id', 'name'),
             required=False,
-            help_text='Ctrl + Click to select multiple or unselect.',
+            label=_('Groups'),
+            help_text=_('Ctrl + Click to select multiple or unselect.'),
         )
 
     class Meta:
@@ -77,14 +83,14 @@ class UserChangeForm(UserChangeForm):
     def clean_password(self):
         data = self.cleaned_data['password']
         if self.cleaned_data['password'] != '' and len(self.cleaned_data['password']) < 8:
-            raise forms.ValidationError('Password should be at least 8 characters long')
+            raise forms.ValidationError(_('Password should be at least 8 characters long'))
         return data
 
     def clean(self):
         cleaned_data = super(UserChangeForm, self).clean()
         if cleaned_data.get('password') != '' or cleaned_data.get('password_confirmation') != '':
             if cleaned_data.get('password') != cleaned_data.get('password_confirmation'):
-                raise forms.ValidationError('Password and password confirmation do not match')
+                raise forms.ValidationError(_('Password and password confirmation do not match'))
         return cleaned_data
 
     def save(self, commit=True):

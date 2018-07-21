@@ -11,6 +11,7 @@ the ES document.
 from abc import ABCMeta, abstractmethod
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 from search.functions import delete_document
@@ -69,20 +70,20 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
 
 
 class DublinCore(models.Model):
-    identifier = models.CharField(max_length=50)
-    title = models.CharField(max_length=200, blank=True)
-    creator = models.CharField(max_length=200, blank=True)
-    subject = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True)
-    publisher = models.CharField(max_length=200, blank=True)
-    contributor = models.CharField(max_length=200, blank=True)
-    date = models.CharField(max_length=21, blank=True)
-    type = models.CharField(max_length=200, blank=True)
-    format = models.TextField(blank=True)
-    source = models.CharField(max_length=200, blank=True)
-    language = models.CharField(max_length=20, blank=True)
-    coverage = models.CharField(max_length=200, blank=True)
-    rights = models.CharField(max_length=200, blank=True)
+    identifier = models.CharField(_('identifier'), max_length=50)
+    title = models.CharField(_('title'), max_length=200, blank=True)
+    creator = models.CharField(_('creator'), max_length=200, blank=True)
+    subject = models.CharField(_('subject'), max_length=200, blank=True)
+    description = models.TextField(_('description'), blank=True)
+    publisher = models.CharField(_('publisher'), max_length=200, blank=True)
+    contributor = models.CharField(_('contributor'), max_length=200, blank=True)
+    date = models.CharField(_('date'), max_length=21, blank=True)
+    type = models.CharField(_('type'), max_length=200, blank=True)
+    format = models.TextField(_('format'), blank=True)
+    source = models.CharField(_('source'), max_length=200, blank=True)
+    language = models.CharField(_('language'), max_length=20, blank=True)
+    coverage = models.CharField(_('coverage'), max_length=200, blank=True)
+    rights = models.CharField(_('rights'), max_length=200, blank=True)
 
     def __str__(self):
         return self.identifier
@@ -97,7 +98,7 @@ class DublinCore(models.Model):
 
 
 class Collection(AbstractEsModel):
-    link = models.URLField(blank=True)
+    link = models.URLField(_('finding aid'), blank=True)
     dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -117,9 +118,13 @@ class Collection(AbstractEsModel):
 
 
 class DIP(AbstractEsModel):
-    objectszip = models.FileField()
+    objectszip = models.FileField(_('objects zip file'))
     uploaded = models.DateTimeField(auto_now_add=True)
-    collection = models.ForeignKey(Collection, related_name='dips')
+    collection = models.ForeignKey(
+        Collection,
+        related_name='dips',
+        verbose_name=_('collection'),
+    )
     dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):

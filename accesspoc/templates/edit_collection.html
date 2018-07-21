@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 
 {% load widget_tweaks %}
+{% load i18n %}
 
-{% block title %}Edit Collection{% endblock %}
-
-{% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'collection' collection.pk %}">{{ collection }}</a></li>
-  <li class="breadcrumb-item active">Edit</li>
-{% endblock %}
+{% block title %}{% trans "Edit Collection" %}{% endblock %}
 
 {% block content %}
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Collections" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collection' collection.pk %}">{{ collection }}</a></li>
+    <li class="breadcrumb-item active">{% trans "Edit" %}</li>
+  </ol>
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' with form=dc_form %}
     {% include 'includes/form.html' with form=collection_form %}
-    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
   </form>
 {% endblock %}

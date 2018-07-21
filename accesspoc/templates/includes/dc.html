@@ -1,16 +1,18 @@
+{% load i18n %}
+
 {% if dc %}
-  <p><strong>Identifier:</strong> {{ dc.identifier }}</p>
-  <p><strong>Title:</strong> {{ dc.title }}</p>
-  <p><strong>Date:</strong> {{ dc.date }}</p>
-  <p><strong>Creator:</strong> {{ dc.creator }}</p>
-  <p><strong>Format:</strong> {{ dc.format|safe }}</p>
-  <p><strong>Description:</strong> {{ dc.description|safe }}</p>
-  <p><strong>Subject:</strong> {{ dc.subject }}</p>
-  <p><strong>Publisher:</strong> {{ dc.publisher }}</p>
-  <p><strong>Contributor:</strong> {{ dc.contributor }}</p>
-  <p><strong>Type:</strong> {{ dc.type }}</p>
-  <p><strong>Source:</strong> {{ dc.source }}</p>
-  <p><strong>Language:</strong> {{ dc.language }}</p>
-  <p><strong>Coverage:</strong> {{ dc.coverage }}</p>
-  <p><strong>Rights:</strong> {{ dc.rights }}</p>
+  <p><strong>{% trans "Identifier" %}:</strong> {{ dc.identifier }}</p>
+  <p><strong>{% trans "Title" %}:</strong> {{ dc.title }}</p>
+  <p><strong>{% trans "Date" %}:</strong> {{ dc.date }}</p>
+  <p><strong>{% trans "Creator" %}:</strong> {{ dc.creator }}</p>
+  <p><strong>{% trans "Format" %}:</strong> {{ dc.format|safe }}</p>
+  <p><strong>{% trans "Description" %}:</strong> {{ dc.description|safe }}</p>
+  <p><strong>{% trans "Subject" %}:</strong> {{ dc.subject }}</p>
+  <p><strong>{% trans "Publisher" %}:</strong> {{ dc.publisher }}</p>
+  <p><strong>{% trans "Contributor" %}:</strong> {{ dc.contributor }}</p>
+  <p><strong>{% trans "Type" %}:</strong> {{ dc.type }}</p>
+  <p><strong>{% trans "Source" %}:</strong> {{ dc.source }}</p>
+  <p><strong>{% trans "Language" %}:</strong> {{ dc.language }}</p>
+  <p><strong>{% trans "Coverage" %}:</strong> {{ dc.coverage }}</p>
+  <p><strong>{% trans "Rights" %}:</strong> {{ dc.rights }}</p>
 {% endif %}

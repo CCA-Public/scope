@@ -1,25 +1,36 @@
 {% load custom_tags %}
+{% load i18n %}
 
 {% if page.paginator.count %}
   <div class="table-pagination">
     {% if not page.has_other_pages %}
-      <span>Showing {{ page.paginator.count }} results</span>
+      <span>
+        {% blocktrans trimmed count counter=page.paginator.count %}
+        Showing {{ counter }} result
+        {% plural %}
+        Showing {{ counter }} results
+        {% endblocktrans %}
+      </span>
     {% else %}
-      <span>Showing {{ page.start_index }} to {{ page.end_index }} of {{ page.paginator.count }} results</span>
-      <nav aria-label="Page navigation">
+      <span>
+        {% blocktrans trimmed with from=page.start_index to=page.end_index total=page.paginator.count %}
+        Showing {{ from }} to {{ to }} of {{ total }} results
+        {% endblocktrans %}
+      </span>
+      <nav aria-label="{% trans "Page navigation" %}">
         <ul class="pagination justify-content-end">
           {% if page.has_previous %}
             <li class="page-item">
-              <a class="page-link" href="?{% update_and_encode_params request.GET page=page.previous_page_number %}" aria-label="Previous">
+              <a class="page-link" href="?{% update_and_encode_params request.GET page=page.previous_page_number %}" aria-label="{% trans "Previous" %}">
                 <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
+                <span class="sr-only">{% trans "Previous" %}</span>
               </a>
             </li>
           {% else %}
             <li class="page-item disabled">
               <span class="page-link">
                 <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
+                <span class="sr-only">{% trans "Previous" %}</span>
               </span>
             </li>
           {% endif %}
@@ -28,7 +39,7 @@
               <li class="page-item active">
                 <span class="page-link">
                   {{ i }}
-                  <span class="sr-only">(current)</span>
+                  <span class="sr-only">({% trans "current" %})</span>
                 </span>
               </li>
             {# Show only previous, next, first and last page links #}
@@ -45,16 +56,16 @@
           {% endfor %}
           {% if page.has_next %}
             <li class="page-item">
-              <a class="page-link" href="?{% update_and_encode_params request.GET page=page.next_page_number %}" aria-label="Next">
+              <a class="page-link" href="?{% update_and_encode_params request.GET page=page.next_page_number %}" aria-label="{% trans "Next" %}">
                 <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
+                <span class="sr-only">{% trans "Next" %}</span>
               </a>
             </li>
           {% else %}
             <li class="page-item disabled">
               <span class="page-link">
                 <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
+                <span class="sr-only">{% trans "Next" %}</span>
               </span>
             </li>
           {% endif %}

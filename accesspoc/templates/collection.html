@@ -1,34 +1,39 @@
-{% extends 'base.html' %}{% load custom_tags %}
+{% extends 'base.html' %}
 
-{% block title %}Collection {{ collection }}{% endblock %}
+{% load custom_tags %}
+{% load i18n %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'home' %}">Collections</a></li>
-  <li class="breadcrumb-item active">{{ collection }}</li>
+{% block title %}
+{% blocktrans %}Collection {{ collection }}{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
-  <h2>Collection description</h2>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Collections" %}</a></li>
+    <li class="breadcrumb-item active">{{ collection }}</li>
+  </ol>
+  <h2>{% trans "Collection description" %}</h2>
   <br>
   <div>
     {% include 'includes/dc.html' with dc=collection.dc %}
-    <p><strong>Finding aid:</strong> <a href="{{ collection.link }}">{{ collection.link }}</a></p>
+    <p><strong>{% trans "Finding aid" %}:</strong> <a href="{{ collection.link }}">{{ collection.link }}</a></p>
     {% if user.is_editor %}
-      <a href="{% url 'edit_collection' collection.pk %}"><button class="btn btn-default">Edit</button></a>
+      <a href="{% url 'edit_collection' collection.pk %}"><button class="btn btn-default">{% trans "Edit" %}</button></a>
     {% endif %}
     {% if user.is_superuser %}
-      <a href="{% url 'delete_collection' collection.pk %}"><button class="btn btn-danger">Delete</button></a>
+      <a href="{% url 'delete_collection' collection.pk %}"><button class="btn btn-danger">{% trans "Delete" %}</button></a>
     {% endif %}
   </div>
   <br>
-  <h2>Folders in this collection</h2>
-  {% include 'includes/table_form.html' %}
+  <h2>{% trans "Folders in this collection" %}</h2>
+  {% trans "Search" as placeholder %}
+  {% include 'includes/table_form.html' with placeholder=placeholder %}
   <div class="table-responsive">
     <table class="table table-striped table-bordered table-condensed">
       {% include 'includes/table_header.html' with headers=table_headers %}
       {% if not dips %}
         <tr>
-          <td colspan="5" class="text-center">No matching records found</td>
+          <td colspan="5" class="text-center">{% trans "No matching records found" %}</td>
         </tr>
       {% endif %}
       {% for dip in dips %}
@@ -37,7 +42,7 @@
           <td>{{ dip.dc.title|default:'' }}</td>
           <td>{{ dip.dc.date|default:'' }}</td>
           <td>{{ dip.dc.description|default:''|safe }}</td>
-          <td><a href="{% url 'dip' dip.meta.id %}"><button class="btn btn-sm btn-primary">View</button></a></td>
+          <td><a href="{% url 'dip' dip.meta.id %}"><button class="btn btn-sm btn-primary">{% trans "See more" %}</button></a></td>
         </tr>
       {% endfor %}
     </table>

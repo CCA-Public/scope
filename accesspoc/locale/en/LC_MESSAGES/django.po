@@ -1,0 +1,678 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-07-21 12:39+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: accesspoc/settings.py:123
+msgid "English"
+msgstr ""
+
+#: accesspoc/settings.py:124
+msgid "French"
+msgstr ""
+
+#: dips/forms.py:14 dips/views.py:98 dips/views.py:323
+#: templates/includes/dc.html:4
+msgid "Identifier"
+msgstr ""
+
+#: dips/forms.py:19
+msgid "Identifier does not match"
+msgstr ""
+
+#: dips/forms.py:24 dips/forms.py:58
+msgid "Administrator"
+msgstr ""
+
+#: dips/forms.py:31 dips/forms.py:72 dips/views.py:158
+msgid "Groups"
+msgstr ""
+
+#: dips/forms.py:32 dips/forms.py:73
+msgid "Ctrl + Click to select multiple or unselect."
+msgstr ""
+
+#: dips/forms.py:38 dips/forms.py:86
+msgid "Password should be at least 8 characters long"
+msgstr ""
+
+#: dips/forms.py:93
+msgid "Password and password confirmation do not match"
+msgstr ""
+
+#: dips/models.py:73
+msgid "identifier"
+msgstr ""
+
+#: dips/models.py:74
+msgid "title"
+msgstr ""
+
+#: dips/models.py:75
+msgid "creator"
+msgstr ""
+
+#: dips/models.py:76
+msgid "subject"
+msgstr ""
+
+#: dips/models.py:77
+msgid "description"
+msgstr ""
+
+#: dips/models.py:78
+msgid "publisher"
+msgstr ""
+
+#: dips/models.py:79
+msgid "contributor"
+msgstr ""
+
+#: dips/models.py:80
+msgid "date"
+msgstr ""
+
+#: dips/models.py:81
+msgid "type"
+msgstr ""
+
+#: dips/models.py:82
+msgid "format"
+msgstr ""
+
+#: dips/models.py:83
+msgid "source"
+msgstr ""
+
+#: dips/models.py:84
+msgid "language"
+msgstr ""
+
+#: dips/models.py:85
+msgid "coverage"
+msgstr ""
+
+#: dips/models.py:86
+msgid "rights"
+msgstr ""
+
+#: dips/models.py:101
+msgid "finding aid"
+msgstr ""
+
+#: dips/models.py:121
+msgid "objects zip file"
+msgstr ""
+
+#: dips/models.py:126
+msgid "collection"
+msgstr ""
+
+#: dips/views.py:99 dips/views.py:324 templates/includes/dc.html:5
+msgid "Title"
+msgstr ""
+
+#: dips/views.py:100 dips/views.py:325 templates/includes/dc.html:6
+msgid "Date"
+msgstr ""
+
+#: dips/views.py:101 dips/views.py:326 templates/includes/dc.html:9
+msgid "Description"
+msgstr ""
+
+#: dips/views.py:102 dips/views.py:327 dips/views.py:372
+msgid "Details"
+msgstr ""
+
+#: dips/views.py:154
+msgid "Username"
+msgstr ""
+
+#: dips/views.py:155
+msgid "First name"
+msgstr ""
+
+#: dips/views.py:156
+msgid "Last name"
+msgstr ""
+
+#: dips/views.py:157
+msgid "Email"
+msgstr ""
+
+#: dips/views.py:159
+msgid "Active"
+msgstr ""
+
+#: dips/views.py:160
+msgid "Admin"
+msgstr ""
+
+#: dips/views.py:161 templates/collection.html:21 templates/dip.html:23
+#: templates/edit_collection.html:12 templates/edit_dip.html:14
+msgid "Edit"
+msgstr ""
+
+#: dips/views.py:281 dips/views.py:368 templates/digitalfile.html:22
+msgid "Filepath"
+msgstr ""
+
+#: dips/views.py:282 dips/views.py:369 templates/includes/dc.html:8
+msgid "Format"
+msgstr ""
+
+#: dips/views.py:283 dips/views.py:370 templates/digitalfile.html:25
+msgid "Size (bytes)"
+msgstr ""
+
+#: dips/views.py:284 dips/views.py:371
+msgid "Last modified"
+msgstr ""
+
+#: dips/views.py:285
+msgid "View parent folder"
+msgstr ""
+
+#: dips/views.py:286
+msgid "File details"
+msgstr ""
+
+#: templates/base.html:22
+msgid "Digital Archives Access Interface"
+msgstr ""
+
+#: templates/base.html:25 templates/collection.html:29 templates/dip.html:39
+#: templates/search.html:6 templates/users.html:12
+msgid "Search"
+msgstr ""
+
+#: templates/base.html:28
+msgid "FAQ"
+msgstr ""
+
+#: templates/base.html:35
+msgid "Select language"
+msgstr ""
+
+#: templates/base.html:53 templates/edit_collection.html:18
+#: templates/edit_dip.html:19 templates/edit_user.html:17
+#: templates/new_collection.html:17 templates/new_dip.html:17
+#: templates/new_user.html:15
+msgid "Submit"
+msgstr ""
+
+#: templates/base.html:65
+msgid "Edit Users"
+msgstr ""
+
+#: templates/base.html:69 templates/new_collection.html:6
+#: templates/new_collection.html:11
+msgid "Add New Collection"
+msgstr ""
+
+#: templates/base.html:70 templates/new_dip.html:11
+msgid "Add New Folder"
+msgstr ""
+
+#: templates/base.html:73
+msgid "Log out"
+msgstr ""
+
+#: templates/base.html:77
+msgid "Log in"
+msgstr ""
+
+#: templates/collection.html:7
+#, python-format
+msgid "Collection %(collection)s"
+msgstr ""
+
+#: templates/collection.html:12 templates/delete_collection.html:10
+#: templates/delete_dip.html:10 templates/digitalfile.html:12
+#: templates/dip.html:12 templates/edit_collection.html:10
+#: templates/edit_dip.html:10 templates/new_collection.html:10
+msgid "Collections"
+msgstr ""
+
+#: templates/collection.html:15
+msgid "Collection description"
+msgstr ""
+
+#: templates/collection.html:19
+msgid "Finding aid"
+msgstr ""
+
+#: templates/collection.html:24 templates/delete_collection.html:12
+#: templates/delete_collection.html:19 templates/delete_dip.html:14
+#: templates/delete_dip.html:21 templates/dip.html:26
+msgid "Delete"
+msgstr ""
+
+#: templates/collection.html:28
+msgid "Folders in this collection"
+msgstr ""
+
+#: templates/collection.html:36 templates/dip.html:46 templates/home.html:17
+#: templates/search.html:17 templates/users.html:19
+msgid "No matching records found"
+msgstr ""
+
+#: templates/collection.html:45 templates/dip.html:55 templates/home.html:26
+#: templates/search.html:27 templates/users.html:31
+msgid "See more"
+msgstr ""
+
+#: templates/delete_collection.html:6
+msgid "Delete Collection"
+msgstr ""
+
+#: templates/delete_collection.html:14
+msgid "Confirm Deletion"
+msgstr ""
+
+#: templates/delete_collection.html:15
+msgid ""
+"Note: Deleting this Collection will also delete all child records (DIPs, "
+"digital files, and PREMIS events)."
+msgstr ""
+
+#: templates/delete_dip.html:6
+msgid "Delete Folder"
+msgstr ""
+
+#: templates/delete_dip.html:12 templates/digitalfile.html:14
+#: templates/dip.html:14 templates/edit_dip.html:12
+msgid "Folder"
+msgstr ""
+
+#: templates/delete_dip.html:16
+msgid "Confirm deletion"
+msgstr ""
+
+#: templates/delete_dip.html:17
+msgid ""
+"Note: Deleting this DIP will also delete all child records (digital files "
+"and PREMIS events)."
+msgstr ""
+
+#: templates/digitalfile.html:7
+#, python-format
+msgid "Digital file %(digitalfile)s"
+msgstr ""
+
+#: templates/digitalfile.html:16
+msgid "Digital file"
+msgstr ""
+
+#: templates/digitalfile.html:19
+msgid "Digital file description"
+msgstr ""
+
+#: templates/digitalfile.html:21
+msgid "UUID"
+msgstr ""
+
+#: templates/digitalfile.html:23
+msgid "File format"
+msgstr ""
+
+#: templates/digitalfile.html:24
+msgid "File format version"
+msgstr ""
+
+#: templates/digitalfile.html:26
+msgid "Size (human readable)"
+msgstr ""
+
+#: templates/digitalfile.html:27
+msgid "Date modified"
+msgstr ""
+
+#: templates/digitalfile.html:28
+msgid "PRONOM ID"
+msgstr ""
+
+#: templates/digitalfile.html:29
+msgid "METS amdSec"
+msgstr ""
+
+#: templates/digitalfile.html:30
+#, python-format
+msgid "Checksum (%(digitalfile.hashtype)s)"
+msgstr ""
+
+#: templates/digitalfile.html:32
+msgid "Preservation metadata"
+msgstr ""
+
+#: templates/digitalfile.html:33
+msgid "Event log from our digital preservation repository for this file."
+msgstr ""
+
+#: templates/digitalfile.html:36
+#, python-format
+msgid "Event: %(event.uuid)s"
+msgstr ""
+
+#: templates/digitalfile.html:37
+msgid "Event type"
+msgstr ""
+
+#: templates/digitalfile.html:38
+msgid "Datetime"
+msgstr ""
+
+#: templates/digitalfile.html:39
+msgid "Event detail"
+msgstr ""
+
+#: templates/digitalfile.html:40
+msgid "Event outcome"
+msgstr ""
+
+#: templates/digitalfile.html:41
+msgid "Event detail note"
+msgstr ""
+
+#: templates/dip.html:7
+#, python-format
+msgid "Folder %(dip)s"
+msgstr ""
+
+#: templates/dip.html:19
+msgid "Folder description"
+msgstr ""
+
+#: templates/dip.html:30
+msgid "Attachments"
+msgstr ""
+
+#: templates/dip.html:32
+msgid "Digital files"
+msgstr ""
+
+#: templates/dip.html:33
+msgid "Download zip file"
+msgstr ""
+
+#: templates/dip.html:38
+msgid "Digital files in this folder"
+msgstr ""
+
+#: templates/edit_collection.html:6
+msgid "Edit Collection"
+msgstr ""
+
+#: templates/edit_dip.html:6
+msgid "Edit Folder"
+msgstr ""
+
+#: templates/edit_user.html:6
+#, python-format
+msgid "User - %(user.username)s"
+msgstr ""
+
+#: templates/edit_user.html:11 templates/new_user.html:9 templates/users.html:6
+#: templates/users.html:10
+msgid "Users"
+msgstr ""
+
+#: templates/faq.html:6
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: templates/faq.html:9
+msgid "Frequently asked questions"
+msgstr ""
+
+#: templates/faq.html:11
+msgid "How are digital files organized?"
+msgstr ""
+
+#: templates/faq.html:12
+msgid "There are three types of records in the DIP Access Interface:"
+msgstr ""
+
+#: templates/faq.html:14
+msgid "Collections:"
+msgstr ""
+
+#: templates/faq.html:14
+msgid ""
+"These are the highest level of organization, and typically correspond to an "
+"archival fonds or collection."
+msgstr ""
+
+#: templates/faq.html:15
+msgid "Folders:"
+msgstr ""
+
+#: templates/faq.html:15
+msgid "Folders are within Collections, and correspond to a \\"
+msgstr ""
+
+#: templates/faq.html:16
+msgid "Digital files:"
+msgstr ""
+
+#: templates/faq.html:16
+msgid ""
+"Indivdual digital files live within Folders, and have detailed pages "
+"containing additional information that are accessible from the Folder and "
+"Search pages."
+msgstr ""
+
+#: templates/faq.html:18
+msgid "How do I get access to the actual files?"
+msgstr ""
+
+#: templates/faq.html:19
+msgid ""
+"Digital files cannot be downloaded individually, but instead must be "
+"downloaded as a package zip file (a \\"
+msgstr ""
+
+#: templates/faq.html:20
+msgid "From the Folder detail page, click \\"
+msgstr ""
+
+#: templates/faq.html:21
+msgid "What is a METS file?"
+msgstr ""
+
+#: templates/faq.html:22
+msgid ""
+"The METS file is an XML file that lives within each preservation and access "
+"package generated by CCA's digital preservation software, Archivematica. It "
+"follows the <a href=\\"
+msgstr ""
+
+#: templates/faq.html:23
+msgid ""
+"We provide the METS file in the DIP in case it's helpful but if you're not "
+"familiar with the format don't worry. Selected information from the METS "
+"file is also included in the search interface and Digital file detail pages, "
+"extracted from the METS file automatically and presented for you in a more "
+"user-friendly manner."
+msgstr ""
+
+#: templates/faq.html:24
+msgid "What is the submissionDocumentation folder?"
+msgstr ""
+
+#: templates/faq.html:25
+msgid ""
+"The submissionDocumentation folder contains contextual documentation related "
+"to the files in a particular DIP. The contents of this folder might vary "
+"from DIP to DIP and archive to archive. One common file to find here in "
+"CCA's DIPs is a DFXML (<a href=\\"
+msgstr ""
+
+#: templates/faq.html:26
+msgid ""
+"Some of the files I want to use are in a file format that is unidentified or "
+"won't open. How can I see what is in the files?"
+msgstr ""
+
+#: templates/faq.html:27
+msgid ""
+"The dedicated CAD workstation in the CCA Study Room contains a wide array of "
+"software and can open many file formats, but not all. If you have trouble "
+"opening a file, please contact Collection Reference and ask to speak with "
+"the Digital Archivist. In some cases, the Digital Archivist may be able to "
+"migrate the file to a newer format that is usable on the CAD workstation or "
+"to set up a virtual machine or emulator using original software to provide "
+"access to obsolete files."
+msgstr ""
+
+#: templates/home.html:5
+msgid "Home"
+msgstr ""
+
+#: templates/home.html:8
+msgid "Browse collections"
+msgstr ""
+
+#: templates/home.html:9
+msgid "To access born digital content within an archive/collection, select \\"
+msgstr ""
+
+#: templates/home.html:10
+msgid "Search collection titles"
+msgstr ""
+
+#: templates/includes/dc.html:7
+msgid "Creator"
+msgstr ""
+
+#: templates/includes/dc.html:10
+msgid "Subject"
+msgstr ""
+
+#: templates/includes/dc.html:11
+msgid "Publisher"
+msgstr ""
+
+#: templates/includes/dc.html:12
+msgid "Contributor"
+msgstr ""
+
+#: templates/includes/dc.html:13
+msgid "Type"
+msgstr ""
+
+#: templates/includes/dc.html:14
+msgid "Source"
+msgstr ""
+
+#: templates/includes/dc.html:15
+msgid "Language"
+msgstr ""
+
+#: templates/includes/dc.html:16
+msgid "Coverage"
+msgstr ""
+
+#: templates/includes/dc.html:17
+msgid "Rights"
+msgstr ""
+
+#: templates/includes/table_pager.html:8
+#, python-format
+msgid "Showing %(counter)s result"
+msgid_plural "Showing %(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/includes/table_pager.html:16
+#, python-format
+msgid "Showing %(from)s to %(to)s of %(total)s results"
+msgstr ""
+
+#: templates/includes/table_pager.html:20
+msgid "Page navigation"
+msgstr ""
+
+#: templates/includes/table_pager.html:24
+#: templates/includes/table_pager.html:26
+#: templates/includes/table_pager.html:33
+msgid "Previous"
+msgstr ""
+
+#: templates/includes/table_pager.html:42
+msgid "current"
+msgstr ""
+
+#: templates/includes/table_pager.html:59
+#: templates/includes/table_pager.html:61
+#: templates/includes/table_pager.html:68
+msgid "Next"
+msgstr ""
+
+#: templates/login.html:5 templates/login.html:9 templates/login.html:14
+msgid "Login"
+msgstr ""
+
+#: templates/login.html:17
+msgid "Policies for use of born-digital material at CCA"
+msgstr ""
+
+#: templates/login.html:18
+msgid ""
+"Born-digital materials in the collection of the CCA are protected by "
+"copyright, licensing, and agreements with CCA's donors. Access to digital "
+"files is allowed only on the CCA's physical premises, and researchers are "
+"not permitted to take copies of files with them when leaving CCA except "
+"through a formal Reproductions request. Downloading files is permitted for "
+"CCA staff working on curatorial activities and for external researchers "
+"working on the dedicated access workstations in the CCA Study Room, for "
+"consultation in appropriate software."
+msgstr ""
+
+#: templates/login.html:19
+msgid ""
+"By logging into to the Access Proof of Concept tool, you agree to abide by "
+"the policies outlined above, including:"
+msgstr ""
+
+#: templates/login.html:21
+msgid ""
+"Not to copy any files to your personal computer, nor to take any files away "
+"with you at the end of your session."
+msgstr ""
+
+#: templates/login.html:22
+msgid ""
+"To submit any requests for Reproductions through the official channels, by "
+"sending an email with all relevant information to reproductions@cca.qc.ca"
+msgstr ""
+
+#: templates/new_dip.html:6
+msgid "Add New DIP"
+msgstr ""
+
+#: templates/new_dip.html:10
+msgid "Folders"
+msgstr ""
+
+#: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:38
+msgid "New User"
+msgstr ""
+
+#: templates/search.html:9 templates/search.html:10
+msgid "Search all digital files"
+msgstr ""
