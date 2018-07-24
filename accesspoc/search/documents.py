@@ -1,4 +1,4 @@
-from elasticsearch_dsl import DocType, InnerDoc, Keyword, Long, \
+from elasticsearch_dsl import analyzer, DocType, InnerDoc, Keyword, Long, \
     MetaField, Object, Text, Integer
 
 
@@ -31,7 +31,16 @@ class DIPDoc(DocType):
 
 class DigitalFileDoc(DocType):
     uuid = Text()
-    filepath = Text(fields={'raw': Keyword()})
+    # To split file extensions, the pattern tokenizer is used,
+    # which defaults to the "\W+" pattern.
+    filepath = Text(
+        fields={'raw': Keyword()},
+        analyzer=analyzer(
+            'filepath',
+            tokenizer='pattern',
+            filter=['lowercase'],
+        ),
+    )
     fileformat = Text(fields={'raw': Keyword()})
     size_bytes = Long()
     # TODO: Use date time field for datemodified, see #54
