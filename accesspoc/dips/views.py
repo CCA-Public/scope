@@ -2,7 +2,6 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Q
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
@@ -127,6 +126,7 @@ def users(request):
         'first_name': 'first_name',
         'last_name': 'last_name',
         'email': 'email',
+        'groups': 'group_names'
     }
     sort_option, sort_dir = get_sort_params(request, sort_options, 'username')
     sort_field = sort_options.get(sort_option)
@@ -134,17 +134,10 @@ def users(request):
         sort_field = '-%s' % sort_field
 
     # Search
+    query = None
     if 'query' in request.GET and request.GET['query']:
         query = request.GET['query']
-        users = User.objects.order_by(sort_field).filter(
-            Q(username__icontains=query) |
-            Q(first_name__icontains=query) |
-            Q(last_name__icontains=query) |
-            Q(email__icontains=query) |
-            Q(groups__name__icontains=query)
-        )
-    else:
-        users = User.objects.order_by(sort_field).all()
+    users = User.get_users(query, sort_field)
 
     # Pagination
     page = get_page_from_search(users, request)
@@ -155,7 +148,7 @@ def users(request):
         (_('First name'), 'first_name'),
         (_('Last name'), 'last_name'),
         (_('Email'), 'email'),
-        (_('Groups'), None),
+        (_('Groups'), 'groups'),
         (_('Active'), None),
         (_('Admin'), None),
         (_('Edit'), None),

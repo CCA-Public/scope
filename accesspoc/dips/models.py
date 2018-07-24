@@ -9,8 +9,8 @@ and a `get_es_data` method to transform to a dictionary representation of
 the ES document.
 """
 from abc import ABCMeta, abstractmethod
+from django.contrib.auth.models import Group, AbstractUser
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
@@ -32,6 +32,34 @@ class User(AbstractUser):
         return (
             self.is_superuser or
             self.groups.filter(name='Managers').exists()
+        )
+
+    @classmethod
+    def get_users(cls, query=None, sort_field='username'):
+        """
+        Get users based on a query string, querying over 'username',
+        'first_name', 'last_name', 'email' and a concatenation of related
+        group names separated by ', '. The group name concatenation
+        can be used to sort and display in the 'group_names' field and the
+        output will be the same as the equally called function from this model.
+        The resulting users will be ordered by a given 'sort_field'. Returns
+        all users if no query is given and sorts by 'username' by default.
+        """
+        class GroupsSQ(models.Subquery):
+            """Subquery to concatenate group names, requires MySQL or SQLite"""
+            template = "(SELECT GROUP_CONCAT(name, ', ') FROM (%(subquery)s))"
+            output_field = models.CharField()
+
+        subquery = GroupsSQ(Group.objects.filter(user=models.OuterRef('pk')))
+        users = cls.objects.annotate(group_names=subquery).order_by(sort_field)
+        if not query:
+            return users.all()
+        return users.filter(
+            models.Q(username__icontains=query) |
+            models.Q(first_name__icontains=query) |
+            models.Q(last_name__icontains=query) |
+            models.Q(email__icontains=query) |
+            models.Q(group_names__icontains=query)
         )
 
 

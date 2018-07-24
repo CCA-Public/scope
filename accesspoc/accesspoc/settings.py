@@ -86,6 +86,7 @@ WSGI_APPLICATION = 'accesspoc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# Requires MySQL or SQLite, the GROUP_CONCAT() function is being used
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

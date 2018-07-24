@@ -15,6 +15,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 200),
         ('basic', 200),
+        ('viewer', 200),
     ],
     'home': [
         ('unauth', 302),
@@ -22,6 +23,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 200),
         ('basic', 200),
+        ('viewer', 200),
     ],
     'search': [
         ('unauth', 302),
@@ -29,6 +31,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 200),
         ('basic', 200),
+        ('viewer', 200),
     ],
     'users': [
         ('unauth', 302),
@@ -36,6 +39,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 302),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'new_user': [
         ('unauth', 302),
@@ -43,6 +47,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 302),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'edit_user': [
         ('unauth', 302),
@@ -50,6 +55,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 302),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'collection': [
         ('unauth', 302),
@@ -57,6 +63,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 200),
         ('basic', 200),
+        ('viewer', 200),
     ],
     'new_collection': [
         ('unauth', 302),
@@ -64,6 +71,7 @@ GET_PAGES = {
         ('manager', 302),
         ('editor', 200),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'edit_collection': [
         ('unauth', 302),
@@ -71,6 +79,7 @@ GET_PAGES = {
         ('manager', 302),
         ('editor', 200),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'delete_collection': [
         ('unauth', 302),
@@ -78,6 +87,7 @@ GET_PAGES = {
         ('manager', 302),
         ('editor', 302),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'dip': [
         ('unauth', 302),
@@ -85,6 +95,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 200),
         ('basic', 200),
+        ('viewer', 200),
     ],
     'new_dip': [
         ('unauth', 302),
@@ -92,6 +103,7 @@ GET_PAGES = {
         ('manager', 302),
         ('editor', 200),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'edit_dip': [
         ('unauth', 302),
@@ -99,6 +111,7 @@ GET_PAGES = {
         ('manager', 302),
         ('editor', 200),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'delete_dip': [
         ('unauth', 302),
@@ -106,6 +119,7 @@ GET_PAGES = {
         ('manager', 302),
         ('editor', 302),
         ('basic', 302),
+        ('viewer', 302),
     ],
     'digital_file': [
         ('unauth', 302),
@@ -113,6 +127,7 @@ GET_PAGES = {
         ('manager', 200),
         ('editor', 200),
         ('basic', 200),
+        ('viewer', 200),
     ],
 }
 
@@ -129,6 +144,9 @@ class UserAccessTests(TestCase):
         editor_user = User.objects.create_user('editor', 'editor@example.com', 'editor')
         group = Group.objects.get(name='Editors')
         editor_user.groups.add(group)
+        viewer_user = User.objects.create_user('viewer', 'viewer@example.com', 'viewer')
+        group = Group.objects.get(name='Viewers')
+        viewer_user.groups.add(group)
 
         # Create editable resources
         self.user = User.objects.create_user('test', 'test@example.com', 'test')
@@ -210,20 +228,22 @@ class UserAccessTests(TestCase):
         self.assertEqual(response.url, next_url)
         self.assertFalse(User.objects.filter(username='test_changed').exists())
 
-        # Basic, create
-        self.client.login(username='basic', password='basic')
-        before_count = len(User.objects.all())
-        response = self.client.post(new_url, new_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
-        after_count = len(User.objects.all())
-        self.assertEqual(before_count, after_count)
-        # Basic, edit
-        response = self.client.post(edit_url, edit_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
-        self.assertFalse(User.objects.filter(username='test_changed').exists())
-        self.client.logout()
+        # Basic and Viewer
+        for user in ['basic', 'viewer']:
+            # Create
+            self.client.login(username=user, password=user)
+            before_count = len(User.objects.all())
+            response = self.client.post(new_url, new_data)
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, '/')
+            after_count = len(User.objects.all())
+            self.assertEqual(before_count, after_count)
+            # Edit
+            response = self.client.post(edit_url, edit_data)
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, '/')
+            self.assertFalse(User.objects.filter(username='test_changed').exists())
+            self.client.logout()
 
         # Editor, create
         self.client.login(username='editor', password='editor')
@@ -307,20 +327,22 @@ class UserAccessTests(TestCase):
         self.assertEqual(response.url, next_url)
         self.assertFalse(Collection.objects.filter(dc__title='test_collection_2').exists())
 
-        # Basic, create
-        self.client.login(username='basic', password='basic')
-        before_count = len(Collection.objects.all())
-        response = self.client.post(new_url, new_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
-        after_count = len(Collection.objects.all())
-        self.assertEqual(before_count, after_count)
-        # Basic, edit
-        response = self.client.post(edit_url, edit_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/collection/%s/' % self.collection.pk)
-        self.assertFalse(Collection.objects.filter(dc__title='test_collection_2').exists())
-        self.client.logout()
+        # Basic and Viewer
+        for user in ['basic', 'viewer']:
+            # Create
+            self.client.login(username=user, password=user)
+            before_count = len(Collection.objects.all())
+            response = self.client.post(new_url, new_data)
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, '/')
+            after_count = len(Collection.objects.all())
+            self.assertEqual(before_count, after_count)
+            # Edit
+            response = self.client.post(edit_url, edit_data)
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, '/collection/%s/' % self.collection.pk)
+            self.assertFalse(Collection.objects.filter(dc__title='test_collection_2').exists())
+            self.client.logout()
 
         # Editor, create
         self.client.login(username='editor', password='editor')
@@ -402,20 +424,22 @@ class UserAccessTests(TestCase):
         self.assertEqual(response.url, next_url)
         self.assertFalse(DIP.objects.filter(dc__title='test_dip_2').exists())
 
-        # Basic, create
-        self.client.login(username='basic', password='basic')
-        before_count = len(DIP.objects.all())
-        response = self.client.post(new_url, new_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
-        after_count = len(DIP.objects.all())
-        self.assertEqual(before_count, after_count)
-        # Basic, edit
-        response = self.client.post(edit_url, edit_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/folder/%s/' % self.dip.pk)
-        self.assertFalse(DIP.objects.filter(dc__title='test_dip_2').exists())
-        self.client.logout()
+        # Basic and Viewer
+        for user in ['basic', 'viewer']:
+            # Create
+            self.client.login(username=user, password=user)
+            before_count = len(DIP.objects.all())
+            response = self.client.post(new_url, new_data)
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, '/')
+            after_count = len(DIP.objects.all())
+            self.assertEqual(before_count, after_count)
+            # Edit
+            response = self.client.post(edit_url, edit_data)
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, '/folder/%s/' % self.dip.pk)
+            self.assertFalse(DIP.objects.filter(dc__title='test_dip_2').exists())
+            self.client.logout()
 
         # Editor, create
         self.client.login(username='editor', password='editor')
@@ -482,15 +506,16 @@ class UserAccessTests(TestCase):
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count)
 
-        # Basic
-        self.client.login(username='basic', password='basic')
-        before_count = len(DIP.objects.all())
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 302)
-        next_url = '/folder/%s/' % self.dip.pk
-        self.assertEqual(response.url, next_url)
-        after_count = len(DIP.objects.all())
-        self.assertEqual(before_count, after_count)
+        # Basic and Viewer
+        for user in ['basic', 'viewer']:
+            self.client.login(username=user, password=user)
+            before_count = len(DIP.objects.all())
+            response = self.client.post(url, data)
+            self.assertEqual(response.status_code, 302)
+            next_url = '/folder/%s/' % self.dip.pk
+            self.assertEqual(response.url, next_url)
+            after_count = len(DIP.objects.all())
+            self.assertEqual(before_count, after_count)
 
         # Editor
         self.client.login(username='editor', password='editor')
@@ -541,15 +566,16 @@ class UserAccessTests(TestCase):
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count, after_count)
 
-        # Basic
-        self.client.login(username='basic', password='basic')
-        before_count = len(Collection.objects.all())
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 302)
-        next_url = '/collection/%s/' % self.collection.pk
-        self.assertEqual(response.url, next_url)
-        after_count = len(Collection.objects.all())
-        self.assertEqual(before_count, after_count)
+        # Basic and Viewer
+        for user in ['basic', 'viewer']:
+            self.client.login(username=user, password=user)
+            before_count = len(Collection.objects.all())
+            response = self.client.post(url, data)
+            self.assertEqual(response.status_code, 302)
+            next_url = '/collection/%s/' % self.collection.pk
+            self.assertEqual(response.url, next_url)
+            after_count = len(Collection.objects.all())
+            self.assertEqual(before_count, after_count)
 
         # Editor
         self.client.login(username='editor', password='editor')
