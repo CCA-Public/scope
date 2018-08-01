@@ -346,6 +346,6 @@ The Digital Archives Access Interface was produced by the Canadian Centre for Ar
 
 The Digital Archives Access Interface is a project financed within the framework of the Montreal Cultural Development grant awarded by the City of Montreal and the Quebec Department of Culture and Communications.
 
-L’Interface d'accès aux archives numériques a été conçue par le Centre Canadien pour l'Architecture (CCA) et développée par Artefactual Systems, à partir d’un concept initialement élaboré par Tim Walsh, archiviste numérique au CCA, de juin 2015 à mai 2018.
+L’Interface d'accès aux archives numériques a été conçue par le Centre Canadien d'Architecture (CCA) et développée par Artefactual Systems, à partir d’un concept initialement élaboré par Tim Walsh, archiviste numérique au CCA de juin 2015 à mai 2018.
 
 L’Interface d’accès aux archives numériques est un projet financé dans le cadre de l’Entente sur le développement culturel de Montréal par la Ville de Montréal et le ministère de la Culture et des Communications.
