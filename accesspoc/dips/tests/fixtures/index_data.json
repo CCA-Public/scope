@@ -1,20 +1,54 @@
 [
 {
+  "model": "dips.dublincore",
+  "pk": 1,
+  "fields": {
+    "identifier": "123"
+  }
+},
+{
+  "model": "dips.dublincore",
+  "pk": 2,
+  "fields": {
+    "identifier": "456"
+  }
+},
+{
+  "model": "dips.dublincore",
+  "pk": 3,
+  "fields": {
+    "identifier": "ABC"
+  }
+},
+{
+  "model": "dips.dublincore",
+  "pk": 4,
+  "fields": {
+    "identifier": "DEF"
+  }
+},
+{
   "model": "dips.collection",
   "pk": 1,
-  "fields": {}
+  "fields": {
+    "dc": 1
+  }
 },
 {
   "model": "dips.collection",
   "pk": 2,
-  "fields": {}
+  "fields": {
+    "dc": 2
+  }
 },
 {
   "model": "dips.dip",
   "pk": 1,
   "fields": {
     "collection": 1,
-    "uploaded": "2018-06-12T05:09:47.368Z"
+    "objectszip": "example.zip",
+    "uploaded": "2018-06-12T05:09:47.368Z",
+    "dc": 3
   }
 },
 {
@@ -22,7 +56,9 @@
   "pk": 2,
   "fields": {
     "collection": 2,
-    "uploaded": "2018-06-12T05:10:14.497Z"
+    "objectszip": "example_2.zip",
+    "uploaded": "2018-06-12T05:10:14.497Z",
+    "dc": 4
   }
 },
 {

@@ -1,19 +1,13 @@
+from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms import modelform_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from .models import User, Collection, DIP, DigitalFile, DublinCore
 from .forms import DeleteByDublinCoreForm, UserCreationForm, UserChangeForm
-from .parsemets import METS
-
-import os
-import re
-import shutil
-import tempfile
-import zipfile
+from .tasks import extract_and_parse_mets
 
 
 def get_sort_params(request, options, default):
@@ -262,6 +256,13 @@ def search(request):
 
     # Search
     search = DigitalFile.es_doc.search()
+    # Exclude DigitalFiles in DIPs with 'PENDING' or 'FAILURE' import
+    # status when the user is not an editor or an administrator.
+    if not request.user.is_editor():
+        search = search.exclude(
+            'terms',
+            **{'dip.import_status': [DIP.IMPORT_PENDING, DIP.IMPORT_FAILURE]},
+        )
     fields = ['filepath', 'fileformat', 'datemodified', 'dip.identifier']
     search = add_query_to_search(search, request, fields)
     search = search.sort({sort_field: {'order': sort_dir}})
@@ -285,6 +286,7 @@ def search(request):
         'sort_option': sort_option,
         'sort_dir': sort_dir,
         'page': page,
+        'statuses': DIP.import_statuses(),
     })
 
 
@@ -305,6 +307,13 @@ def collection(request, pk):
         'match',
         **{'collection.id': pk},
     )
+    # Exclude DIPs with 'PENDING' or 'FAILURE' import status
+    # when the user is not an editor or an administrator.
+    if not request.user.is_editor():
+        search = search.exclude(
+            'terms',
+            import_status=[DIP.IMPORT_PENDING, DIP.IMPORT_FAILURE],
+        )
     search = add_query_to_search(search, request, ['dc.*'])
     search = search.sort({sort_field: {'order': sort_dir}})
 
@@ -327,12 +336,21 @@ def collection(request, pk):
         'sort_option': sort_option,
         'sort_dir': sort_dir,
         'page': page,
+        'statuses': DIP.import_statuses(),
     })
 
 
 @login_required(login_url='/login/')
 def dip(request, pk):
     dip = get_object_or_404(DIP, pk=pk)
+
+    # Redirect to the collection page if the DIP is not visible
+    if not dip.is_visible_by_user(request.user):
+        return redirect('collection', pk=dip.collection.pk)
+
+    # Show notification to user about import error
+    if dip.import_status == DIP.IMPORT_FAILURE:
+        messages.error(request, dip.get_import_error_message())
 
     # Sort options
     sort_options = {
@@ -372,12 +390,22 @@ def dip(request, pk):
         'sort_option': sort_option,
         'sort_dir': sort_dir,
         'page': page,
+        'statuses': DIP.import_statuses(),
     })
 
 
 @login_required(login_url='/login/')
 def digital_file(request, pk):
     digitalfile = get_object_or_404(DigitalFile, pk=pk)
+
+    # Redirect to the collection page if the related DIP is not visible
+    if not digitalfile.dip.is_visible_by_user(request.user):
+        return redirect('collection', pk=digitalfile.dip.collection.pk)
+
+    # Show notification to user about import error
+    if digitalfile.dip.import_status == DIP.IMPORT_FAILURE:
+        messages.error(request, digitalfile.dip.get_import_error_message())
+
     return render(request, 'digitalfile.html', {
         'digitalfile': digitalfile,
     })
@@ -427,26 +455,36 @@ def new_dip(request):
     if request.method == 'POST' and dip_form.is_valid() and dc_form.is_valid():
         dip = dip_form.save(commit=False)
         dip.dc = dc_form.save()
+        # TODO: Avoid this save from updating the related ES
+        # documents, as a later save when the async_result id
+        # is added, will repeat the process. It may require
+        # stop using signals and move to a custom save method.
         dip.save()
 
-        # Extract METS file from DIP objects zip
-        tmpdir = tempfile.mkdtemp()
-        if not os.path.isdir(tmpdir):
-            os.mkdirs(tmpdir)
-        objectszip = os.path.join(settings.MEDIA_ROOT, request.FILES['objectszip'].name)
-        metsfile = ''
-        zip = zipfile.ZipFile(objectszip)
-        for info in zip.infolist():
-            if re.match(r'.*METS.[0-9a-f\-]{32}.*$', info.filename):
-                print('METS file to extract:', info.filename)
-                metsfile = zip.extract(info, tmpdir)
-        # Parse METS file
-        mets = METS(os.path.abspath(metsfile), dip.pk)
-        mets.parse_mets()
-        # Delete extracted METS file
-        shutil.rmtree(tmpdir)
+        # Extract and parse METS file asynchronously
+        async_result = extract_and_parse_mets.delay(dip.pk, dip.objectszip.path)
+        # Save the async_result id to relate later with the TaskResult
+        # related object, which is not created on task call. Celery docs
+        # recommend to call get() or forget() on AsyncResult to free the
+        # backend resources used to store and transmit results, but the
+        # former waits for the task completion and the later may remove
+        # the result in the backend and the database. The only solution
+        # I could find is to rely on the `__del__` method, which cancels
+        # pending operations over the AsyncResult but doesn't delete the
+        # related TaskResult from the database.
+        dip.import_task_id = async_result.id
+        dip.import_status = DIP.IMPORT_PENDING
+        dip.save()
 
-        return redirect('home')
+        # Show notification to user about import in progress
+        messages.info(request, _(
+            'A background process has been launched to extract and parse '
+            'the METS file. After the process finishes and the interface '
+            'is reloaded, a link to the Folder will show up in the '
+            'Folders table at the related Collection page.'
+        ))
+
+        return redirect('collection', pk=dip.collection.pk)
 
     return render(
         request,

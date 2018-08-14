@@ -24,7 +24,16 @@
           <td>{{ digital_file.size_bytes }}</td>
           <td>{{ digital_file.datemodified|default:'' }}</td>
           <td><a href="{% url 'dip' digital_file.dip.id %}">{{ digital_file.dip.identifier }}</a></td>
-          <td><a href="{% url 'digital_file' digital_file.meta.id %}"><button class="btn btn-sm btn-primary">{% trans "See more" %}</button></a></td>
+          <td>
+            {% if 'import_status' not in digital_file.dip or digital_file.dip.import_status == statuses.SUCCESS %}
+              <a href="{% url 'digital_file' digital_file.meta.id %}"><button class="btn btn-sm btn-primary">{% trans "See more" %}</button></a>
+            {% elif digital_file.dip.import_status == statuses.FAILURE %}
+              <a href="{% url 'digital_file' digital_file.meta.id %}"><button class="btn btn-sm btn-danger">{% trans "See error" %}</button></a>
+            {% else %}
+              <span aria-hidden="true"><i class="fas fa-circle-notch fa-spin" title="{% trans "Import in progress" %}"></i></span>
+              <span class="sr-only">{% trans "Import in progress" %}</span>
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
     </table>

@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 
 from envparse import env
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_celery_results',
     'widget_tweaks',
 
     'dips.apps.DipsConfig',
@@ -91,6 +93,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'OPTIONS': {
+            'timeout': 10,
+        },
     }
 }
 
@@ -137,6 +142,16 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Messages
+
+# Force cookie storage to reduce the possibility of looking the database
+# when using SessionStorage, which saves the data in the database by default.
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+# Fix mismatch with Bootstrap alert classes
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',
+    messages.ERROR: 'danger',
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -173,3 +188,11 @@ ES_INDEXES_SETTINGS = {
     'number_of_shards': env.int('ES_INDEXES_SHARDS', default=1),
     'number_of_replicas': env.int('ES_INDEXES_REPLICAS', default=0),
 }
+
+# Celery
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE

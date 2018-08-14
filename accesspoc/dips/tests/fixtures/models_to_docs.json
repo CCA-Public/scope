@@ -53,6 +53,8 @@
   "fields": {
     "collection": 1,
     "dc": 2,
+    "import_task_id": "f52b82bb-3824-48ec-9a78-5c3288f2e03e",
+    "import_status": "SUCCESS",
     "objectszip": "example.zip",
     "uploaded": "2018-06-12T05:09:47.368Z"
   }

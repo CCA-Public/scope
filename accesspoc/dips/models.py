@@ -11,11 +11,23 @@ the ES document.
 from abc import ABCMeta, abstractmethod
 from django.contrib.auth.models import Group, AbstractUser
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
+from django_celery_results.models import TaskResult as CeleryTaskResult
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 from search.functions import delete_document
 from .helpers import add_if_not_empty
+
+
+class TaskResult(CeleryTaskResult):
+    """Proxy model to generate error message from Celery TaskResult"""
+    class Meta:
+        proxy = True
+
+    def get_error_message(self):
+        """Format traceback as HTML to display in alert"""
+        message = gettext('Trace:') + '<p><pre>%s</pre></p>' % self.traceback
+        return message
 
 
 class User(AbstractUser):
@@ -154,9 +166,36 @@ class DIP(AbstractEsModel):
         verbose_name=_('collection'),
     )
     dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
+    # The TaskResult created by 'django_celery_results' are not added
+    # to the database when the import task is called. Therefore, a proper
+    # model relation can't be made at that point. This field is used to
+    # track the asynchronous result id from the task call, as that id
+    # will match the `task_id` unique field from the TaskResult.
+    import_task_id = models.CharField(max_length=255, null=True, unique=True)
+    # Because a related TaskResult may not exist for two reasons: not created
+    # yet or deleted (for example by a clean task), an extra field is needed
+    # to know if there is an import in progress for the DIP. This field is also
+    # used to track the import task status and it's set to `PENDING` when the
+    # task is called from the `new_dip` view and to `SUCCESS` or `FAILURE` when
+    # the task ends from within the task's `after_return` method.
+    import_status = models.CharField(max_length=7, null=True)
+
+    # Import statuses
+    IMPORT_PENDING = 'PENDING'
+    IMPORT_SUCCESS = 'SUCCESS'
+    IMPORT_FAILURE = 'FAILURE'
 
     def __str__(self):
         return str(self.dc) or str(self.pk)
+
+    @classmethod
+    def import_statuses(cls):
+        """Return dictionary with available statuses"""
+        return {
+            'PENDING': cls.IMPORT_PENDING,
+            'SUCCESS': cls.IMPORT_SUCCESS,
+            'FAILURE': cls.IMPORT_FAILURE,
+        }
 
     es_doc = DIPDoc
 
@@ -164,6 +203,8 @@ class DIP(AbstractEsModel):
         data = {
             '_id': self.pk,
         }
+        add_if_not_empty(data, 'import_status', self.import_status)
+        add_if_not_empty(data, 'import_task_id', self.import_task_id)
 
         if self.dc:
             data['dc'] = self.dc.get_es_inner_data()
@@ -175,6 +216,30 @@ class DIP(AbstractEsModel):
             }
 
         return data
+
+    def get_import_error_message(self):
+        # Try to get error info from TaskResult
+        try:
+            result = TaskResult.objects.get(task_id=self.import_task_id)
+            error = result.get_error_message()
+        except TaskResult.DoesNotExist:
+            error = gettext('A related TaskResult could not be found.')
+        return gettext(
+            'An error occurred during the process executed to extract '
+            'and parse the METS file. %(error_message)s Please, contact '
+            'an administrator.' % {'error_message': error}
+        )
+
+    def is_visible_by_user(self, user):
+        """
+        Retrun `False` if there is an import pending for the DIP or if
+        the import failed and the user is not an editor or an admin.
+        Otherwise, return `True`.
+        """
+        return not (self.import_status == self.IMPORT_PENDING or (
+            self.import_status == self.IMPORT_FAILURE and
+            not user.is_editor()
+        ))
 
 
 class DigitalFile(AbstractEsModel):
@@ -211,6 +276,12 @@ class DigitalFile(AbstractEsModel):
                 'id': self.dip.pk,
                 'identifier': self.dip.dc.identifier,
             }
+            # Reflect import status from the parent DIP
+            add_if_not_empty(
+                data['dip'],
+                'import_status',
+                self.dip.import_status,
+            )
 
         return data
 

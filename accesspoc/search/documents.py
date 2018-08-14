@@ -23,6 +23,8 @@ class DIPDoc(DocType):
         'id': Integer(),
         'identifier': Text(),
     })
+    import_task_id = Keyword()
+    import_status = Keyword()
 
     class Meta:
         index = 'accesspoc_dips'
@@ -48,6 +50,7 @@ class DigitalFileDoc(DocType):
     dip = Object(properties={
         'id': Integer(),
         'identifier': Text(),
+        'import_status': Keyword(),
     })
 
     class Meta:

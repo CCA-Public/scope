@@ -35,6 +35,8 @@ class ModelsToDocsTests(TestCase):
         dip = DIP.objects.get(pk=1)
         doc_dict = {
             '_id': 1,
+            'import_task_id': 'f52b82bb-3824-48ec-9a78-5c3288f2e03e',
+            'import_status': DIP.IMPORT_SUCCESS,
             'dc': {
                 'identifier': 'ABC',
                 'title': 'Example DIP',
@@ -72,6 +74,7 @@ class ModelsToDocsTests(TestCase):
             'dip': {
                 'id': 1,
                 'identifier': 'ABC',
+                'import_status': 'SUCCESS',
             }
         }
         self.assertEqual(doc_dict, digital_file.get_es_data())
