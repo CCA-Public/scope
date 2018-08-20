@@ -20,416 +20,420 @@ msgstr ""
 
 #: accesspoc/settings.py:124
 msgid "English"
-msgstr ""
+msgstr "Anglais"
 
 #: accesspoc/settings.py:125
 msgid "French"
-msgstr ""
+msgstr "Français"
 
 #: dips/forms.py:14 dips/views.py:97 dips/views.py:316
 #: templates/includes/dc.html:4
 msgid "Identifier"
-msgstr ""
+msgstr "Identifiant"
 
 #: dips/forms.py:19
 msgid "Identifier does not match"
-msgstr ""
+msgstr "Identifiant inconnu"
 
 #: dips/forms.py:24 dips/forms.py:58
 msgid "Administrator"
-msgstr ""
+msgstr "Administrateur"
 
 #: dips/forms.py:31 dips/forms.py:72 dips/views.py:151
 msgid "Groups"
-msgstr ""
+msgstr "Groupes"
 
 #: dips/forms.py:32 dips/forms.py:73
 msgid "Ctrl + Click to select multiple or unselect."
-msgstr ""
+msgstr "Appuyer sur la touche Ctrl pour sélectionner ou désélectionner plusieurs options."
 
 #: dips/forms.py:38 dips/forms.py:86
 msgid "Password should be at least 8 characters long"
-msgstr ""
+msgstr "Le mot de passe doit contenir au moins 8 caractères"
 
 #: dips/forms.py:93
 msgid "Password and password confirmation do not match"
-msgstr ""
+msgstr "Les mots de passe entrés sont différents"
 
 #: dips/models.py:101
 msgid "identifier"
-msgstr ""
+msgstr "identifiant de la ressource"
 
 #: dips/models.py:102
 msgid "title"
-msgstr ""
+msgstr "titre"
 
 #: dips/models.py:103
 msgid "creator"
-msgstr ""
+msgstr "créateur"
 
 #: dips/models.py:104
 msgid "subject"
-msgstr ""
+msgstr "sujet"
 
 #: dips/models.py:105
 msgid "description"
-msgstr ""
+msgstr "description"
 
 #: dips/models.py:106
 msgid "publisher"
-msgstr ""
+msgstr "éditeur"
 
 #: dips/models.py:107
 msgid "contributor"
-msgstr ""
+msgstr "contributeur"
 
 #: dips/models.py:108
 msgid "date"
-msgstr ""
+msgstr "date"
 
 #: dips/models.py:109
 msgid "type"
-msgstr ""
+msgstr "type"
 
 #: dips/models.py:110
 msgid "format"
-msgstr ""
+msgstr "format"
 
 #: dips/models.py:111
 msgid "source"
-msgstr ""
+msgstr "source"
 
 #: dips/models.py:112
 msgid "language"
-msgstr ""
+msgstr "langue"
 
 #: dips/models.py:113
 msgid "coverage"
-msgstr ""
+msgstr "couverture"
 
 #: dips/models.py:114
 msgid "rights"
-msgstr ""
+msgstr "gestion des droits"
 
 #: dips/models.py:129
 msgid "finding aid"
-msgstr ""
+msgstr "instrument de recherche"
 
 #: dips/models.py:149
 msgid "objects zip file"
-msgstr ""
+msgstr "fichier zip contenant les objets"
 
 #: dips/models.py:154
 msgid "collection"
-msgstr ""
+msgstr "collection"
 
 #: dips/views.py:98 dips/views.py:317 templates/includes/dc.html:5
 msgid "Title"
-msgstr ""
+msgstr "Titre"
 
 #: dips/views.py:99 dips/views.py:318 templates/includes/dc.html:6
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: dips/views.py:100 dips/views.py:319 templates/includes/dc.html:9
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: dips/views.py:101 dips/views.py:320 dips/views.py:365
 msgid "Details"
-msgstr ""
+msgstr "Détails"
 
 #: dips/views.py:147
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: dips/views.py:148
 msgid "First name"
-msgstr ""
+msgstr "Prénom"
 
 #: dips/views.py:149
 msgid "Last name"
-msgstr ""
+msgstr "Nom de famille"
 
 #: dips/views.py:150
 msgid "Email"
-msgstr ""
+msgstr "Courriel"
 
 #: dips/views.py:152
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: dips/views.py:153
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
 #: dips/views.py:154 templates/collection.html:21 templates/dip.html:23
 #: templates/edit_collection.html:12 templates/edit_dip.html:14
 msgid "Edit"
-msgstr ""
+msgstr "Modifier"
 
 #: dips/views.py:274 dips/views.py:361 templates/digitalfile.html:22
 msgid "Filepath"
-msgstr ""
+msgstr "Chemin d'accès"
 
 #: dips/views.py:275 dips/views.py:362 templates/includes/dc.html:8
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 #: dips/views.py:276 dips/views.py:363 templates/digitalfile.html:25
 msgid "Size (bytes)"
-msgstr ""
+msgstr "Taille (bytes)"
 
 #: dips/views.py:277 dips/views.py:364
 msgid "Last modified"
-msgstr ""
+msgstr "Dernière modification"
 
 #: dips/views.py:278
 msgid "View parent folder"
-msgstr ""
+msgstr "Voir le dossier parent"
 
 #: dips/views.py:279
 msgid "File details"
-msgstr ""
+msgstr "Détails du fichier"
 
 #: templates/base.html:23
 msgid "Digital Archives Access Interface"
-msgstr ""
+msgstr "Interface d'accès aux archives numériques"
 
 #: templates/base.html:26 templates/collection.html:29 templates/dip.html:39
 #: templates/search.html:6 templates/users.html:12
 msgid "Search"
-msgstr ""
+msgstr "Recherche"
 
 #: templates/base.html:29
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: templates/base.html:36
 msgid "Select language"
-msgstr ""
+msgstr "Sélectionner la langue"
 
 #: templates/base.html:58
 msgid "Edit Users"
-msgstr ""
+msgstr "Modifier les utilisateurs"
 
 #: templates/base.html:62 templates/new_collection.html:6
 #: templates/new_collection.html:11
 msgid "Add New Collection"
-msgstr ""
+msgstr "Ajouter de nouvelles collections"
 
 #: templates/base.html:63 templates/new_dip.html:11
 msgid "Add New Folder"
-msgstr ""
+msgstr "Ajouter un nouveau dossier"
 
 #: templates/base.html:66
 msgid "Log out"
-msgstr ""
+msgstr "Déconnexion"
 
 #: templates/base.html:70
 msgid "Log in"
-msgstr ""
+msgstr "Connexion"
 
 #: templates/collection.html:7
 #, python-format
 msgid "Collection %(collection)s"
-msgstr ""
+msgstr "Collection %(collection)s"
 
 #: templates/collection.html:12 templates/delete_collection.html:10
 #: templates/delete_dip.html:10 templates/digitalfile.html:12
 #: templates/dip.html:12 templates/edit_collection.html:10
 #: templates/edit_dip.html:10 templates/new_collection.html:10
 msgid "Collections"
-msgstr ""
+msgstr "Collections"
 
 #: templates/collection.html:15
 msgid "Collection description"
-msgstr ""
+msgstr "Description de la collection"
 
 #: templates/collection.html:19
 msgid "Finding aid"
-msgstr ""
+msgstr "Instrument de recherche"
 
 #: templates/collection.html:24 templates/delete_collection.html:12
 #: templates/delete_collection.html:19 templates/delete_dip.html:14
 #: templates/delete_dip.html:21 templates/dip.html:26
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: templates/collection.html:28
 msgid "Folders in this collection"
-msgstr ""
+msgstr "Dossiers de la collection"
 
 #: templates/collection.html:36 templates/dip.html:46 templates/home.html:17
 #: templates/search.html:17 templates/users.html:19
 msgid "No matching records found"
-msgstr ""
+msgstr "Aucun résultat ne correspond à vos critères de recherche"
 
 #: templates/collection.html:45 templates/dip.html:55 templates/home.html:26
 #: templates/search.html:27 templates/users.html:31
 msgid "See more"
-msgstr ""
+msgstr "Voir plus"
 
 #: templates/delete_collection.html:6
 msgid "Delete Collection"
-msgstr ""
+msgstr "Supprimer la collection"
 
 #: templates/delete_collection.html:14
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Confirmer la suppression"
 
 #: templates/delete_collection.html:15
 msgid ""
 "Note: Deleting this Collection will also delete all child records (DIPs, "
 "digital files, and PREMIS events)."
 msgstr ""
+"Note: La suppression de cette collection entraîne la suppression de ses "
+"enregistrements enfants (DIPs, fichiers et événements PREMIS)."
 
 #: templates/delete_dip.html:6
 msgid "Delete Folder"
-msgstr ""
+msgstr "Supprimer le dossier"
 
 #: templates/delete_dip.html:12 templates/digitalfile.html:14
 #: templates/dip.html:14 templates/edit_dip.html:12
 msgid "Folder"
-msgstr ""
+msgstr "Dossier"
 
 #: templates/delete_dip.html:16
 msgid "Confirm deletion"
-msgstr ""
+msgstr "Confirmer la suppression"
 
 #: templates/delete_dip.html:17
 msgid ""
 "Note: Deleting this DIP will also delete all child records (digital files "
 "and PREMIS events)."
 msgstr ""
+"Note: La suppression de ce DIP entraîne la suppression de ses enregistrements "
+"enfants (fichiers et événements PREMIS)."
 
 #: templates/digitalfile.html:7
 #, python-format
 msgid "Digital file %(digitalfile)s"
-msgstr ""
+msgstr "Fichier %(digitalfile)s"
 
 #: templates/digitalfile.html:16
 msgid "Digital file"
-msgstr ""
+msgstr "Fichier"
 
 #: templates/digitalfile.html:19
 msgid "Digital file description"
-msgstr ""
+msgstr "Description du fichier"
 
 #: templates/digitalfile.html:21
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #: templates/digitalfile.html:23
 msgid "File format"
-msgstr ""
+msgstr "Format du fichier"
 
 #: templates/digitalfile.html:24
 msgid "File format version"
-msgstr ""
+msgstr "Version du format du fichier"
 
 #: templates/digitalfile.html:26
 msgid "Size (human readable)"
-msgstr ""
+msgstr "Taille (intelligible)"
 
 #: templates/digitalfile.html:27
 msgid "Date modified"
-msgstr ""
+msgstr "Date de modification"
 
 #: templates/digitalfile.html:28
 msgid "PRONOM ID"
-msgstr ""
+msgstr "ID PRONOM"
 
 #: templates/digitalfile.html:29
 msgid "METS amdSec"
-msgstr ""
+msgstr "METS amdSec"
 
 #: templates/digitalfile.html:30
 #, python-format
 msgid "Checksum (%(digitalfile.hashtype)s)"
-msgstr ""
+msgstr "Empreinte (%(digitalfile.hashtype)s)"
 
 #: templates/digitalfile.html:32
 msgid "Preservation metadata"
-msgstr ""
+msgstr "Métadonnées de préservation"
 
 #: templates/digitalfile.html:33
 msgid "Event log from our digital preservation repository for this file."
-msgstr ""
+msgstr "Registre d'événements généré par notre dépôt numérique pour ce fichier."
 
 #: templates/digitalfile.html:36
 #, python-format
 msgid "Event: %(event.uuid)s"
-msgstr ""
+msgstr "Événement: %(event.uuid)s"
 
 #: templates/digitalfile.html:37
 msgid "Event type"
-msgstr ""
+msgstr "Type d'événement"
 
 #: templates/digitalfile.html:38
 msgid "Datetime"
-msgstr ""
+msgstr "Date et heure"
 
 #: templates/digitalfile.html:39
 msgid "Event detail"
-msgstr ""
+msgstr "Détail de l'événement"
 
 #: templates/digitalfile.html:40
 msgid "Event outcome"
-msgstr ""
+msgstr "Résultat de l'événement"
 
 #: templates/digitalfile.html:41
 msgid "Event detail note"
-msgstr ""
+msgstr "Note sur le détail d'événement"
 
 #: templates/dip.html:7
 #, python-format
 msgid "Folder %(dip)s"
-msgstr ""
+msgstr "Dossier %(dip)s"
 
 #: templates/dip.html:19
 msgid "Folder description"
-msgstr ""
+msgstr "Description du dossier"
 
 #: templates/dip.html:30
 msgid "Attachments"
-msgstr ""
+msgstr "Pièces jointes"
 
 #: templates/dip.html:32
 msgid "Digital files"
-msgstr ""
+msgstr "Fichiers"
 
 #: templates/dip.html:33
 msgid "Download zip file"
-msgstr ""
+msgstr "Télécharger le fichier zip"
 
 #: templates/dip.html:38
 msgid "Digital files in this folder"
-msgstr ""
+msgstr "Fichiers dans ce dossier"
 
 #: templates/edit_collection.html:6
 msgid "Edit Collection"
-msgstr ""
+msgstr "Modifier la Collection"
 
 #: templates/edit_collection.html:18 templates/edit_dip.html:19
 #: templates/edit_user.html:17 templates/new_collection.html:17
 #: templates/new_dip.html:17 templates/new_user.html:15
 msgid "Submit"
-msgstr ""
+msgstr "Soumettre"
 
 #: templates/edit_dip.html:6
 msgid "Edit Folder"
-msgstr ""
+msgstr "Modifier le Dossier"
 
 #: templates/edit_user.html:6
 #, python-format
 msgid "User - %(user.username)s"
-msgstr ""
+msgstr "Utilisateur - %(user.username)s"
 
 #: templates/edit_user.html:11 templates/new_user.html:9 templates/users.html:6
 #: templates/users.html:10
 msgid "Users"
-msgstr ""
+msgstr "Utilisateurs"
 
 #: templates/faq.html:6
 msgid "Frequently Asked Questions"
@@ -437,37 +441,39 @@ msgstr ""
 
 #: templates/faq.html:9
 msgid "Frequently asked questions"
-msgstr ""
+msgstr "Foire aux questions"
 
 #: templates/faq.html:11
 msgid "How are digital files organized?"
-msgstr ""
+msgstr "Comment les fichiers sont-ils organisés?"
 
 #: templates/faq.html:12
 msgid "There are three types of records in the DIP Access Interface:"
-msgstr ""
+msgstr "Il y a trois types d'enregistrements dans l'Interface d'accès aux archives numériques:"
 
 #: templates/faq.html:14
 msgid "Collections:"
-msgstr ""
+msgstr "Collections:"
 
 #: templates/faq.html:14
 msgid ""
 "These are the highest level of organization, and typically correspond to an "
 "archival fonds or collection."
 msgstr ""
+"Il s'agit du plus haut niveau d'organisation d'un ensemble documentaire, que ce"
+"soit un fonds d'archives ou une collection."
 
 #: templates/faq.html:15
 msgid "Folders:"
-msgstr ""
+msgstr "Dossiers:"
 
 #: templates/faq.html:15
 msgid "Folders are within Collections, and correspond to a \\"
-msgstr ""
+msgstr "Les Dossiers font partis d'une Collection et correspondent à \\"
 
 #: templates/faq.html:16
 msgid "Digital files:"
-msgstr ""
+msgstr "Des fichiers:"
 
 #: templates/faq.html:16
 msgid ""
@@ -475,64 +481,73 @@ msgid ""
 "containing additional information that are accessible from the Folder and "
 "Search pages."
 msgstr ""
+"Les fichiers individuels sont regroupés sous les Dossiers. Il y a une page "
+"d'information pour chaque fichier, accessible à partir de l'enregistrement "
+"du Dossier ou des résultats de recherche."
 
 #: templates/faq.html:18
 msgid "What are the different ways to search?"
-msgstr ""
+msgstr "Comment effectuer une recherche?"
 
 #: templates/faq.html:19
 msgid "For Collections:"
-msgstr ""
+msgstr "Trouver une collection:"
 
 #: templates/faq.html:19
 msgid ""
 "From the Collections page, you can search for a particular collection from "
 "the search bar. Click \\"
 msgstr ""
+"Sur la page Collections, retrouver la collection qui vous intéresse à l'aide "
+"de la barre de recherche. Cliquer sur \\"
 
 #: templates/faq.html:20
 msgid "Within Collections:"
-msgstr ""
+msgstr "Chercher dans une collection:"
 
 #: templates/faq.html:20
 msgid ""
 "Once you’ve clicked on a collections page, you can search for particular "
 "folders based on their title. Click \\"
 msgstr ""
+"À partir de la page d'une collection vous pouvez rechercher les dossiers"
+"par leurs titres. Cliquer sur \\"
 
 #: templates/faq.html:21
 msgid "Within Folders:"
-msgstr ""
+msgstr "Chercher dans un dossier:"
 
 #: templates/faq.html:21
 msgid ""
 "Once you’ve selected a folder, you can search for digital files within that "
 "folder. You can see additional metadata about the file by clicking \\"
 msgstr ""
+"À partir de la page d'un dossier, vous pouvez effectuer une recherche des fichiers  "
+"qu'il contient. Vous accéderez aux métadonnées du fichier en cliquant sur \\"
 
 #: templates/faq.html:22
 msgid "Across Collections:"
-msgstr ""
+msgstr "Chercher dans toutes les collections:"
 
 #: templates/faq.html:22
 msgid "From the \\"
-msgstr ""
+msgstr "À partir de \\"
 
 #: templates/faq.html:23
 msgid "How do I get access to the actual files?"
-msgstr ""
+msgstr "Comment accéder aux fichiers?"
 
 #: templates/faq.html:24
 msgid "Files can be downloaded as a package zip file (a \\"
-msgstr ""
+msgstr "Les fichiers individuels sont inclus dans un fichier zip qui peut être téléchargé (a \\"
 
 #: templates/faq.html:25
 msgid "From the Folder page, click \\"
-msgstr ""
+msgstr "À partir de la page d'un dossier, cliquer sur \\"
 
 #: templates/faq.html:26
 msgid "What is a METS file?"
-msgstr ""
+msgstr "Qu'est-ce qu'un fichier METS?"
 
 #: templates/faq.html:27
 msgid ""
@@ -543,6 +558,12 @@ msgid ""
 "information, extracted metadata, and a log of all events that happened to "
 "the file while being processed by Archivematica."
 msgstr ""
+"Le fichier METS est un fichier au format XML qui est généré par Archivematica, "
+"le logiciel de préservation numérique du CCA. Il se conforme au schéma Metadata "
+"Encoding & Transmission Standard (METS) et contient des informations détaillées "
+"pour chacun des fichiers d'un Dossier, tel que ses métadonnées d'identification "
+"et de caractérisation, ainsi que le registre des événements de traitement des "
+"SIPs par Archivematica."
 
 #: templates/faq.html:28
 msgid ""
@@ -552,10 +573,14 @@ msgid ""
 "from the METS file automatically and presented for you in a more user-"
 "friendly manner."
 msgstr ""
+"Le fichier METS est rendu disponible pour le cas où il vous serait utile, "
+"bien que l'organisation des informations qu'il contient soit peu conviviale. "
+"Une partie de ces métadonnées est extraite automatiquement et s'affiche dans "
+"les enregistrements des Collections, des Dossiers et des Fichiers."
 
 #: templates/faq.html:29
 msgid "What is the submissionDocumentation folder?"
-msgstr ""
+msgstr "Qu'est-ce que le dossier submissionDocumentation?"
 
 #: templates/faq.html:30
 msgid ""
@@ -564,16 +589,22 @@ msgid ""
 "software used at CCA, as well as by our archivists during processing. The "
 "contents of this folder will vary."
 msgstr ""
+"Le dossier submissionDocumentation contient de la documentation contextuelle "
+"aux fichiers qui sont présents dans un DIP. Cette documentation est créée lors du "
+"traitement des archives, soit automatiquement par les logiciels utilisés au CCA ou "
+"encore par les archivistes. Le contenu de ce dossier peut varier d'un DIP à l'autre."
 
 #: templates/faq.html:31
 msgid "One common file to find here is a DFXML (<a href=\\"
-msgstr ""
+msgstr "Le fichier DFXML est commun à ce dossier (<a href=\\"
 
 #: templates/faq.html:32
 msgid ""
 "Some of the files I want to use are in a file format that is unidentified or "
 "won't open. How can I see what is in the files?"
 msgstr ""
+"Je ne parviens pas à ouvrir certains des fichirs qui m'intéressent ou le format "
+"est inconnu. Comment puis-je savoir ce que le fichier représente?"
 
 #: templates/faq.html:33
 msgid ""
@@ -585,10 +616,17 @@ msgid ""
 "to set up a virtual machine or emulator using original software to provide "
 "access to obsolete files."
 msgstr ""
+"Le poste de consultation des archives numériques de la salle de lecture du CCA "
+"est doté de plusieurs logiciels qui permettent d'ouvrir un nombre important de "
+"formats de fichiers, mais pas tous les formats. Si vous rencontrez des difficultés "
+"pour l'ouverture d'un fichier, l'équipe de référence peut vous mettre en contact "
+"avec l'archiviste numérique qui pourra évaluer les solutions possibles. La mise à "
+"jour du format de fichier, ou la mise en place d'une machine virtuel ou d'un "
+"émulateur du logiciel original peuvent être envisagés pour résoudre le problème." 
 
 #: templates/faq.html:34
 msgid "Who created the digital archives access interface?"
-msgstr ""
+msgstr "Qui a créé l'Interface d'accès aux archives numériques?"
 
 #: templates/faq.html:35
 msgid ""
@@ -597,6 +635,10 @@ msgid ""
 "project initially conceived by Tim Walsh, digital archivist at CCA from June "
 "2015 to May 2018."
 msgstr ""
+"L’Interface d'accès aux archives numériques a été conçue par le Centre "
+"Canadien d'Architecture (CCA) et développée par Artefactual Systems, à partir "
+"d’un concept initialement élaboré par Tim Walsh, archiviste numérique au CCA "
+"de juin 2015 à mai 2018."
 
 #: templates/faq.html:36
 msgid ""
@@ -604,98 +646,101 @@ msgid ""
 "framework of the Montreal Cultural Development grant awarded by the City of "
 "Montreal and the Quebec Department of Culture and Communications."
 msgstr ""
+"L’Interface d’accès aux archives numériques est un projet financé dans le "
+"cadre de l’Entente sur le développement culturel de Montréal par la Ville de "
+"Montréal et le ministère de la Culture et des Communications."
 
 #: templates/home.html:5
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 #: templates/home.html:8
 msgid "Browse collections"
-msgstr ""
+msgstr "Parcourir la collection"
 
 #: templates/home.html:9
 msgid "To access born digital content within an archive/collection, select \\"
-msgstr ""
+msgstr "Pour accéder aux documents numériques d'un fonds d'archives ou d'une collection, sélectionner \\"
 
 #: templates/home.html:10
 msgid "Search collection titles"
-msgstr ""
+msgstr "Rechercher dans les titres de collections"
 
 #: templates/includes/dc.html:7
 msgid "Creator"
-msgstr ""
+msgstr "Créateur"
 
 #: templates/includes/dc.html:10
 msgid "Subject"
-msgstr ""
+msgstr "Sujet"
 
 #: templates/includes/dc.html:11
 msgid "Publisher"
-msgstr ""
+msgstr "Éditeur"
 
 #: templates/includes/dc.html:12
 msgid "Contributor"
-msgstr ""
+msgstr "Contributeur"
 
 #: templates/includes/dc.html:13
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: templates/includes/dc.html:14
 msgid "Source"
-msgstr ""
+msgstr "Source"
 
 #: templates/includes/dc.html:15
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
 #: templates/includes/dc.html:16
 msgid "Coverage"
-msgstr ""
+msgstr "Couverture"
 
 #: templates/includes/dc.html:17
 msgid "Rights"
-msgstr ""
+msgstr "Gestion des droits"
 
 #: templates/includes/table_pager.html:8
 #, python-format
 msgid "Showing %(counter)s result"
 msgid_plural "Showing %(counter)s results"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Afficher %(counter)s résultat"
+msgstr[1] "Afficher %(counter)s résultats"
 
 #: templates/includes/table_pager.html:16
 #, python-format
 msgid "Showing %(from)s to %(to)s of %(total)s results"
-msgstr ""
+msgstr "Résultats %(from)s à %(to)s de %(total)s"
 
 #: templates/includes/table_pager.html:20
 msgid "Page navigation"
-msgstr ""
+msgstr "Navigation"
 
 #: templates/includes/table_pager.html:24
 #: templates/includes/table_pager.html:26
 #: templates/includes/table_pager.html:33
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #: templates/includes/table_pager.html:42
 msgid "current"
-msgstr ""
+msgstr "actuel"
 
 #: templates/includes/table_pager.html:59
 #: templates/includes/table_pager.html:61
 #: templates/includes/table_pager.html:68
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: templates/login.html:5 templates/login.html:9 templates/login.html:14
 msgid "Login"
-msgstr ""
+msgstr "Connexion"
 
 #: templates/login.html:17
 msgid "Policies for use of born-digital material at CCA"
-msgstr ""
+msgstr "Politique d'utilisation des collections nées numériques du CCA"
 
 #: templates/login.html:18
 msgid ""
@@ -708,37 +753,50 @@ msgid ""
 "working on the dedicated access workstations in the CCA Study Room, for "
 "consultation in appropriate software."
 msgstr ""
+"Le matériel né-numérique des collections du CCA est protégé par le droit "
+"d'auteur et les ententes conclues avec les donateurs. La consultation des "
+"fichiers est seulement permise dans les locaux du CCA, et les chercheurs "
+"ne peuvent quitter les lieux avec des copies de fichiers sauf si ces copies "
+"ont été obtenues suite à une demande formelle de reproduction. Le téléchargement "
+"des fichiers est autorisé en soutien aux activités curatoriales du CCA et pour "
+"la consultation par les chercheurs sur les postes dédiés de la salle de lecture."
 
 #: templates/login.html:19
 msgid ""
 "By logging into to the Access Proof of Concept tool, you agree to abide by "
 "the policies outlined above, including:"
 msgstr ""
+"En cliquant sur Connexion, vous consentez à vous conformer à la politique "
+"énoncée ci-dessus, incluant:"
 
 #: templates/login.html:21
 msgid ""
 "Not to copy any files to your personal computer, nor to take any files away "
 "with you at the end of your session."
 msgstr ""
+"De ne copier aucun fichier sur votre ordinateur personnel ou sur tout autre "
+"support d'information vous permettant de les emmmener avec vous."
 
 #: templates/login.html:22
 msgid ""
 "To submit any requests for Reproductions through the official channels, by "
 "sending an email with all relevant information to reproductions@cca.qc.ca"
 msgstr ""
+"Veuillez transmettre vos demandes de reproduction à l'adresse "
+"reproductions@cca.qc.ca en incluant toutes les informations pertinentes."
 
 #: templates/new_dip.html:6
 msgid "Add New DIP"
-msgstr ""
+msgstr "Ajouter un nouveau DIP"
 
 #: templates/new_dip.html:10
 msgid "Folders"
-msgstr ""
+msgstr "Dossiers"
 
 #: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:38
 msgid "New User"
-msgstr ""
+msgstr "Nouvel utilisateur"
 
 #: templates/search.html:9 templates/search.html:10
 msgid "Search all digital files"
-msgstr ""
+msgstr "Rechercher dans tous les fichiers"
