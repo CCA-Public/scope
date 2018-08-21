@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-01 19:33+0000\n"
+"POT-Creation-Date: 2018-08-21 10:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: accesspoc/settings.py:124
+#: accesspoc/settings.py:122
 msgid "English"
 msgstr "Anglais"
 
-#: accesspoc/settings.py:125
+#: accesspoc/settings.py:123
 msgid "French"
 msgstr "Français"
 
-#: dips/forms.py:14 dips/views.py:97 dips/views.py:316
+#: dips/forms.py:14 dips/views.py:92 dips/views.py:326
 #: templates/includes/dc.html:4
 msgid "Identifier"
 msgstr "Identifiant"
@@ -39,13 +39,15 @@ msgstr "Identifiant inconnu"
 msgid "Administrator"
 msgstr "Administrateur"
 
-#: dips/forms.py:31 dips/forms.py:72 dips/views.py:151
+#: dips/forms.py:31 dips/forms.py:72 dips/views.py:146
 msgid "Groups"
 msgstr "Groupes"
 
 #: dips/forms.py:32 dips/forms.py:73
 msgid "Ctrl + Click to select multiple or unselect."
-msgstr "Appuyer sur la touche Ctrl pour sélectionner ou désélectionner plusieurs options."
+msgstr ""
+"Appuyer sur la touche Ctrl pour sélectionner ou désélectionner plusieurs "
+"options."
 
 #: dips/forms.py:38 dips/forms.py:86
 msgid "Password should be at least 8 characters long"
@@ -55,142 +57,164 @@ msgstr "Le mot de passe doit contenir au moins 8 caractères"
 msgid "Password and password confirmation do not match"
 msgstr "Les mots de passe entrés sont différents"
 
-#: dips/models.py:101
+#: dips/models.py:29
+msgid "Trace:"
+msgstr ""
+
+#: dips/models.py:113
 msgid "identifier"
 msgstr "identifiant de la ressource"
 
-#: dips/models.py:102
+#: dips/models.py:114
 msgid "title"
 msgstr "titre"
 
-#: dips/models.py:103
+#: dips/models.py:115
 msgid "creator"
 msgstr "créateur"
 
-#: dips/models.py:104
+#: dips/models.py:116
 msgid "subject"
 msgstr "sujet"
 
-#: dips/models.py:105
+#: dips/models.py:117
 msgid "description"
 msgstr "description"
 
-#: dips/models.py:106
+#: dips/models.py:118
 msgid "publisher"
 msgstr "éditeur"
 
-#: dips/models.py:107
+#: dips/models.py:119
 msgid "contributor"
 msgstr "contributeur"
 
-#: dips/models.py:108
+#: dips/models.py:120
 msgid "date"
 msgstr "date"
 
-#: dips/models.py:109
+#: dips/models.py:121
 msgid "type"
 msgstr "type"
 
-#: dips/models.py:110
+#: dips/models.py:122
 msgid "format"
 msgstr "format"
 
-#: dips/models.py:111
+#: dips/models.py:123
 msgid "source"
 msgstr "source"
 
-#: dips/models.py:112
+#: dips/models.py:124
 msgid "language"
 msgstr "langue"
 
-#: dips/models.py:113
+#: dips/models.py:125
 msgid "coverage"
 msgstr "couverture"
 
-#: dips/models.py:114
+#: dips/models.py:126
 msgid "rights"
 msgstr "gestion des droits"
 
-#: dips/models.py:129
+#: dips/models.py:141
 msgid "finding aid"
 msgstr "instrument de recherche"
 
-#: dips/models.py:149
+#: dips/models.py:161
 msgid "objects zip file"
 msgstr "fichier zip contenant les objets"
 
-#: dips/models.py:154
+#: dips/models.py:166
 msgid "collection"
 msgstr "collection"
 
-#: dips/views.py:98 dips/views.py:317 templates/includes/dc.html:5
+#: dips/models.py:226
+msgid "A related TaskResult could not be found."
+msgstr ""
+
+#: dips/models.py:228
+#, python-format
+msgid ""
+"An error occurred during the process executed to extract and parse the METS "
+"file. %(error_message)s Please, contact an administrator."
+msgstr ""
+
+#: dips/views.py:93 dips/views.py:327 templates/includes/dc.html:5
 msgid "Title"
 msgstr "Titre"
 
-#: dips/views.py:99 dips/views.py:318 templates/includes/dc.html:6
+#: dips/views.py:94 dips/views.py:328 templates/includes/dc.html:6
 msgid "Date"
 msgstr "Date"
 
-#: dips/views.py:100 dips/views.py:319 templates/includes/dc.html:9
+#: dips/views.py:95 dips/views.py:329 templates/includes/dc.html:9
 msgid "Description"
 msgstr "Description"
 
-#: dips/views.py:101 dips/views.py:320 dips/views.py:365
+#: dips/views.py:96 dips/views.py:330 dips/views.py:384
 msgid "Details"
 msgstr "Détails"
 
-#: dips/views.py:147
+#: dips/views.py:142
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: dips/views.py:148
+#: dips/views.py:143
 msgid "First name"
 msgstr "Prénom"
 
-#: dips/views.py:149
+#: dips/views.py:144
 msgid "Last name"
 msgstr "Nom de famille"
 
-#: dips/views.py:150
+#: dips/views.py:145
 msgid "Email"
 msgstr "Courriel"
 
-#: dips/views.py:152
+#: dips/views.py:147
 msgid "Active"
 msgstr "Actif"
 
-#: dips/views.py:153
+#: dips/views.py:148
 msgid "Admin"
 msgstr "Admin"
 
-#: dips/views.py:154 templates/collection.html:21 templates/dip.html:23
+#: dips/views.py:149 templates/collection.html:21 templates/dip.html:23
 #: templates/edit_collection.html:12 templates/edit_dip.html:14
 msgid "Edit"
 msgstr "Modifier"
 
-#: dips/views.py:274 dips/views.py:361 templates/digitalfile.html:22
+#: dips/views.py:276 dips/views.py:380 templates/digitalfile.html:22
 msgid "Filepath"
 msgstr "Chemin d'accès"
 
-#: dips/views.py:275 dips/views.py:362 templates/includes/dc.html:8
+#: dips/views.py:277 dips/views.py:381 templates/includes/dc.html:8
 msgid "Format"
 msgstr "Format"
 
-#: dips/views.py:276 dips/views.py:363 templates/digitalfile.html:25
+#: dips/views.py:278 dips/views.py:382 templates/digitalfile.html:25
 msgid "Size (bytes)"
 msgstr "Taille (bytes)"
 
-#: dips/views.py:277 dips/views.py:364
+#: dips/views.py:279 dips/views.py:383
 msgid "Last modified"
 msgstr "Dernière modification"
 
-#: dips/views.py:278
+#: dips/views.py:280
 msgid "View parent folder"
 msgstr "Voir le dossier parent"
 
-#: dips/views.py:279
+#: dips/views.py:281
 msgid "File details"
 msgstr "Détails du fichier"
+
+#: dips/views.py:482
+msgid ""
+"A background process has been launched to extract and parse the METS file. "
+"After the process finishes and the interface is reloaded, a link to the "
+"Folder will show up in the Folders table at the related Collection page."
+msgstr ""
 
 #: templates/base.html:23
 msgid "Digital Archives Access Interface"
@@ -265,10 +289,21 @@ msgstr "Dossiers de la collection"
 msgid "No matching records found"
 msgstr "Aucun résultat ne correspond à vos critères de recherche"
 
-#: templates/collection.html:45 templates/dip.html:55 templates/home.html:26
-#: templates/search.html:27 templates/users.html:31
+#: templates/collection.html:47 templates/dip.html:57 templates/home.html:26
+#: templates/search.html:29 templates/users.html:31
 msgid "See more"
 msgstr "Voir plus"
+
+#: templates/collection.html:49 templates/dip.html:59 templates/search.html:31
+#, fuzzy
+#| msgid "See more"
+msgid "See error"
+msgstr "Voir plus"
+
+#: templates/collection.html:51 templates/collection.html:52
+#: templates/search.html:33 templates/search.html:34
+msgid "Import in progress"
+msgstr ""
 
 #: templates/delete_collection.html:6
 msgid "Delete Collection"
@@ -304,8 +339,8 @@ msgid ""
 "Note: Deleting this DIP will also delete all child records (digital files "
 "and PREMIS events)."
 msgstr ""
-"Note: La suppression de ce DIP entraîne la suppression de ses enregistrements "
-"enfants (fichiers et événements PREMIS)."
+"Note: La suppression de ce DIP entraîne la suppression de ses "
+"enregistrements enfants (fichiers et événements PREMIS)."
 
 #: templates/digitalfile.html:7
 #, python-format
@@ -359,7 +394,8 @@ msgstr "Métadonnées de préservation"
 
 #: templates/digitalfile.html:33
 msgid "Event log from our digital preservation repository for this file."
-msgstr "Registre d'événements généré par notre dépôt numérique pour ce fichier."
+msgstr ""
+"Registre d'événements généré par notre dépôt numérique pour ce fichier."
 
 #: templates/digitalfile.html:36
 #, python-format
@@ -449,7 +485,9 @@ msgstr "Comment les fichiers sont-ils organisés?"
 
 #: templates/faq.html:12
 msgid "There are three types of records in the DIP Access Interface:"
-msgstr "Il y a trois types d'enregistrements dans l'Interface d'accès aux archives numériques:"
+msgstr ""
+"Il y a trois types d'enregistrements dans l'Interface d'accès aux archives "
+"numériques:"
 
 #: templates/faq.html:14
 msgid "Collections:"
@@ -460,8 +498,8 @@ msgid ""
 "These are the highest level of organization, and typically correspond to an "
 "archival fonds or collection."
 msgstr ""
-"Il s'agit du plus haut niveau d'organisation d'un ensemble documentaire, que ce"
-"soit un fonds d'archives ou une collection."
+"Il s'agit du plus haut niveau d'organisation d'un ensemble documentaire, que "
+"cesoit un fonds d'archives ou une collection."
 
 #: templates/faq.html:15
 msgid "Folders:"
@@ -510,8 +548,8 @@ msgid ""
 "Once you’ve clicked on a collections page, you can search for particular "
 "folders based on their title. Click \\"
 msgstr ""
-"À partir de la page d'une collection vous pouvez rechercher les dossiers"
-"par leurs titres. Cliquer sur \\"
+"À partir de la page d'une collection vous pouvez rechercher les dossierspar "
+"leurs titres. Cliquer sur \\"
 
 #: templates/faq.html:21
 msgid "Within Folders:"
@@ -522,8 +560,9 @@ msgid ""
 "Once you’ve selected a folder, you can search for digital files within that "
 "folder. You can see additional metadata about the file by clicking \\"
 msgstr ""
-"À partir de la page d'un dossier, vous pouvez effectuer une recherche des fichiers  "
-"qu'il contient. Vous accéderez aux métadonnées du fichier en cliquant sur \\"
+"À partir de la page d'un dossier, vous pouvez effectuer une recherche des "
+"fichiers  qu'il contient. Vous accéderez aux métadonnées du fichier en "
+"cliquant sur \\"
 
 #: templates/faq.html:22
 msgid "Across Collections:"
@@ -539,7 +578,9 @@ msgstr "Comment accéder aux fichiers?"
 
 #: templates/faq.html:24
 msgid "Files can be downloaded as a package zip file (a \\"
-msgstr "Les fichiers individuels sont inclus dans un fichier zip qui peut être téléchargé (a \\"
+msgstr ""
+"Les fichiers individuels sont inclus dans un fichier zip qui peut être "
+"téléchargé (a \\"
 
 #: templates/faq.html:25
 msgid "From the Folder page, click \\"
@@ -558,12 +599,12 @@ msgid ""
 "information, extracted metadata, and a log of all events that happened to "
 "the file while being processed by Archivematica."
 msgstr ""
-"Le fichier METS est un fichier au format XML qui est généré par Archivematica, "
-"le logiciel de préservation numérique du CCA. Il se conforme au schéma Metadata "
-"Encoding & Transmission Standard (METS) et contient des informations détaillées "
-"pour chacun des fichiers d'un Dossier, tel que ses métadonnées d'identification "
-"et de caractérisation, ainsi que le registre des événements de traitement des "
-"SIPs par Archivematica."
+"Le fichier METS est un fichier au format XML qui est généré par "
+"Archivematica, le logiciel de préservation numérique du CCA. Il se conforme "
+"au schéma Metadata Encoding & Transmission Standard (METS) et contient des "
+"informations détaillées pour chacun des fichiers d'un Dossier, tel que ses "
+"métadonnées d'identification et de caractérisation, ainsi que le registre "
+"des événements de traitement des SIPs par Archivematica."
 
 #: templates/faq.html:28
 msgid ""
@@ -590,9 +631,10 @@ msgid ""
 "contents of this folder will vary."
 msgstr ""
 "Le dossier submissionDocumentation contient de la documentation contextuelle "
-"aux fichiers qui sont présents dans un DIP. Cette documentation est créée lors du "
-"traitement des archives, soit automatiquement par les logiciels utilisés au CCA ou "
-"encore par les archivistes. Le contenu de ce dossier peut varier d'un DIP à l'autre."
+"aux fichiers qui sont présents dans un DIP. Cette documentation est créée "
+"lors du traitement des archives, soit automatiquement par les logiciels "
+"utilisés au CCA ou encore par les archivistes. Le contenu de ce dossier peut "
+"varier d'un DIP à l'autre."
 
 #: templates/faq.html:31
 msgid "One common file to find here is a DFXML (<a href=\\"
@@ -603,8 +645,8 @@ msgid ""
 "Some of the files I want to use are in a file format that is unidentified or "
 "won't open. How can I see what is in the files?"
 msgstr ""
-"Je ne parviens pas à ouvrir certains des fichirs qui m'intéressent ou le format "
-"est inconnu. Comment puis-je savoir ce que le fichier représente?"
+"Je ne parviens pas à ouvrir certains des fichirs qui m'intéressent ou le "
+"format est inconnu. Comment puis-je savoir ce que le fichier représente?"
 
 #: templates/faq.html:33
 msgid ""
@@ -616,13 +658,14 @@ msgid ""
 "to set up a virtual machine or emulator using original software to provide "
 "access to obsolete files."
 msgstr ""
-"Le poste de consultation des archives numériques de la salle de lecture du CCA "
-"est doté de plusieurs logiciels qui permettent d'ouvrir un nombre important de "
-"formats de fichiers, mais pas tous les formats. Si vous rencontrez des difficultés "
-"pour l'ouverture d'un fichier, l'équipe de référence peut vous mettre en contact "
-"avec l'archiviste numérique qui pourra évaluer les solutions possibles. La mise à "
-"jour du format de fichier, ou la mise en place d'une machine virtuel ou d'un "
-"émulateur du logiciel original peuvent être envisagés pour résoudre le problème." 
+"Le poste de consultation des archives numériques de la salle de lecture du "
+"CCA est doté de plusieurs logiciels qui permettent d'ouvrir un nombre "
+"important de formats de fichiers, mais pas tous les formats. Si vous "
+"rencontrez des difficultés pour l'ouverture d'un fichier, l'équipe de "
+"référence peut vous mettre en contact avec l'archiviste numérique qui pourra "
+"évaluer les solutions possibles. La mise à jour du format de fichier, ou la "
+"mise en place d'une machine virtuel ou d'un émulateur du logiciel original "
+"peuvent être envisagés pour résoudre le problème."
 
 #: templates/faq.html:34
 msgid "Who created the digital archives access interface?"
@@ -636,9 +679,9 @@ msgid ""
 "2015 to May 2018."
 msgstr ""
 "L’Interface d'accès aux archives numériques a été conçue par le Centre "
-"Canadien d'Architecture (CCA) et développée par Artefactual Systems, à partir "
-"d’un concept initialement élaboré par Tim Walsh, archiviste numérique au CCA "
-"de juin 2015 à mai 2018."
+"Canadien d'Architecture (CCA) et développée par Artefactual Systems, à "
+"partir d’un concept initialement élaboré par Tim Walsh, archiviste numérique "
+"au CCA de juin 2015 à mai 2018."
 
 #: templates/faq.html:36
 msgid ""
@@ -660,7 +703,9 @@ msgstr "Parcourir la collection"
 
 #: templates/home.html:9
 msgid "To access born digital content within an archive/collection, select \\"
-msgstr "Pour accéder aux documents numériques d'un fonds d'archives ou d'une collection, sélectionner \\"
+msgstr ""
+"Pour accéder aux documents numériques d'un fonds d'archives ou d'une "
+"collection, sélectionner \\"
 
 #: templates/home.html:10
 msgid "Search collection titles"
@@ -755,11 +800,12 @@ msgid ""
 msgstr ""
 "Le matériel né-numérique des collections du CCA est protégé par le droit "
 "d'auteur et les ententes conclues avec les donateurs. La consultation des "
-"fichiers est seulement permise dans les locaux du CCA, et les chercheurs "
-"ne peuvent quitter les lieux avec des copies de fichiers sauf si ces copies "
-"ont été obtenues suite à une demande formelle de reproduction. Le téléchargement "
-"des fichiers est autorisé en soutien aux activités curatoriales du CCA et pour "
-"la consultation par les chercheurs sur les postes dédiés de la salle de lecture."
+"fichiers est seulement permise dans les locaux du CCA, et les chercheurs ne "
+"peuvent quitter les lieux avec des copies de fichiers sauf si ces copies ont "
+"été obtenues suite à une demande formelle de reproduction. Le téléchargement "
+"des fichiers est autorisé en soutien aux activités curatoriales du CCA et "
+"pour la consultation par les chercheurs sur les postes dédiés de la salle de "
+"lecture."
 
 #: templates/login.html:19
 msgid ""
