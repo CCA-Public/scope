@@ -9,16 +9,20 @@ services:
   accesspoc:
     build: .
     environment:
+      - DJANGO_ALLOWED_HOSTS=*
+      - DJANGO_SECRET_KEY=secret_key
+      - DJANGO_DEBUG=True
       - ES_HOSTS=elasticsearch:9200
       - CELERY_BROKER_URL=redis://redis:6379
     volumes:
       - ./accesspoc:/src
-    ports:
-      - '43430:8000'
 
   worker:
     build: .
     environment:
+      - DJANGO_ALLOWED_HOSTS=*
+      - DJANGO_SECRET_KEY=secret_key
+      - DJANGO_DEBUG=True
       - ES_HOSTS=elasticsearch:9200
       - CELERY_BROKER_URL=redis://redis:6379
     volumes:
@@ -47,3 +51,11 @@ services:
       - redis_data:/data
     ports:
       - '43432:6379'
+
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./accesspoc/media:/src/media:ro
+      - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - '43430:80'

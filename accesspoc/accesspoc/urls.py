@@ -17,9 +17,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from dips import views
 
@@ -27,13 +24,14 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
-    url(r'^collection/(?P<pk>[\w\.-_]+)/edit/$', views.edit_collection, name='edit_collection'),
-    url(r'^collection/(?P<pk>[\w\.-_]+)/delete/$', views.delete_collection, name='delete_collection'),
-    url(r'^collection/(?P<pk>[\w\.-_]+)/$', views.collection, name='collection'),
+    url(r'^collection/(?P<pk>\d+)/edit/$', views.edit_collection, name='edit_collection'),
+    url(r'^collection/(?P<pk>\d+)/delete/$', views.delete_collection, name='delete_collection'),
+    url(r'^collection/(?P<pk>\d+)/$', views.collection, name='collection'),
     url(r'^new_collection/', views.new_collection, name='new_collection'),
-    url(r'^folder/(?P<pk>[-\w.-_]+)/edit/$', views.edit_dip, name='edit_dip'),
-    url(r'^folder/(?P<pk>[-\w.-_]+)/delete/$', views.delete_dip, name='delete_dip'),
-    url(r'^folder/(?P<pk>[-\w.-_]+)/$', views.dip, name='dip'),
+    url(r'^folder/(?P<pk>\d+)/edit/$', views.edit_dip, name='edit_dip'),
+    url(r'^folder/(?P<pk>\d+)/delete/$', views.delete_dip, name='delete_dip'),
+    url(r'^folder/(?P<pk>\d+)/$', views.dip, name='dip'),
+    url(r'^folder/(?P<pk>\d+)/download$', views.download_dip, name='download_dip'),
     url(r'^object/(?P<pk>[-\w-]+)$', views.digital_file, name='digital_file'),
     url(r'^new_folder/', views.new_dip, name='new_dip'),
     url(r'^faq/', views.faq, name='faq'),
@@ -44,7 +42,3 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ]
-
-urlpatterns += staticfiles_urlpatterns()
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

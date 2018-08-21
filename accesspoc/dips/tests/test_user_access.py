@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -6,7 +5,6 @@ from unittest.mock import patch
 
 from dips.models import User, Collection, DIP, DigitalFile, DublinCore
 
-import os
 
 GET_PAGES = {
     'faq': [
@@ -121,6 +119,14 @@ GET_PAGES = {
         ('basic', 302),
         ('viewer', 302),
     ],
+    'download_dip': [
+        ('unauth', 302),
+        ('admin', 404),
+        ('manager', 404),
+        ('editor', 404),
+        ('basic', 404),
+        ('viewer', 404),
+    ],
     'digital_file': [
         ('unauth', 302),
         ('admin', 200),
@@ -156,7 +162,7 @@ class UserAccessTests(TestCase):
         self.dip = DIP.objects.create(
             dc=DublinCore.objects.create(identifier='A'),
             collection=self.collection,
-            objectszip=os.path.join(settings.MEDIA_ROOT, 'fake.zip'),
+            objectszip='fake.zip',
         )
         self.digital_file = DigitalFile.objects.create(
             uuid='e75c7789-7ebf-41b3-a233-39d4003e42ec',
@@ -176,7 +182,7 @@ class UserAccessTests(TestCase):
                 url = reverse(page, kwargs={'pk': self.user.pk})
             elif page in ['collection', 'edit_collection', 'delete_collection']:
                 url = reverse(page, kwargs={'pk': self.collection.pk})
-            elif page in ['dip', 'edit_dip', 'delete_dip']:
+            elif page in ['dip', 'edit_dip', 'delete_dip', 'download_dip']:
                 url = reverse(page, kwargs={'pk': self.dip.pk})
             elif page in ['digital_file']:
                 url = reverse(page, kwargs={'pk': self.digital_file.pk})

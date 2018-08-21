@@ -9,13 +9,19 @@
 * [Data model](#data-model)
 * [Uploading new DIPs](#uploading-new-dips)
 * [User types and permissions](#user-types-and-permissions)
+* [Technologies involved](#technologies-involved)
+  * [Django, Celery and SQLite](#django-celery-and-sqlite)
+  * [Redis](#redis)
+  * [Elasticsearch](#elasticsearch)
+* [Recommended system requirements](#recommended-system-requirements)
 * [Installation](#installation)
   * [Requirements](#requirements)
   * [Environment](#environment)
   * [Setup](#setup)
+  * [Configure worker](#configure-worker)
   * [Serve](#serve)
 * [Development](#development)
-* [Credit](#credit)
+* [Credits](#credits)
 
 ## Overview
 
@@ -56,9 +62,51 @@ By default, the application has five levels of permissions:
 
 For more information check the [user management and permissions feature file](features/user_management_and_permissions.feature).
 
+## Technologies involved
+
+The DIP Access Interface (real name pending) is a Django application that uses Elasticsearch 6.x as search engine, Celery 4.2 to process asynchronous tasks, a SQLite database and Redis as message broker (probably in the future, as cache system too).
+
+### Django, Celery and SQLite
+
+The Django application and the Celery worker need access to the source code, the database and the stored ZIP files. To avoid complexity and because the application currently uses SQLite as the database engine, it’s recommended to have both components running on the same machine.
+
+The application is ready to be served with Gunicorn and Gevent, using WhiteNoise to serve the static files and Nginx, to proxy the application and serve the uploaded ZIP files. Check the install notes below for more information. Gunicorn is deployed using the Gevent worker class, meaning that a single worker should scale sufficiently even during I/O-bound operations like serving static files. If there are more CPU-bound tasks needed in the future, those will be delegated to the Celery async. task queue to ensure that the event loop is not blocked; therefore, the recommended amount of workers deployed is one.
+
+Large file uploads (+2.5 megabytes) are saved in the OS temporary directory and deleted at the end of the request by Django and, using SQLite as the database engine, the memory requirements should be really low for this part of the application. Some notes about SQLite memory management in [this page](https://www2.sqlite.org/sysreq.html) (from S30000 to S30500).
+
+The amount of Celery workers deployed to handle asynchronous tasks could vary, as well as the pool size for each worker, check [the Celery concurrency documentation](http://docs.celeryproject.org/en/latest/userguide/workers.html#concurrency). However, to reduce the possibility of simultaneous writes to the SQLite database, we suggest to use a single worker with a concurrency of one. Currently, the application only includes a task to extract and parse the METS file, until a better parsing process is developed, the entire METS file is being hold in memory and, for that reason, the amount of memory needed for this part of the application should be around: (workers * concurrency * biggest METS file size expected). The METS file will also be extracted in the OS temporary directory during the process, so the disk capacity should also meet the same requirement.
+
+At this point, the application stores the uploaded ZIP files in the "media" folder at the application location. This should be considered to determine the disk capacity needed to hold the application data; in addition to the SQLite database, the space needed for the METS files extraction (mentioned above) and around 200 megabytes to hold the source code and Python dependencies.
+
+### Redis
+
+Redis is used as broker in the current Celery implementation and it will probably be used as cache system in the future. This component could be installed in the same or a different server and its URL can be configured through an environment variable read in the Django settings. At this point the memory footprint, the CPU usage and the disk allocation needed for snapshots will be minimal. Check [the Redis FAQ page](https://redis.io/topics/faq) for more information.
+
+### Elasticsearch
+
+Elasticsearch could also be installed in the same or different servers and its URL(s) can be configured through an environment variable read in the Django settings. The application expects Elasticsearch 6.x, which requires at least Java 8 in order to run. Only Oracle’s Java and the OpenJDK are supported and the same JVM version should be used on all Elasticsearch nodes and clients.
+
+The Elasticsearch node/cluster configuration can be fully customized, however, for the current implementation, a single node with the the default JVM heap size of 1GB set by Elasticsearch would be more than enough. It could even be reduced to 512MB if more memory is needed for other parts of the application or to reduce its requirements. For more info on how to change the Elasticsearch configuration check [their documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html), specially [the JVM heap size page](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html).
+
+The Elasticsearch indexes size will vary based on the application data and they will require some disk space, but it’s hard to tell how much at this point.
+
+## Recommended system requirements
+
+* Processor, 2 CPU cores.
+* Memory, 2GB:
+  - 1GB JVM heap size.
+  - Biggest METS file size expected.
+  - Other services (Nginx, Redis)
+* Disk space, the sum of:
+  - ~1GB for source code, dependencies and needed services.
+  - ~1GB for SQLite database and Elasticsearch data (to be revised as data grows).
+  - Biggest ZIP file size expected.
+  - Biggest METS file size expected.
+  - Total ZIP storage size.
+
 ## Installation
 
-The following steps are just an example of how to run the application in a production environment over Ubuntu 16.04.
+The following steps are just an example of how to run the application in a production environment, with all the services involved sharing the same machine, over Ubuntu 16.04.
 
 ### Requirements
 
@@ -70,11 +118,15 @@ The following steps are just an example of how to run the application in a produ
 
 The following environment variables are used to run the application:
 
-* `ES_HOSTS` **[REQUIRED]**: List of Elasticsearch hosts separated by comma. RFC-1738 formatted URLs can be used. E.g.:`https://user:secret@host:443/`.
+* `DJANGO_ALLOWED_HOSTS` **[REQUIRED]**: List of host/domain names separated by comma that this instance can serve.
+* `DJANGO_SECRET_KEY` **[REQUIRED]**: A secret key for this instance, used to provide cryptographic signing, and should be set to a unique, unpredictable value.
+* `DJANGO_DEBUG`: Boolean that turns on/off debug mode. Never deploy a site into production with it turned on. *Default:* `False`.
+* `ES_HOSTS` **[REQUIRED]**: List of Elasticsearch hosts separated by comma. RFC-1738 formatted URLs can be used. E.g.: `https://user:secret@host:443/`.
 * `ES_TIMEOUT`: Timeout in seconds for Elasticsearch requests. *Default:* `10`.
 * `ES_POOL_SIZE`: Elasticsearch requests pool size. *Default:* `10`.
 * `ES_INDEXES_SHARDS`: Number of shards for Elasticsearch indexes. *Default:* `1`.
 * `ES_INDEXES_REPLICAS`: Number of replicas for Elasticsearch indexes. *Default:* `0`.
+* `CELERY_BROKER_URL` **[REQUIRED]**: Redis server URL. E.g.: `redis://hostname:port`.
 
 ### Setup
 
@@ -90,7 +142,7 @@ rm get-pip.py
 pip install virtualenv
 ```
 
-And install Java 8 and Elasticsearch:
+Install Java 8 and Elasticsearch:
 
 ```
 apt-get install apt-transport-https openjdk-8-jre
@@ -123,6 +175,8 @@ curl -XGET http://localhost:9200
 }
 ```
 
+Intall the Redis server, for example following [this tutorial from Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04). If you decide to install it in a different server, make sure to check [Redis' security documentation](https://redis.io/topics/security) and include the password into the 'CELERY_BROKER_URL' environment variable, following the `redis://:password@hostname:port/db_number` format. For a better level of persistence set 'appendonly' to `yes` in `/etc/redis/redis.conf` and reset the Redis service (`systemctl restart redis`), check [Redis' persistence documentation](https://redis.io/topics/persistence) for more information.
+
 Create user to own and run the application, log in and make sure you're placed in its home folder:
 
 ```
@@ -131,10 +185,13 @@ su - accesspoc
 cd ~
 ```
 
-Create an environment file in `~/accesspoc-env`, at least with the required variable, to reference it where it's needed, for example:
+Create an environment file in `~/accesspoc-env`, at least with the required variables, to reference it where it's needed, for example:
 
 ```
+DJANGO_ALLOWED_HOSTS=example.com
+DJANGO_SECRET_KEY=secret_key
 ES_HOSTS=localhost:9200
+CELERY_BROKER_URL=redis://localhost:6379
 ```
 
 Clone the repository and go to its directory:
@@ -142,12 +199,6 @@ Clone the repository and go to its directory:
 ```
 git clone https://github.com/CCA-Public/dip-access-interface
 cd dip-access-interface
-```
-
-Until different settings files are added and this is added to the environment, you'll need to edit `accesspoc/accesspoc/settings.py` to add the host IP or domain address to the `ALLOWED_HOSTS` variable. E.g.:
-
-```
-ALLOWED_HOSTS = ['example.com']
 ```
 
 Create a Python virtual environment and install the application requirements:
@@ -163,6 +214,13 @@ Export the environment for the `manage.py` commands and go to the 'accesspoc' di
 ```
 export $(cat ~/accesspoc-env)
 cd accesspoc
+```
+
+Create the `media` folder with read and execute permissions for the group:
+
+```
+mkdir -p media
+chmod 750 media
 ```
 
 Initialize the database:
@@ -191,15 +249,69 @@ Compile translation files:
 ./manage.py compilemessages
 ```
 
+Collect static files:
+
+```
+./manage.py collectstatic
+```
+
 You can now deactivate the environment and go back to the root session:
 
 ```
 deactivate && exit
 ```
 
+### Configure worker
+
+To execute asynchronous tasks, back as the 'root' user, create a systemd service file to run the Celery worker. In `/etc/systemd/system/accesspoc-worker.service`, with the following content:
+
+```
+[Unit]
+Description=Accesspoc Celery Worker
+After=network.target
+
+[Service]
+Type=forking
+User=accesspoc
+Group=accesspoc
+EnvironmentFile=/home/accesspoc/accesspoc-env
+Environment=CELERYD_PID_FILE=/home/accesspoc/accesspoc-worker.pid
+Environment=CELERYD_LOG_FILE=/home/accesspoc/accesspoc-worker.log
+WorkingDirectory=/home/accesspoc/dip-access-interface/accesspoc
+ExecStart=/home/accesspoc/dip-access-interface/venv/bin/celery \
+            multi start accesspoc-worker -A accesspoc \
+            --pidfile=${CELERYD_PID_FILE} \
+            --logfile=${CELERYD_LOG_FILE} \
+            --loglevel=WARNING
+ExecReload=/home/accesspoc/dip-access-interface/venv/bin/celery \
+            multi restart accesspoc-worker -A accesspoc \
+            --pidfile=${CELERYD_PID_FILE} \
+            --logfile=${CELERYD_LOG_FILE} \
+            --loglevel=WARNING
+ExecStop=/home/accesspoc/dip-access-interface/venv/bin/celery \
+            multi stopwait accesspoc-worker \
+            --pidfile=${CELERYD_PID_FILE}
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Start and enable the service:
+
+```
+systemctl start accesspoc-worker
+systemctl enable accesspoc-worker
+```
+
+To access the service logs, use:
+
+```
+journalctl -u accesspoc-worker
+```
+
 ### Serve
 
-The application requirements install Gunicorn and WhiteNoise to serve the application, including the static files. Back as the root user, make a systemd service file to run the Gunicorn daemon in `/etc/systemd/system/accesspoc-gunicorn.service`, with the following content:
+The application requirements install Gunicorn, Gevent and WhiteNoise to serve the application, including the static files. Create a systemd service file to run the Gunicorn daemon in `/etc/systemd/system/accesspoc-gunicorn.service`, with the following content:
 
 ```
 [Unit]
@@ -216,7 +328,6 @@ WorkingDirectory=/home/accesspoc/dip-access-interface/accesspoc
 ExecStart=/home/accesspoc/dip-access-interface/venv/bin/gunicorn \
             --access-logfile /dev/null \
             --worker-class gevent \
-            --workers 4 \
             --bind unix:/home/accesspoc/accesspoc-gunicorn.sock \
             accesspoc.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
@@ -239,14 +350,14 @@ To access the service logs, use:
 journalctl -u accesspoc-gunicorn
 ```
 
-The Gunicorn service is using an Unix socket to listen for connections so we will use Nginx to proxy the application:
+The Gunicorn service is using an Unix socket to listen for connections and we will use Nginx to proxy the application and to serve the uploaded ZIP files. It should also be used to secure the site, but we won't cover that configuration in this example. Install Nginx and create a configuration file:
 
 ```
 apt-get install nginx
 nano /etc/nginx/sites-available/accesspoc
 ```
 
-With a basic configuration:
+With the following configuration:
 
 ```
 upstream accesspoc {
@@ -257,6 +368,11 @@ server {
   listen 80;
   server_name example.com;
   client_max_body_size 500M;
+
+  location /media/ {
+    internal;
+    alias /home/accesspoc/dip-access-interface/accesspoc/media/;
+  }
 
   location / {
     proxy_set_header Host $http_host;
@@ -281,6 +397,14 @@ Verify configuration and restart Nginx service:
 nginx -t
 systemctl restart nginx
 ```
+
+Make sure that the user running Nginx (usually 'www-data') has access to the media folder and files by adding it to the 'accesspoc' group:
+
+```
+usermod -a -G accesspoc www-data
+```
+
+Reboot to reflect user changes.
 
 ## Development
 
@@ -323,6 +447,12 @@ Compile translation files:
 
 ```
 docker-compose exec accesspoc ./manage.py compilemessages
+```
+
+Collect static files:
+
+```
+docker-compose exec accesspoc ./manage.py collectstatic
 ```
 
 To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:

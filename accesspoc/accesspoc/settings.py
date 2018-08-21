@@ -18,18 +18,11 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', cast=list, subcast=str)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'qnhu8m*ib)d+yp(9fi*0j7##r_(u)xvf4g@ywwpdzb^a(hs(z='
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 # Application definition
 
@@ -157,15 +150,16 @@ MESSAGE_TAGS = {
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'accesspoc', 'static'),
 ]
 
 # Media
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+FILE_UPLOAD_PERMISSIONS = 0o640
 
 # Authentication
 

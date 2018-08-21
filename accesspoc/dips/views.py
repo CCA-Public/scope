@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms import modelform_factory
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from .models import User, Collection, DIP, DigitalFile, DublinCore
@@ -581,3 +582,17 @@ def delete_dip(request, pk):
         return redirect('home')
 
     return render(request, 'delete_dip.html', {'form': form, 'dip': dip})
+
+
+@login_required(login_url='/login/')
+def download_dip(request, pk):
+    dip = get_object_or_404(DIP, pk=pk)
+    try:
+        response = HttpResponse()
+        response['Content-Length'] = dip.objectszip.size
+        response['Content-Type'] = 'application/zip'
+        response['Content-Disposition'] = 'attachment; filename=%s' % dip.objectszip.name
+        response['X-Accel-Redirect'] = '/media/%s' % dip.objectszip.name
+        return response
+    except FileNotFoundError:
+        raise Http404('ZIP file not found.')

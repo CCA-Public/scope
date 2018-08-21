@@ -30,7 +30,7 @@
       <h2>{% trans "Attachments" %}</h2>
       <div class="card card-body p-3 mb-2">
         <p><strong>{% trans "Digital files" %}:</strong> {{ dip.objectszip.name }}</p>
-        <a href="{{ dip.objectszip.url }}"><button class="btn btn-primary">{% trans "Download zip file" %}</button></a>
+        <a href="{% url 'download_dip' dip.pk %}"><button class="btn btn-primary">{% trans "Download zip file" %}</button></a>
       </div>
     </div>
   </div>

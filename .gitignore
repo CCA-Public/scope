@@ -23,3 +23,6 @@ coverage.xml
 
 # Compiled translation files
 *.mo
+
+# Collected static files
+accesspoc/static
