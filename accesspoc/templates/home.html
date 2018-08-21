@@ -6,7 +6,7 @@
 
 {% block content %}
   <h2>{% trans "Browse collections" %}</h2>
-  <p><em>{% trans "To access born digital content within an archive/collection, select \"See more\" from the list below. To search digital files across all collections, select \"Search\" from the menu above." %}</em></p>
+  <p><em>{% blocktrans %}To access born digital content within an archive/collection, select "See more" from the list below. To search digital files across all collections, select "Search" from the menu above.{% endblocktrans %}</em></p>
   {% trans "Search collection titles" as placeholder %}
   {% include 'includes/table_form.html' with placeholder=placeholder %}
   <div class="table-responsive">
