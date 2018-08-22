@@ -29,15 +29,27 @@
   <p><strong>{% trans "METS amdSec" %}:</strong> {{ digitalfile.amdsec }}</p>
   <p><strong>{% blocktrans %}Checksum ({{ digitalfile.hashtype }}){% endblocktrans %}:</strong> {{ digitalfile.hashvalue }}</p>
   <br>
-  <h2>{% trans "Preservation metadata" %}</h2>
-  <p><em>{% trans "Event log from our digital preservation repository for this file." %}</em></p>
-  {% for event in digitalfile.premis_events.all|sort_by:'datetime' %}
-    <br>
-    <h4>{% blocktrans %}Event: {{ event.uuid }}{% endblocktrans %}</h4>
-    <p><strong>{% trans "Event type" %}:</strong> {{ event.eventtype }}</p>
-    <p><strong>{% trans "Datetime" %}:</strong> {{ event.datetime }}</p>
-    <p><strong>{% trans "Event detail" %}:</strong> {{ event.detail }}</p>
-    <p><strong>{% trans "Event outcome" %}:</strong> {{ event.outcome }}</p>
-    <p><strong>{% trans "Event detail note" %}:</strong> {{ event.detailnote }}</p>
-  {% endfor %}
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapsed-premis" aria-expanded="false" aria-controls="collapsed-premis">
+          {% trans "Preservation metadata" %}
+        </button>
+      </h5>
+    </div>
+    <div class="collapse" id="collapsed-premis">
+      <div class="card-body">
+        <p><em>{% trans "Event log from our digital preservation repository for this file." %}</em></p>
+        {% for event in digitalfile.premis_events.all|sort_by:'datetime' %}
+          <br>
+          <h4>{% blocktrans %}Event: {{ event.uuid }}{% endblocktrans %}</h4>
+          <p><strong>{% trans "Event type" %}:</strong> {{ event.eventtype }}</p>
+          <p><strong>{% trans "Datetime" %}:</strong> {{ event.datetime }}</p>
+          <p><strong>{% trans "Event detail" %}:</strong> {{ event.detail }}</p>
+          <p><strong>{% trans "Event outcome" %}:</strong> {{ event.outcome }}</p>
+          <p><strong>{% trans "Event detail note" %}:</strong> {{ event.detailnote }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 {% endblock %}
