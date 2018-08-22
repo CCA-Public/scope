@@ -70,7 +70,7 @@ def get_page_from_search(search, request):
 
 
 @login_required(login_url='/login/')
-def home(request):
+def collections(request, template):
     # Sort options
     sort_options = {
         'identifier': 'dc.identifier.raw',
@@ -79,9 +79,13 @@ def home(request):
     sort_option, sort_dir = get_sort_params(request, sort_options, 'identifier')
     sort_field = sort_options.get(sort_option)
 
-    # Search
+    # Search:
+    # This view is used in two URLs from accesspoc.urls, where the template
+    # is defined for each case. The query parameter should only filter in
+    # the collections page.
     search = Collection.es_doc.search()
-    search = add_query_to_search(search, request, ['dc.*'])
+    if template == 'collections.html':
+        search = add_query_to_search(search, request, ['dc.*'])
     search = search.sort({sort_field: {'order': sort_dir}})
 
     # Pagination
@@ -96,7 +100,7 @@ def home(request):
         (_('Details'), None),
     ]
 
-    return render(request, 'home.html', {
+    return render(request, template, {
         'collections': collections,
         'table_headers': table_headers,
         'sort_option': sort_option,

@@ -5,21 +5,10 @@
 {% block title %}{% trans "Home" %}{% endblock %}
 
 {% block content %}
-  <div class="text-center">
-    <h2>{% trans "Digital Archives Access Interface" %}</h2>
-    <p class="mb-0">{% trans "You can search digital files by using the search bar below or you can browse our collections." %}</p>
-    <p>{% trans "If you need help, please use our FAQ page in the menu above." %}</p>
-    <h4>{% trans "Search our digital files" %}</h4>
-    <form method="get" action="{% url 'search' %}" class="row justify-content-md-center mb-4">
-      <div class="input-group col-lg-6 col-md-8">
-        <input type="text" name="query" class="form-control form-control-lg" placeholder="{% trans "Type any words to search digital files in our collections" %}">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search fa-lg"></i></button>
-        </div>
-      </div>
-    </form>
-    <h4>{% trans "Browse our collections" %}</h4>
-  </div>
+  <h2>{% trans "Browse collections" %}</h2>
+  <p><em>{% blocktrans %}To access born digital content within an archive/collection, select "See more" from the list below. To search digital files across all collections, select "Search" from the menu above.{% endblocktrans %}</em></p>
+  {% trans "Search collection titles" as placeholder %}
+  {% include 'includes/table_form.html' with placeholder=placeholder %}
   <div class="table-responsive">
     <table class="table table-striped table-bordered table-condensed">
       {% include 'includes/table_header.html' with headers=table_headers %}

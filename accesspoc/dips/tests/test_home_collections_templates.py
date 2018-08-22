@@ -1,10 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.urls import resolve
 from django.test import TestCase
 from unittest.mock import patch
-
-from dips.views import home
 
 
 class HomeTests(TestCase):
@@ -15,11 +12,14 @@ class HomeTests(TestCase):
 
     @patch('elasticsearch_dsl.Search.execute')
     @patch('elasticsearch_dsl.Search.count', return_value=0)
-    def test_home_view_status_code(self, patch, patch_2):
+    def test_home_template(self, patch, patch_2):
         url = reverse('home')
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
 
-    def test_home_url_resolves_home_view(self):
-        view = resolve('/')
-        self.assertEqual(view.func, home)
+    @patch('elasticsearch_dsl.Search.execute')
+    @patch('elasticsearch_dsl.Search.count', return_value=0)
+    def test_collections_template(self, patch, patch_2):
+        url = reverse('collections')
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, 'collections.html')

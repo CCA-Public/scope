@@ -21,9 +21,10 @@ from django.contrib.auth import views as auth_views
 from dips import views
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
+    url(r'^$', views.collections, {'template': 'home.html'}, name='home'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
+    url(r'^collections/', views.collections, {'template': 'collections.html'}, name='collections'),
     url(r'^collection/(?P<pk>\d+)/edit/$', views.edit_collection, name='edit_collection'),
     url(r'^collection/(?P<pk>\d+)/delete/$', views.delete_collection, name='delete_collection'),
     url(r'^collection/(?P<pk>\d+)/$', views.collection, name='collection'),

@@ -63,6 +63,14 @@ GET_PAGES = {
         ('basic', 200),
         ('viewer', 200),
     ],
+    'collections': [
+        ('unauth', 302),
+        ('admin', 200),
+        ('manager', 200),
+        ('editor', 200),
+        ('basic', 200),
+        ('viewer', 200),
+    ],
     'new_collection': [
         ('unauth', 302),
         ('admin', 200),
