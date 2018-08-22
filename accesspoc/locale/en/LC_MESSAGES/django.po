@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-21 12:41+0000\n"
+"POT-Creation-Date: 2018-08-22 17:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "French"
 msgstr ""
 
-#: dips/forms.py:14 dips/views.py:92 dips/views.py:326
+#: dips/forms.py:14 dips/views.py:96 dips/views.py:330
 #: templates/includes/dc.html:4
 msgid "Identifier"
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Administrator"
 msgstr ""
 
-#: dips/forms.py:31 dips/forms.py:72 dips/views.py:146
+#: dips/forms.py:31 dips/forms.py:72 dips/views.py:150
 msgid "Groups"
 msgstr ""
 
@@ -137,130 +137,131 @@ msgid ""
 "file. %(error_message)s Please, contact an administrator."
 msgstr ""
 
-#: dips/views.py:93 dips/views.py:327 templates/includes/dc.html:5
+#: dips/views.py:97 dips/views.py:331 templates/includes/dc.html:5
 msgid "Title"
 msgstr ""
 
-#: dips/views.py:94 dips/views.py:328 templates/includes/dc.html:6
+#: dips/views.py:98 dips/views.py:332 templates/includes/dc.html:6
 msgid "Date"
 msgstr ""
 
-#: dips/views.py:95 dips/views.py:329 templates/includes/dc.html:9
+#: dips/views.py:99 dips/views.py:333 templates/includes/dc.html:9
 msgid "Description"
 msgstr ""
 
-#: dips/views.py:96 dips/views.py:330 dips/views.py:384
+#: dips/views.py:100 dips/views.py:334 dips/views.py:388
 msgid "Details"
 msgstr ""
 
-#: dips/views.py:142
+#: dips/views.py:146
 msgid "Username"
 msgstr ""
 
-#: dips/views.py:143
+#: dips/views.py:147
 msgid "First name"
 msgstr ""
 
-#: dips/views.py:144
+#: dips/views.py:148
 msgid "Last name"
 msgstr ""
 
-#: dips/views.py:145
+#: dips/views.py:149
 msgid "Email"
 msgstr ""
 
-#: dips/views.py:147
+#: dips/views.py:151
 msgid "Active"
 msgstr ""
 
-#: dips/views.py:148
+#: dips/views.py:152
 msgid "Admin"
 msgstr ""
 
-#: dips/views.py:149 templates/collection.html:21 templates/dip.html:23
+#: dips/views.py:153 templates/collection.html:21 templates/dip.html:23
 #: templates/edit_collection.html:12 templates/edit_dip.html:14
 msgid "Edit"
 msgstr ""
 
-#: dips/views.py:276 dips/views.py:380 templates/digitalfile.html:22
+#: dips/views.py:280 dips/views.py:384 templates/digitalfile.html:22
 msgid "Filepath"
 msgstr ""
 
-#: dips/views.py:277 dips/views.py:381 templates/includes/dc.html:8
+#: dips/views.py:281 dips/views.py:385 templates/includes/dc.html:8
 msgid "Format"
 msgstr ""
 
-#: dips/views.py:278 dips/views.py:382 templates/digitalfile.html:25
+#: dips/views.py:282 dips/views.py:386 templates/digitalfile.html:25
 msgid "Size (bytes)"
 msgstr ""
 
-#: dips/views.py:279 dips/views.py:383
+#: dips/views.py:283 dips/views.py:387
 msgid "Last modified"
 msgstr ""
 
-#: dips/views.py:280
+#: dips/views.py:284
 msgid "View parent folder"
 msgstr ""
 
-#: dips/views.py:281
+#: dips/views.py:285
 msgid "File details"
 msgstr ""
 
-#: dips/views.py:482
+#: dips/views.py:486
 msgid ""
 "A background process has been launched to extract and parse the METS file. "
 "After the process finishes and the interface is reloaded, a link to the "
 "Folder will show up in the Folders table at the related Collection page."
 msgstr ""
 
-#: templates/base.html:23
+#: templates/base.html:23 templates/home.html:9
 msgid "Digital Archives Access Interface"
 msgstr ""
 
-#: templates/base.html:26 templates/collection.html:29 templates/dip.html:39
+#: templates/base.html:26 templates/collection.html:12
+#: templates/delete_collection.html:10 templates/delete_dip.html:10
+#: templates/digitalfile.html:12 templates/dip.html:12
+#: templates/edit_collection.html:10 templates/edit_dip.html:10
+#: templates/new_collection.html:10
+msgid "Collections"
+msgstr ""
+
+#: templates/base.html:29 templates/collection.html:29 templates/dip.html:39
 #: templates/search.html:6 templates/users.html:12
 msgid "Search"
 msgstr ""
 
-#: templates/base.html:29
+#: templates/base.html:32
 msgid "FAQ"
 msgstr ""
 
-#: templates/base.html:36
+#: templates/base.html:39
 msgid "Select language"
 msgstr ""
 
-#: templates/base.html:58
+#: templates/base.html:61
 msgid "Edit Users"
 msgstr ""
 
-#: templates/base.html:62 templates/new_collection.html:6
+#: templates/base.html:65 templates/new_collection.html:6
 #: templates/new_collection.html:11
 msgid "Add New Collection"
 msgstr ""
 
-#: templates/base.html:63 templates/new_dip.html:11
+#: templates/base.html:66 templates/new_dip.html:11
 msgid "Add New Folder"
 msgstr ""
 
-#: templates/base.html:66
+#: templates/base.html:69
 msgid "Log out"
 msgstr ""
 
-#: templates/base.html:70
+#: templates/base.html:73
 msgid "Log in"
 msgstr ""
 
 #: templates/collection.html:7
 #, python-format
 msgid "Collection %(collection)s"
-msgstr ""
-
-#: templates/collection.html:12 templates/delete_collection.html:10
-#: templates/delete_dip.html:10 templates/digitalfile.html:12
-#: templates/dip.html:12 templates/edit_collection.html:10
-#: templates/edit_dip.html:10 templates/new_collection.html:10
-msgid "Collections"
 msgstr ""
 
 #: templates/collection.html:15
@@ -281,13 +282,15 @@ msgstr ""
 msgid "Folders in this collection"
 msgstr ""
 
-#: templates/collection.html:36 templates/dip.html:46 templates/home.html:17
-#: templates/search.html:17 templates/users.html:19
+#: templates/collection.html:36 templates/collections.html:17
+#: templates/dip.html:46 templates/home.html:28 templates/search.html:17
+#: templates/users.html:19
 msgid "No matching records found"
 msgstr ""
 
-#: templates/collection.html:47 templates/dip.html:57 templates/home.html:26
-#: templates/search.html:29 templates/users.html:31
+#: templates/collection.html:47 templates/collections.html:26
+#: templates/dip.html:57 templates/home.html:37 templates/search.html:29
+#: templates/users.html:31
 msgid "See more"
 msgstr ""
 
@@ -298,6 +301,25 @@ msgstr ""
 #: templates/collection.html:51 templates/collection.html:52
 #: templates/search.html:33 templates/search.html:34
 msgid "Import in progress"
+msgstr ""
+
+#: templates/collections.html:5 templates/home.html:5
+msgid "Home"
+msgstr ""
+
+#: templates/collections.html:8
+msgid "Browse collections"
+msgstr ""
+
+#: templates/collections.html:9
+msgid ""
+"To access born digital content within an archive/collection, select \"See "
+"more\" from the list below. To search digital files across all collections, "
+"select \"Search\" from the menu above."
+msgstr ""
+
+#: templates/collections.html:10
+msgid "Search collection titles"
 msgstr ""
 
 #: templates/delete_collection.html:6
@@ -379,36 +401,36 @@ msgstr ""
 msgid "Checksum (%(digitalfile.hashtype)s)"
 msgstr ""
 
-#: templates/digitalfile.html:32
+#: templates/digitalfile.html:36
 msgid "Preservation metadata"
 msgstr ""
 
-#: templates/digitalfile.html:33
+#: templates/digitalfile.html:42
 msgid "Event log from our digital preservation repository for this file."
 msgstr ""
 
-#: templates/digitalfile.html:36
+#: templates/digitalfile.html:45
 #, python-format
 msgid "Event: %(event.uuid)s"
 msgstr ""
 
-#: templates/digitalfile.html:37
+#: templates/digitalfile.html:46
 msgid "Event type"
 msgstr ""
 
-#: templates/digitalfile.html:38
+#: templates/digitalfile.html:47
 msgid "Datetime"
 msgstr ""
 
-#: templates/digitalfile.html:39
+#: templates/digitalfile.html:48
 msgid "Event detail"
 msgstr ""
 
-#: templates/digitalfile.html:40
+#: templates/digitalfile.html:49
 msgid "Event outcome"
 msgstr ""
 
-#: templates/digitalfile.html:41
+#: templates/digitalfile.html:50
 msgid "Event detail note"
 msgstr ""
 
@@ -662,23 +684,26 @@ msgid ""
 "Montreal and the Quebec Department of Culture and Communications."
 msgstr ""
 
-#: templates/home.html:5
-msgid "Home"
-msgstr ""
-
-#: templates/home.html:8
-msgid "Browse collections"
-msgstr ""
-
-#: templates/home.html:9
-msgid ""
-"To access born digital content within an archive/collection, select \"See "
-"more\" from the list below. To search digital files across all collections, "
-"select \"Search\" from the menu above."
-msgstr ""
-
 #: templates/home.html:10
-msgid "Search collection titles"
+msgid ""
+"You can search digital files by using the search bar below or you can browse "
+"our collections."
+msgstr ""
+
+#: templates/home.html:11
+msgid "If you need help, please use our FAQ page in the menu above."
+msgstr ""
+
+#: templates/home.html:12
+msgid "Search our digital files"
+msgstr ""
+
+#: templates/home.html:15
+msgid "Type any words to search digital files in our collections"
+msgstr ""
+
+#: templates/home.html:21
+msgid "Browse our collections"
 msgstr ""
 
 #: templates/includes/dc.html:7
