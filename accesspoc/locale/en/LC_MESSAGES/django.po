@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-22 18:43+0000\n"
+"POT-Creation-Date: 2018-08-23 13:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -213,11 +213,20 @@ msgid ""
 "Folder will show up in the Folders table at the related Collection page."
 msgstr ""
 
-#: templates/base.html:23 templates/home.html:9
-msgid "Digital Archives Access Interface"
+#: templates/base.html:20
+msgid "Toggle navigation"
 msgstr ""
 
-#: templates/base.html:26 templates/collection.html:12
+#: templates/base.html:23 templates/base.html:31 templates/collections.html:5
+#: templates/home.html:5
+msgid "Home"
+msgstr ""
+
+#: templates/base.html:24
+msgid "Canadian Centre for Architecture logo"
+msgstr ""
+
+#: templates/base.html:35 templates/collection.html:12
 #: templates/delete_collection.html:10 templates/delete_dip.html:10
 #: templates/digitalfile.html:12 templates/dip.html:12
 #: templates/edit_collection.html:10 templates/edit_dip.html:10
@@ -225,37 +234,36 @@ msgstr ""
 msgid "Collections"
 msgstr ""
 
-#: templates/base.html:29 templates/collection.html:29 templates/dip.html:39
-#: templates/search.html:6 templates/users.html:12
-msgid "Search"
-msgstr ""
-
-#: templates/base.html:32
+#: templates/base.html:38
 msgid "FAQ"
 msgstr ""
 
-#: templates/base.html:39
+#: templates/base.html:43 templates/search.html:9 templates/search.html:10
+msgid "Search all digital files"
+msgstr ""
+
+#: templates/base.html:53
 msgid "Select language"
 msgstr ""
 
-#: templates/base.html:61
+#: templates/base.html:75
 msgid "Edit Users"
 msgstr ""
 
-#: templates/base.html:65 templates/new_collection.html:6
+#: templates/base.html:79 templates/new_collection.html:6
 #: templates/new_collection.html:11
 msgid "Add New Collection"
 msgstr ""
 
-#: templates/base.html:66 templates/new_dip.html:11
+#: templates/base.html:80 templates/new_dip.html:11
 msgid "Add New Folder"
 msgstr ""
 
-#: templates/base.html:69
+#: templates/base.html:83
 msgid "Log out"
 msgstr ""
 
-#: templates/base.html:73
+#: templates/base.html:87
 msgid "Log in"
 msgstr ""
 
@@ -282,6 +290,11 @@ msgstr ""
 msgid "Folders in this collection"
 msgstr ""
 
+#: templates/collection.html:29 templates/dip.html:39 templates/search.html:6
+#: templates/users.html:12
+msgid "Search"
+msgstr ""
+
 #: templates/collection.html:36 templates/collections.html:17
 #: templates/dip.html:46 templates/home.html:28 templates/search.html:17
 #: templates/users.html:19
@@ -301,10 +314,6 @@ msgstr ""
 #: templates/collection.html:51 templates/collection.html:52
 #: templates/search.html:33 templates/search.html:34
 msgid "Import in progress"
-msgstr ""
-
-#: templates/collections.html:5 templates/home.html:5
-msgid "Home"
 msgstr ""
 
 #: templates/collections.html:8
@@ -684,6 +693,10 @@ msgid ""
 "Montreal and the Quebec Department of Culture and Communications."
 msgstr ""
 
+#: templates/home.html:9
+msgid "Digital Archives Access Interface"
+msgstr ""
+
 #: templates/home.html:10
 msgid ""
 "You can search digital files by using the search bar below or you can browse "
@@ -822,8 +835,4 @@ msgstr ""
 
 #: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:38
 msgid "New User"
-msgstr ""
-
-#: templates/search.html:9 templates/search.html:10
-msgid "Search all digital files"
 msgstr ""
