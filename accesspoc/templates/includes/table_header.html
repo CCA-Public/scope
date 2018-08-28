@@ -1,20 +1,19 @@
 {% load custom_tags %}
 
 <tr>
-  {% for header, option in headers %}
-    {% if option %}
-      <th>
-        {% if option == sort_option and sort_dir == 'desc' %}
-          <a href="?{% update_and_encode_params request.GET sort=option sort_dir='asc' page=None %}" class="active"><i class="fas fa-sort-down"></i></a>
-        {% elif option == sort_option %}
-          <a href="?{% update_and_encode_params request.GET sort=option sort_dir='desc' page=None %}" class="active"><i class="fas fa-sort-up"></i></a>
+  {% for header in headers %}
+      <th class="text-nowrap"{% if header.width %} style="width:{{ header.width }}"{% endif %}>
+        {% if header.sort_param %}
+          {% if header.sort_param == sort_option and sort_dir == 'desc' %}
+            <a href="?{% update_and_encode_params request.GET sort=header.sort_param sort_dir='asc' page=None %}" class="btn-sort-cca active">{{ header.label }}<i class="fas fa-sort-down pl-2"></i></a>
+          {% elif header.sort_param == sort_option %}
+            <a href="?{% update_and_encode_params request.GET sort=header.sort_param sort_dir='desc' page=None %}" class="btn-sort-cca active">{{ header.label }}<i class="fas fa-sort-up pl-2"></i></a>
+          {% else %}
+            <a href="?{% update_and_encode_params request.GET sort=header.sort_param sort_dir=None page=None %}" class="btn-sort-cca">{{ header.label }}<i class="fas fa-sort pl-2"></i></a>
+          {% endif %}
         {% else %}
-          <a href="?{% update_and_encode_params request.GET sort=option sort_dir=None page=None %}"><i class="fas fa-sort"></i></a>
+          {{ header.label }}
         {% endif %}
-        <span>{{ header }}</span>
       </th>
-    {% else %}
-      <th>{{ header }}</th>
-    {% endif %}
   {% endfor %}
 </tr>

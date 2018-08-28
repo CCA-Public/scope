@@ -6,13 +6,18 @@
 {% block title %}{% trans "Users" %}{% endblock %}
 
 {% block content %}
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active">{% trans "Users" %}</li>
-  </ol>
+  <h2>{% trans "Users" %}</h2>
+  <span class="d-inline-block mt-3 mb-2 mr-2">
+    {% blocktrans trimmed count counter=page.paginator.count %}
+      <strong>{{ counter }}</strong> user
+    {% plural %}
+      <strong>{{ counter }}</strong> users
+    {% endblocktrans %}
+  </span>
   {% trans "Search" as placeholder %}
   {% include 'includes/table_form.html' with placeholder=placeholder %}
   <div class="table-responsive">
-    <table class="table table-striped table-bordered table-condensed">
+    <table class="table table-striped table-condensed mb-0 border">
       {% include 'includes/table_header.html' with headers=table_headers %}
       {% if not users %}
         <tr>
@@ -28,12 +33,11 @@
           <td>{{ user.group_names|default:'' }}</td>
           <td>{{ user.is_active }}</td>
           <td>{{ user.is_superuser }}</td>
-          <td><a href="{% url 'edit_user' user.pk %}"><button class="btn btn-sm btn-primary">{% trans "See more" %}</button></a></td>
+          <td><a href="{% url 'edit_user' user.pk %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a></td>
         </tr>
       {% endfor %}
     </table>
   </div>
   {% include 'includes/table_pager.html' %}
-  <br>
-  <a href="{% url 'new_user' %}"><button class="btn btn-primary">{% trans "New User" %}</button></a>
+  <a href="{% url 'new_user' %}" class="btn btn-primary mt-3">{% trans "Add new User" %}</a>
 {% endblock %}

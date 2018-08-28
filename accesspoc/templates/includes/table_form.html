@@ -1,13 +1,11 @@
 {% load i18n %}
 
-<div class="table-form">
-  <form method="get">
-    {# TODO?: Maintain other GET params #}
-    <div class="input-group">
-      <input type="text" name="query" class="form-control" placeholder="{{ placeholder }}" value="{{ request.GET.query }}">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
-      </div>
+<form method="get" class="float-right mb-3">
+  {# TODO?: Maintain other GET params #}
+  <div class="input-group">
+    <input type="text" name="query" class="form-control" placeholder="{{ placeholder }}" value="{{ request.GET.query }}">
+    <div class="input-group-append">
+      <button class="btn btn-outline-cca" type="submit"><i class="fas fa-search"></i></button>
     </div>
-  </form>
-</div>
+  </div>
+</form>

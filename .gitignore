@@ -26,3 +26,7 @@ coverage.xml
 
 # Collected static files
 accesspoc/static
+
+# Compiled CSS and map files
+accesspoc/accesspoc/static/styles/main.css
+accesspoc/accesspoc/static/styles/main.css.map

@@ -3,17 +3,17 @@
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% block title %}{% trans "Add New Collection" %}{% endblock %}
+{% block title %}{% trans "Add new Collection" %}{% endblock %}
 
 {% block content %}
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Collections" %}</a></li>
-    <li class="breadcrumb-item active">{% trans "Add New Collection" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Add new Collection" %}</li>
   </ol>
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' with form=dc_form %}
     {% include 'includes/form.html' with form=collection_form %}
-    <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
   </form>
 {% endblock %}

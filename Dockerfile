@@ -8,6 +8,7 @@ COPY requirements /src/requirements
 
 RUN set -ex \
     && apk add --update --no-cache --virtual .buildDeps \
+        alpine-sdk \
         gcc \
         libxslt-dev \
         musl-dev \

@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load widget_tweaks %}
+{% load custom_tags %}
+
+<div class="form-group{% if field|widget_type == 'checkboxinput' %} custom-control custom-checkbox{% endif %}">
+  {% if field|widget_type == 'checkboxinput' %}
+    {{ field|add_class:'custom-control-input'|add_class:classes }}
+    {{ field|render_label_with_class:'custom-control-label' }}
+  {% else %}
+    {{ field|render_label }}
+    {% if field|widget_type == 'clearablefileinput' or field|widget_type == 'fileinput' %}
+      <div class="custom-file">
+        {% trans "Choose file" as placeholder %}
+        {% get_current_language as lang_code %}
+        {% with lang_attr='lang:'|add:lang_code data='placeholder:'|add:placeholder %}
+          {{ field|add_class:'custom-file-input'|add_class:classes|attr:lang_attr|set_data:data }}
+        {% endwith %}
+        <label class="custom-file-label">{{ placeholder }}</label>
+      </div>
+    {% else %}
+      {{ field|add_class:'form-control'|add_class:classes }}
+    {% endif %}
+  {% endif %}
+  {% if errors %}
+    {% for error in errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% if field.help_text %}
+    <small class="form-text text-muted">
+      {{ field.help_text|safe }}
+    </small>
+  {% endif %}
+</div>

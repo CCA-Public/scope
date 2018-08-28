@@ -7,15 +7,14 @@
 
 {% block content %}
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Collections" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection }}</a></li>
-    <li class="breadcrumb-item">{% trans "Folder" %}</li>
     <li class="breadcrumb-item"><a href="{% url 'dip' dip.pk %}">{{ dip }}</a></li>
     <li class="breadcrumb-item active">{% trans "Edit" %}</li>
   </ol>
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
   </form>
 {% endblock %}

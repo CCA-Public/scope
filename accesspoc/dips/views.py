@@ -93,12 +93,16 @@ def collections(request, template):
     collections = page.object_list.execute()
 
     table_headers = [
-        (_('Identifier'), 'identifier'),
-        (_('Title'), 'title'),
-        (_('Date'), None),
-        (_('Description'), None),
-        (_('Details'), None),
+        {'label': _('Identifier'), 'sort_param': 'identifier'},
+        {'label': _('Title'), 'sort_param': 'title', 'width': '25%'},
+        {'label': _('Date'), 'width': '10%'},
+        {'label': _('Description')},
+        {'label': _('Details')},
     ]
+
+    # Date column should only appear in collections page
+    if template != 'collections.html':
+        table_headers.pop(2)
 
     return render(request, template, {
         'collections': collections,
@@ -143,14 +147,14 @@ def users(request):
     users = page.object_list
 
     table_headers = [
-        (_('Username'), 'username'),
-        (_('First name'), 'first_name'),
-        (_('Last name'), 'last_name'),
-        (_('Email'), 'email'),
-        (_('Groups'), 'groups'),
-        (_('Active'), None),
-        (_('Admin'), None),
-        (_('Edit'), None),
+        {'label': _('Username'), 'sort_param': 'username'},
+        {'label': _('First name'), 'sort_param': 'first_name'},
+        {'label': _('Last name'), 'sort_param': 'last_name'},
+        {'label': _('Email'), 'sort_param': 'email'},
+        {'label': _('Groups'), 'sort_param': 'groups'},
+        {'label': _('Active')},
+        {'label': _('Admin')},
+        {'label': _('Edit')},
     ]
 
     return render(request, 'users.html', {
@@ -277,12 +281,12 @@ def search(request):
     digital_files = page.object_list.execute()
 
     table_headers = [
-        (_('Filepath'), 'path'),
-        (_('Format'), 'format'),
-        (_('Size (bytes)'), 'size'),
-        (_('Last modified'), 'date'),
-        (_('View parent folder'), None),
-        (_('File details'), None),
+        {'label': _('Filepath'), 'sort_param': 'path'},
+        {'label': _('Format'), 'sort_param': 'format'},
+        {'label': _('Size (bytes)'), 'sort_param': 'size'},
+        {'label': _('Last modified'), 'sort_param': 'date'},
+        {'label': _('View parent folder')},
+        {'label': _('File details')},
     ]
 
     return render(request, 'search.html', {
@@ -327,11 +331,11 @@ def collection(request, pk):
     dips = page.object_list.execute()
 
     table_headers = [
-        (_('Identifier'), 'identifier'),
-        (_('Title'), 'title'),
-        (_('Date'), None),
-        (_('Description'), None),
-        (_('Details'), None),
+        {'label': _('Identifier'), 'sort_param': 'identifier'},
+        {'label': _('Title'), 'sort_param': 'title', 'width': '25%'},
+        {'label': _('Date'), 'width': '10%'},
+        {'label': _('Description')},
+        {'label': _('Details')},
     ]
 
     return render(request, 'collection.html', {
@@ -381,11 +385,11 @@ def dip(request, pk):
     digital_files = page.object_list.execute()
 
     table_headers = [
-        (_('Filepath'), 'path'),
-        (_('Format'), 'format'),
-        (_('Size (bytes)'), 'size'),
-        (_('Last modified'), 'date'),
-        (_('Details'), None),
+        {'label': _('Filepath'), 'sort_param': 'path'},
+        {'label': _('Format'), 'sort_param': 'format'},
+        {'label': _('Size (bytes)'), 'sort_param': 'size'},
+        {'label': _('Last modified'), 'sort_param': 'date'},
+        {'label': _('File details')},
     ]
 
     return render(request, 'dip.html', {
@@ -433,7 +437,7 @@ def new_collection(request):
         collection.dc = dc_form.save()
         collection.save()
 
-        return redirect('home')
+        return redirect('collections')
 
     return render(
         request,
@@ -559,7 +563,7 @@ def delete_collection(request, pk):
     )
     if form.is_valid():
         collection.delete()
-        return redirect('home')
+        return redirect('collections')
 
     return render(
         request,
@@ -582,8 +586,9 @@ def delete_dip(request, pk):
         initial={'identifier': ''},
     )
     if form.is_valid():
+        collection_pk = dip.collection.pk
         dip.delete()
-        return redirect('home')
+        return redirect('collection', pk=collection_pk)
 
     return render(request, 'delete_dip.html', {'form': form, 'dip': dip})
 

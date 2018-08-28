@@ -112,7 +112,7 @@ The following steps are just an example of how to run the application in a produ
 
 * Python 3.4 or higher
 * Elasticsearch 6.x
-* gettext
+* Redis
 
 ### Environment
 
@@ -130,12 +130,12 @@ The following environment variables are used to run the application:
 
 ### Setup
 
-As the root user, install pip and virtualenv:
+As the root user, install pip, virtualenv and needed libraries:
 
 ```
 apt-get update
 apt-get upgrade
-apt-get install gcc python3-dev
+apt-get install build-essential gcc gettext python3-dev
 wget https://bootstrap.pypa.io/get-pip.py
 python3 get-pip.py
 rm get-pip.py
@@ -247,6 +247,12 @@ Compile translation files:
 
 ```
 ./manage.py compilemessages
+```
+
+Compile CSS styles:
+
+```
+sassc -mt compressed accesspoc/static/styles/main.scss accesspoc/static/styles/main.css
 ```
 
 Collect static files:
@@ -449,11 +455,13 @@ Compile translation files:
 docker-compose exec accesspoc ./manage.py compilemessages
 ```
 
-Collect static files:
+Compile CSS styles:
 
 ```
-docker-compose exec accesspoc ./manage.py collectstatic
+docker-compose exec accesspoc sassc -mt compressed accesspoc/static/styles/main.scss accesspoc/static/styles/main.css
 ```
+
+Until a system is included to compile and update the styles when needed per request, this command needs to be executed when changes are made over the SASS files to see those changes in the GUI.
 
 To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
 

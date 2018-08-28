@@ -363,7 +363,7 @@ class UserAccessTests(TestCase):
         before_count = len(Collection.objects.all())
         response = self.client.post(new_url, new_data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
+        self.assertEqual(response.url, '/collections/')
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count + 1, after_count)
         # Editor, edit
@@ -393,7 +393,7 @@ class UserAccessTests(TestCase):
         before_count = len(Collection.objects.all())
         response = self.client.post(new_url, new_data_2)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
+        self.assertEqual(response.url, '/collections/')
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count + 1, after_count)
         # Admin, edit
@@ -556,7 +556,7 @@ class UserAccessTests(TestCase):
         before_count = len(DIP.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
+        self.assertEqual(response.url, '/collection/%s/' % self.collection.pk)
         after_count = len(DIP.objects.all())
         self.assertEqual(before_count, after_count + 1)
 
@@ -616,6 +616,6 @@ class UserAccessTests(TestCase):
         before_count = len(Collection.objects.all())
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, '/')
+        self.assertEqual(response.url, '/collections/')
         after_count = len(Collection.objects.all())
         self.assertEqual(before_count, after_count + 1)

@@ -3,17 +3,17 @@
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% block title %}{% trans "Add New DIP" %}{% endblock %}
+{% block title %}{% trans "Add new DIP" %}{% endblock %}
 
 {% block content %}
   <ol class="breadcrumb">
-    <li class="breadcrumb-item">{% trans "Folders" %}</li>
-    <li class="breadcrumb-item active">{% trans "Add New Folder" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Add new Folder" %}</li>
   </ol>
   <form action="." method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' with form=dc_form %}
     {% include 'includes/form.html' with form=dip_form %}
-    <button type="submit" class="btn btn-success">{% trans "Submit" %}</button>
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
   </form>
 {% endblock %}

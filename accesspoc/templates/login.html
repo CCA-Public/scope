@@ -5,20 +5,24 @@
 {% block title %}{% trans "Login" %}{% endblock %}
 
 {% block content %}
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active">{% trans "Login" %}</li>
-  </ol>
-  <form method="post" novalidate>
-    {% csrf_token %}
-    {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-primary btn-block">{% trans "Login" %}</button>
-  </form>
-  <br>
-  <h2>{% trans "Policies for use of born-digital material at CCA" %}</h2>
-  <p>{% trans "Born-digital materials in the collection of the CCA are protected by copyright, licensing, and agreements with CCA's donors. Access to digital files is allowed only on the CCA's physical premises, and researchers are not permitted to take copies of files with them when leaving CCA except through a formal Reproductions request. Downloading files is permitted for CCA staff working on curatorial activities and for external researchers working on the dedicated access workstations in the CCA Study Room, for consultation in appropriate software." %}</p>
-  <p>{% trans "By logging into to the Access Proof of Concept tool, you agree to abide by the policies outlined above, including:" %}</p>
-  <ul>
-  	<li>{% trans "Not to copy any files to your personal computer, nor to take any files away with you at the end of your session." %}</li>
-  	<li>{% trans "To submit any requests for Reproductions through the official channels, by sending an email with all relevant information to reproductions@cca.qc.ca" %}</li>
-  </ul>
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="card">
+        <div class="card-body p-3">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% include 'includes/form.html' %}
+            <button type="submit" class="btn btn-primary btn-block">{% trans "Login" %}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5 text-center">
+    <h2 class="mb-3">{% trans "Policies for use of born-digital material at CCA" %}</h2>
+    <p>{% trans "Born-digital materials in the collection of the CCA are protected by copyright, licensing, and agreements with CCA's donors. Access to digital files is allowed only on the CCA's physical premises, and researchers are not permitted to take copies of files with them when leaving CCA except through a formal Reproductions request. Downloading files is permitted for CCA staff working on curatorial activities and for external researchers working on the dedicated access workstations in the CCA Study Room, for consultation in appropriate software." %}</p>
+    <p>{% trans "By logging into to the Access Proof of Concept tool, you agree to abide by the policies outlined above, including:" %}</p>
+  	<p class="mb-0">{% trans "Not to copy any files to your personal computer, nor to take any files away with you at the end of your session." %}</p>
+  	<p>{% trans "To submit any requests for Reproductions through the official channels, by sending an email with all relevant information to reproductions@cca.qc.ca." %}</p>
+  </div>
 {% endblock %}
