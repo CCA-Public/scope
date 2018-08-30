@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-29 11:49+0000\n"
+"POT-Creation-Date: 2018-08-30 17:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -820,11 +820,11 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: templates/login.html:22
+#: templates/login.html:23
 msgid "Policies for use of born-digital material at CCA"
 msgstr ""
 
-#: templates/login.html:23
+#: templates/login.html:24
 msgid ""
 "Born-digital materials in the collection of the CCA are protected by "
 "copyright, licensing, and agreements with CCA's donors. Access to digital "
@@ -836,22 +836,23 @@ msgid ""
 "consultation in appropriate software."
 msgstr ""
 
-#: templates/login.html:24
+#: templates/login.html:27
 msgid ""
 "By logging into to the Access Proof of Concept tool, you agree to abide by "
 "the policies outlined above, including:"
 msgstr ""
 
-#: templates/login.html:25
+#: templates/login.html:28
 msgid ""
 "Not to copy any files to your personal computer, nor to take any files away "
 "with you at the end of your session."
 msgstr ""
 
-#: templates/login.html:26
+#: templates/login.html:29
 msgid ""
 "To submit any requests for Reproductions through the official channels, by "
-"sending an email with all relevant information to reproductions@cca.qc.ca."
+"sending an email with all relevant information to <a href=\"mailto:"
+"reproductions@cca.qc.ca\">reproductions@cca.qc.ca</a>."
 msgstr ""
 
 #: templates/new_dip.html:6

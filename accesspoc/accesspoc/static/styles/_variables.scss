@@ -1,7 +1,7 @@
 /* Custom */
-$cca-blue: #1D42AC;
-$cca-gray: #343A40;
-$cca-gray-light: #E3E3E3;
+$cca-blue: #1d42ac;
+$cca-gray: #343a40;
+$cca-gray-light: #f2f2f2;
 
 /* FontAwesome */
 $fa-font-path: "../vendor/fontawesome/webfonts";
@@ -11,8 +11,7 @@ $font-family-sans-serif: "Roboto Regular", sans-serif;
 $body-color: $cca-gray;
 $theme-colors: (
   "primary": $cca-blue,
-  "secondary": $cca-gray,
-  "cca-gray-light": $cca-gray-light
+  "secondary": $cca-gray
 );
 $input-border-color: $cca-gray;
 $navbar-light-color: $cca-gray;

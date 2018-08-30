@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-29 11:49+0000\n"
+"POT-Creation-Date: 2018-08-30 17:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -875,11 +875,11 @@ msgstr "Suivant"
 msgid "Login"
 msgstr "Connexion"
 
-#: templates/login.html:22
+#: templates/login.html:23
 msgid "Policies for use of born-digital material at CCA"
 msgstr "Politique d'utilisation des collections nées numériques du CCA"
 
-#: templates/login.html:23
+#: templates/login.html:24
 msgid ""
 "Born-digital materials in the collection of the CCA are protected by "
 "copyright, licensing, and agreements with CCA's donors. Access to digital "
@@ -899,7 +899,7 @@ msgstr ""
 "pour la consultation par les chercheurs sur les postes dédiés de la salle de "
 "lecture."
 
-#: templates/login.html:24
+#: templates/login.html:27
 msgid ""
 "By logging into to the Access Proof of Concept tool, you agree to abide by "
 "the policies outlined above, including:"
@@ -907,7 +907,7 @@ msgstr ""
 "En cliquant sur Connexion, vous consentez à vous conformer à la politique "
 "énoncée ci-dessus, incluant:"
 
-#: templates/login.html:25
+#: templates/login.html:28
 msgid ""
 "Not to copy any files to your personal computer, nor to take any files away "
 "with you at the end of your session."
@@ -915,13 +915,15 @@ msgstr ""
 "De ne copier aucun fichier sur votre ordinateur personnel ou sur tout autre "
 "support d'information vous permettant de les emmmener avec vous."
 
-#: templates/login.html:26
+#: templates/login.html:29
 msgid ""
 "To submit any requests for Reproductions through the official channels, by "
-"sending an email with all relevant information to reproductions@cca.qc.ca."
+"sending an email with all relevant information to <a href=\"mailto:"
+"reproductions@cca.qc.ca\">reproductions@cca.qc.ca</a>."
 msgstr ""
-"Veuillez transmettre vos demandes de reproduction à l'adresse "
-"reproductions@cca.qc.ca en incluant toutes les informations pertinentes."
+"Veuillez transmettre vos demandes de reproduction à l'adresse <a href="
+"\"mailto:reproductions@cca.qc.ca\">reproductions@cca.qc.ca</a> en incluant "
+"toutes les informations pertinentes."
 
 #: templates/new_dip.html:6
 msgid "Add new DIP"

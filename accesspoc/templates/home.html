@@ -5,12 +5,12 @@
 {% block title %}{% trans "Home" %}{% endblock %}
 
 {% block content %}
-  <div class="text-center">
+  <div class="text-center mb-5">
     <h2>{% trans "Digital Archives Access Interface" %}</h2>
     <p class="mb-0">{% trans "You can search digital files by using the search bar below or you can browse our collections." %}</p>
     <p>{% trans "If you need help, please use our FAQ page in the menu above." %}</p>
     <h4 class="mt-5">{% trans "Search our digital files" %}</h4>
-    <form method="get" action="{% url 'search' %}" class="row justify-content-md-center mb-4">
+    <form method="get" action="{% url 'search' %}" class="row justify-content-md-center pb-1">
       <div class="input-group col-lg-6 col-md-8">
         <input type="text" name="query" class="form-control form-control-lg" placeholder="{% trans "Type any words to search digital files in our collections" %}">
         <div class="input-group-append">
@@ -19,33 +19,32 @@
       </div>
     </form>
   </div>
-  <div class="home-collections-section mt-5 p-3 bg-cca-gray-light">
-    <h4 class="text-center mb-0">{% trans "Browse our collections" %}</h4>
-    <span class="d-inline-block mt-3 mb-2 mr-2">
-      {% blocktrans trimmed count counter=page.paginator.count %}
-        <strong>{{ counter }}</strong> collection
-      {% plural %}
-        <strong>{{ counter }}</strong> collections
-      {% endblocktrans %}
-    </span>
-    <div class="table-responsive">
-      <table class="table table-striped table-condensed mb-0 border bg-white">
-        {% include 'includes/table_header.html' with headers=table_headers %}
-        {% if not collections %}
-          <tr>
-            <td colspan="5" class="text-center">{% trans "No matching records found" %}</td>
-          </tr>
-        {% endif %}
-        {% for collection in collections %}
-          <tr>
-            <td>{{ collection.dc.identifier }}</td>
-            <td>{{ collection.dc.title|default:'' }}</td>
-            <td>{{ collection.dc.description|default:''|safe }}</td>
-            <td><a href="{% url 'collection' collection.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a></td>
-          </tr>
-        {% endfor %}
-      </table>
-    </div>
-    {% include 'includes/table_pager.html' %}
+  <hr>
+  <h4 class="text-center mt-5">{% trans "Browse our collections" %}</h4>
+  <span class="d-inline-block mt-3 mb-2 mr-2">
+    {% blocktrans trimmed count counter=page.paginator.count %}
+      <strong>{{ counter }}</strong> collection
+    {% plural %}
+      <strong>{{ counter }}</strong> collections
+    {% endblocktrans %}
+  </span>
+  <div class="table-responsive">
+    <table class="table table-striped table-condensed mb-0 border bg-white">
+      {% include 'includes/table_header.html' with headers=table_headers %}
+      {% if not collections %}
+        <tr>
+          <td colspan="5" class="text-center">{% trans "No matching records found" %}</td>
+        </tr>
+      {% endif %}
+      {% for collection in collections %}
+        <tr>
+          <td>{{ collection.dc.identifier }}</td>
+          <td>{{ collection.dc.title|default:'' }}</td>
+          <td>{{ collection.dc.description|default:''|safe }}</td>
+          <td><a href="{% url 'collection' collection.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a></td>
+        </tr>
+      {% endfor %}
+    </table>
   </div>
+  {% include 'includes/table_pager.html' %}
 {% endblock %}

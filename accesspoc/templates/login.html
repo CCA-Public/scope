@@ -18,11 +18,15 @@
       </div>
     </div>
   </div>
-  <div class="mt-5 text-center">
-    <h2 class="mb-3">{% trans "Policies for use of born-digital material at CCA" %}</h2>
-    <p>{% trans "Born-digital materials in the collection of the CCA are protected by copyright, licensing, and agreements with CCA's donors. Access to digital files is allowed only on the CCA's physical premises, and researchers are not permitted to take copies of files with them when leaving CCA except through a formal Reproductions request. Downloading files is permitted for CCA staff working on curatorial activities and for external researchers working on the dedicated access workstations in the CCA Study Room, for consultation in appropriate software." %}</p>
-    <p>{% trans "By logging into to the Access Proof of Concept tool, you agree to abide by the policies outlined above, including:" %}</p>
-  	<p class="mb-0">{% trans "Not to copy any files to your personal computer, nor to take any files away with you at the end of your session." %}</p>
-  	<p>{% trans "To submit any requests for Reproductions through the official channels, by sending an email with all relevant information to reproductions@cca.qc.ca." %}</p>
+  <div class="row mt-5">
+    <div class="col-lg-10 mx-auto text-center">
+      <h2 class="mb-3">{% trans "Policies for use of born-digital material at CCA" %}</h2>
+      <p>{% trans "Born-digital materials in the collection of the CCA are protected by copyright, licensing, and agreements with CCA's donors. Access to digital files is allowed only on the CCA's physical premises, and researchers are not permitted to take copies of files with them when leaving CCA except through a formal Reproductions request. Downloading files is permitted for CCA staff working on curatorial activities and for external researchers working on the dedicated access workstations in the CCA Study Room, for consultation in appropriate software." %}</p>
+    </div>
+    <div class="col-12 text-center">
+      <p>{% trans "By logging into to the Access Proof of Concept tool, you agree to abide by the policies outlined above, including:" %}</p>
+    	<p class="mb-0">{% trans "Not to copy any files to your personal computer, nor to take any files away with you at the end of your session." %}</p>
+    	<p>{% blocktrans %}To submit any requests for Reproductions through the official channels, by sending an email with all relevant information to <a href="mailto:reproductions@cca.qc.ca">reproductions@cca.qc.ca</a>.{% endblocktrans %}</p>
+    </div>
   </div>
 {% endblock %}
