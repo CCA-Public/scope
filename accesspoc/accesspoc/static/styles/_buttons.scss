@@ -32,3 +32,13 @@
   	color: $cca-blue;
   }
 }
+
+.card-header button {
+  &:before {
+    content: "- ";
+  }
+
+  &.collapsed:before {
+    content: "+ ";
+  }
+}
