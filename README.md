@@ -356,7 +356,7 @@ To access the service logs, use:
 journalctl -u accesspoc-gunicorn
 ```
 
-The Gunicorn service is using an Unix socket to listen for connections and we will use Nginx to proxy the application and to serve the uploaded ZIP files. It should also be used to secure the site, but we won't cover that configuration in this example. Install Nginx and create a configuration file:
+The Gunicorn service is using an Unix socket to listen for connections and we will use Nginx to proxy the application and to serve the uploaded ZIP files. The `client_max_body_size` and `proxy_read_timeout` values should be changed based on the biggest ZIP file and upload time expected. It should also be used to secure the site, but we won't cover that configuration in this example. Install Nginx and create a configuration file:
 
 ```
 apt-get install nginx
@@ -385,6 +385,7 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_redirect off;
     proxy_buffering off;
+    proxy_read_timeout 600s;
     proxy_pass http://accesspoc;
   }
 }
