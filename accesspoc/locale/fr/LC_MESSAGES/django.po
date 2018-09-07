@@ -59,7 +59,7 @@ msgstr "Les mots de passe entrés sont différents"
 
 #: dips/models.py:29
 msgid "Trace:"
-msgstr ""
+msgstr "Retrouver:"
 
 #: dips/models.py:113
 msgid "identifier"
@@ -131,7 +131,7 @@ msgstr "collection"
 
 #: dips/models.py:226
 msgid "A related TaskResult could not be found."
-msgstr ""
+msgstr "Impossible de trouver un TaskResult relié."
 
 #: dips/models.py:228
 #, python-format
@@ -139,6 +139,8 @@ msgid ""
 "An error occurred during the process executed to extract and parse the METS "
 "file. %(error_message)s Please, contact an administrator."
 msgstr ""
+"Une erreur s'est produite lors du traitement du fichier METS."
+"%(error_message)s Veuillez contacter un administrateur."
 
 #: dips/views.py:97 dips/views.py:335 templates/includes/dc.html:5
 msgid "Title"
@@ -215,6 +217,9 @@ msgid ""
 "After the process finishes and the interface is reloaded, a link to the "
 "Folder will show up in the Folders table at the related Collection page."
 msgstr ""
+"Le traitement du fichier METS est en cours. Lorsque ce processus se termine, "
+"l'interface est mise à jour afin d'inclure le lien vers le Dossier sur la "
+"page de la Collection concernée."
 
 #: templates/collection.html:7
 #, python-format
@@ -251,8 +256,8 @@ msgstr "Dossiers de la collection"
 #, python-format
 msgid "<strong>%(counter)s</strong> folder"
 msgid_plural "<strong>%(counter)s</strong> folders"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(counter)s</strong> dossier"
+msgstr[1] "<strong>%(counter)s</strong> dossiers"
 
 #: templates/collection.html:38 templates/dip.html:46 templates/search.html:6
 #: templates/users.html:17
@@ -273,12 +278,12 @@ msgstr "Voir plus"
 
 #: templates/collection.html:58 templates/dip.html:66 templates/search.html:38
 msgid "See error"
-msgstr ""
+msgstr "Voir le message d'erreur"
 
 #: templates/collection.html:60 templates/collection.html:61
 #: templates/search.html:40 templates/search.html:41
 msgid "Import in progress"
-msgstr ""
+msgstr "Importation en cours"
 
 #: templates/collections.html:5 templates/home.html:5
 #: templates/includes/header.html:7 templates/includes/header.html:16
@@ -287,7 +292,7 @@ msgstr "Accueil"
 
 #: templates/collections.html:8
 msgid "Browse collections"
-msgstr "Parcourir la collection"
+msgstr "Parcourir les collections"
 
 #: templates/collections.html:9
 msgid ""
@@ -295,13 +300,16 @@ msgid ""
 "more\" from the list below. To search digital files across all collections, "
 "select \"Search\" from the menu above."
 msgstr ""
+"Pour accéder au contenu né numérique d'une archive ou d'une collection, sélectionner "
+"\"Voir plus\" dans la liste ci-dessous. Pour rechercher parmi tous les fichiers "
+"de toutes les collections, sélectionner \"Rechercher\" dans le menu ci-dessus."
 
 #: templates/collections.html:11 templates/home.html:25
 #, python-format
 msgid "<strong>%(counter)s</strong> collection"
 msgid_plural "<strong>%(counter)s</strong> collections"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(counter)s</strong> collection"
+msgstr[1] "<strong>%(counter)s</strong> collections"
 
 #: templates/collections.html:17
 msgid "Search collection titles"
@@ -309,7 +317,7 @@ msgstr "Rechercher dans les titres de collections"
 
 #: templates/delete_collection.html:6
 msgid "Delete Collection"
-msgstr "Supprimer la collection"
+msgstr "Supprimer la Collection"
 
 #: templates/delete_collection.html:14
 msgid "Confirm Deletion"
@@ -320,12 +328,12 @@ msgid ""
 "Note: Deleting this Collection will also delete all child records (DIPs, "
 "digital files, and PREMIS events)."
 msgstr ""
-"Note: La suppression de cette collection entraîne la suppression de ses "
+"Note: La suppression de cette Collection entraîne la suppression de ses "
 "enregistrements enfants (DIPs, fichiers et événements PREMIS)."
 
 #: templates/delete_dip.html:6
 msgid "Delete Folder"
-msgstr "Supprimer le dossier"
+msgstr "Supprimer le Dossier"
 
 #: templates/delete_dip.html:15
 msgid "Confirm deletion"
@@ -394,6 +402,8 @@ msgid ""
 "By clicking on the button below you'll download all the digital files "
 "included in the same folder."
 msgstr ""
+"Cliquer ci-dessous pour télécharger tous les fichiers numériques d'un "
+"Dossier."
 
 #: templates/digitalfile.html:37 templates/dip.html:33
 msgid "Download zip file"
@@ -405,8 +415,7 @@ msgstr "Métadonnées de préservation"
 
 #: templates/digitalfile.html:52
 msgid "Event log from our digital preservation repository for this file."
-msgstr ""
-"Registre d'événements généré par notre dépôt numérique pour ce fichier."
+msgstr "Registre d'événements généré par notre dépôt numérique pour ce fichier."
 
 #: templates/digitalfile.html:54
 #, python-format
@@ -447,6 +456,8 @@ msgid ""
 "By clicking on the button below you'll download all the digital files "
 "included in this folder."
 msgstr ""
+"Cliquer ci-dessous pour télécharger tous les fichiers numériques inclus "
+"dans ce Dossier."
 
 #: templates/dip.html:38
 msgid "Digital files in this folder"
@@ -456,8 +467,8 @@ msgstr "Fichiers dans ce dossier"
 #, python-format
 msgid "<strong>%(counter)s</strong> digital file"
 msgid_plural "<strong>%(counter)s</strong> digital files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%(counter)s</strong> fichier"
+msgstr[1] "<strong>%(counter)s</strong> fichiers"
 
 #: templates/edit_collection.html:6
 msgid "Edit Collection"
@@ -485,7 +496,7 @@ msgstr "Utilisateurs"
 
 #: templates/faq.html:6
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Foire aux questions"
 
 #: templates/faq.html:9
 msgid "Frequently asked questions"
@@ -511,7 +522,7 @@ msgid ""
 "archival fonds or collection."
 msgstr ""
 "Il s'agit du plus haut niveau d'organisation d'un ensemble documentaire, que "
-"cesoit un fonds d'archives ou une collection."
+"ce soit un fonds d'archives ou une collection."
 
 #: templates/faq.html:14
 msgid "Folders:"
@@ -524,10 +535,14 @@ msgid ""
 "Folders typically have a 1-to-1 relationship with folder-level archival "
 "descriptions in CCA's finding aids."
 msgstr ""
+"Les Collections contiennent des Dossiers correspondant chacun à un \"paquet\" "
+"de fichiers numériques, tel qu'entreposé dans le dépôt numérique du CCA. Ces "
+"Dossiers équivalent à la description de niveau dossier dans l'instrument de "
+"recherche du CCA."
 
 #: templates/faq.html:15
 msgid "Digital files:"
-msgstr "Des fichiers:"
+msgstr "Fichiers:"
 
 #: templates/faq.html:15
 msgid ""
@@ -552,6 +567,9 @@ msgid ""
 "From the Collections page, you can search for a particular collection from "
 "the search bar. Click \"See more\" to see the folders within the collection."
 msgstr ""
+"Sur la page Collections, retrouver la collection qui vous intéresse à "
+"l'aide de la barre de recherche. Cliquer sur \"Voir plus\" pour accéder à la "
+"liste des dossiers contenus dans la collection."
 
 #: templates/faq.html:20
 msgid "Within Collections:"
@@ -563,6 +581,9 @@ msgid ""
 "folders based on their title. Click \"See more\" to see the digital files "
 "within that folder."
 msgstr ""
+"À partir de la page d'une collection vous pouvez rechercher les dossiers "
+"par leurs titres. Cliquer sur \"Voir plus\" pour accéder à la liste des "
+"fichiers contenus dans le dossier."
 
 #: templates/faq.html:21
 msgid "Within Folders:"
@@ -574,6 +595,9 @@ msgid ""
 "folder. You can see additional metadata about the file by clicking \"See more"
 "\"."
 msgstr ""
+"À partir de la page d'un dossier, vous pouvez effectuer une recherche des "
+"fichiers  qu'il contient. Vous accéderez aux métadonnées du fichier en "
+"cliquant sur \"Voir plus\"."
 
 #: templates/faq.html:22
 msgid "Across Collections:"
@@ -586,6 +610,10 @@ msgid ""
 "then view the parent folder (i.e. the folder that contains that file) or see "
 "additional metadata about the file by clicking \"See more\"."
 msgstr ""
+"En haut de la page d'accueil, la barre de recherche \"Rechercher tous les "
+"fichiers\" permet la recherche au travers des collections. Les résultats "
+"permettront d'accéder au dossier parent des fichiers ou d'accéder à ses "
+"métadonnées en cliquant sur \"Voir plus\"."
 
 #: templates/faq.html:24
 msgid "How do I get access to the actual files?"
@@ -599,6 +627,11 @@ msgid ""
 "an HTML file) and the archival context of files remain intact. Files cannot "
 "be downloaded individually."
 msgstr ""
+"Les fichiers peuvent être téléchargés sous la forme d'un paquet correspondant "
+"à un fichier zip (a\"DIP\") à partir de la page d'un Dossier. Le paquet permet "
+"de préserver les relations entre les fichiers (e.g., une référence externe "
+"d'un fichier CAD ou une image liée à un fichier html) ainsi que leur contexte "
+"archivistique. Les fichiers ne peuvent être téléchargés individuellement."
 
 #: templates/faq.html:26
 msgid ""
@@ -608,6 +641,11 @@ msgid ""
 "dates restored to their original values, as well as a METS file and a "
 "submissionDocumentation folder."
 msgstr ""
+"Sur la page du Dossier, cliquer sur \"Télécharger le fichier zip\". Vous "
+"pourrez par la suite décompresser le DIP et en explorer le contenu. Le "
+"paquet contient un fichier METS, un dossier submissionDocumentation, et les "
+"fichiers originaux avec leurs noms de fichiers et leur dernière date de "
+"modification."
 
 #: templates/faq.html:27
 msgid "What is a METS file?"
@@ -669,13 +707,20 @@ msgid ""
 "dates, and so on) against their values as they arrived at CCA on a "
 "particular piece of storage media."
 msgstr ""
+"Un fichier DFXML (<a href=\"https://forensicswiki.org/wiki/Category:Digital_"
+"Forensics_XML\">Digital Forensics XML</a>) fait parti de la documentation. Il "
+"contient des métadonnées sur les systèmes de fichiers des supports d'origine "
+"des fichiers: disquettes, disques durs, disques Jaz, etc. Les fichiers DFXML "
+"peuvent servir à comparer entre les métadonnées courantes des fichiers quant " 
+"au système de fichiers et celles extraites lors de la création des images "
+"disques lors de l'arrivée des supports au CCA."
 
 #: templates/faq.html:33
 msgid ""
 "Some of the files I want to use are in a file format that is unidentified or "
 "won't open. How can I see what is in the files?"
 msgstr ""
-"Je ne parviens pas à ouvrir certains des fichirs qui m'intéressent ou le "
+"Je ne parviens pas à ouvrir certains des fichiers qui m'intéressent ou le "
 "format est inconnu. Comment puis-je savoir ce que le fichier représente?"
 
 #: templates/faq.html:34
@@ -689,13 +734,12 @@ msgid ""
 "access to obsolete files."
 msgstr ""
 "Le poste de consultation des archives numériques de la salle de lecture du "
-"CCA est doté de plusieurs logiciels qui permettent d'ouvrir un nombre "
-"important de formats de fichiers, mais pas tous les formats. Si vous "
-"rencontrez des difficultés pour l'ouverture d'un fichier, l'équipe de "
-"référence peut vous mettre en contact avec l'archiviste numérique qui pourra "
-"évaluer les solutions possibles. La mise à jour du format de fichier, ou la "
-"mise en place d'une machine virtuel ou d'un émulateur du logiciel original "
-"peuvent être envisagés pour résoudre le problème."
+"CCA est doté de plusieurs logiciels qui permettent d'ouvrir la plupart "
+"des formats de fichiers. Si vous rencontrez des difficultés pour l'ouverture "
+"d'un fichier, l'équipe de la Référence vous mettra en contact avec l'archiviste "
+"numérique qui pourra évaluer les solutions possibles. La mise à jour du format "
+"de fichier, ou la "mise en place d'une machine virtuel ou d'un émulateur du "
+"logiciel original peuvent être envisagés pour résoudre ce type de problème."
 
 #: templates/faq.html:35
 msgid "Who created the digital archives access interface?"
@@ -710,8 +754,8 @@ msgid ""
 msgstr ""
 "L’Interface d'accès aux archives numériques a été conçue par le Centre "
 "Canadien d'Architecture (CCA) et développée par Artefactual Systems, à "
-"partir d’un concept initialement élaboré par Tim Walsh, archiviste numérique "
-"au CCA de juin 2015 à mai 2018."
+"partir d’un concept élaboré par Tim Walsh, archiviste numérique au CCA "
+"de juin 2015 à mai 2018."
 
 #: templates/faq.html:37
 msgid ""
@@ -732,20 +776,22 @@ msgid ""
 "You can search digital files by using the search bar below or you can browse "
 "our collections."
 msgstr ""
+"Pour effectuer une recherche dans les fichiers, utiliser la barre de recherche "
+"ci-dessous ou naviguer dans nos collections."
 
 #: templates/home.html:11
 msgid "If you need help, please use our FAQ page in the menu above."
-msgstr ""
+msgstr "Consulter la FAQ si vous avez besoin d'aide."
 
 #: templates/home.html:12
 #, fuzzy
 #| msgid "Search all digital files"
 msgid "Search our digital files"
-msgstr "Rechercher dans tous les fichiers"
+msgstr "Rechercher des fichiers"
 
 #: templates/home.html:15
 msgid "Type any words to search digital files in our collections"
-msgstr ""
+msgstr "Rechercher dans les fichiers de nos collections"
 
 #: templates/home.html:23
 #, fuzzy
@@ -791,15 +837,15 @@ msgstr "Gestion des droits"
 
 #: templates/includes/form_field.html:13
 msgid "Choose file"
-msgstr ""
+msgstr "Choisir un fichier"
 
 #: templates/includes/header.html:4
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Changement de navigation"
 
 #: templates/includes/header.html:8
 msgid "Canadian Centre for Architecture logo"
-msgstr ""
+msgstr "Logo du Centre Canadien d'Architecture"
 
 #: templates/includes/header.html:24
 msgid "FAQ"
@@ -808,7 +854,7 @@ msgstr "FAQ"
 #: templates/includes/header.html:30 templates/search.html:9
 #: templates/search.html:17
 msgid "Search all digital files"
-msgstr "Rechercher dans tous les fichiers"
+msgstr "Rechercher parmi tous les fichiers"
 
 #: templates/includes/header.html:41
 msgid "Select language"
@@ -890,7 +936,7 @@ msgid ""
 "working on the dedicated access workstations in the CCA Study Room, for "
 "consultation in appropriate software."
 msgstr ""
-"Le matériel né-numérique des collections du CCA est protégé par le droit "
+"Le matériel né numérique des collections du CCA est protégé par le droit "
 "d'auteur et les ententes conclues avec les donateurs. La consultation des "
 "fichiers est seulement permise dans les locaux du CCA, et les chercheurs ne "
 "peuvent quitter les lieux avec des copies de fichiers sauf si ces copies ont "
@@ -921,7 +967,7 @@ msgid ""
 "sending an email with all relevant information to <a href=\"mailto:"
 "reproductions@cca.qc.ca\">reproductions@cca.qc.ca</a>."
 msgstr ""
-"Veuillez transmettre vos demandes de reproduction à l'adresse <a href="
+"De transmettre vos demandes de reproduction à l'adresse <a href="
 "\"mailto:reproductions@cca.qc.ca\">reproductions@cca.qc.ca</a> en incluant "
 "toutes les informations pertinentes."
 
@@ -931,56 +977,11 @@ msgstr "Ajouter un nouveau DIP"
 
 #: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:42
 msgid "Add new User"
-msgstr ""
+msgstr "Ajouter un nouvel utilisateur"
 
 #: templates/users.html:11
 #, python-format
 msgid "<strong>%(counter)s</strong> user"
 msgid_plural "<strong>%(counter)s</strong> users"
-msgstr[0] ""
-msgstr[1] ""
-
-#~ msgid "Folders are within Collections, and correspond to a \\"
-#~ msgstr "Les Dossiers font partis d'une Collection et correspondent à \\"
-
-#~ msgid ""
-#~ "From the Collections page, you can search for a particular collection "
-#~ "from the search bar. Click \\"
-#~ msgstr ""
-#~ "Sur la page Collections, retrouver la collection qui vous intéresse à "
-#~ "l'aide de la barre de recherche. Cliquer sur \\"
-
-#~ msgid ""
-#~ "Once you’ve clicked on a collections page, you can search for particular "
-#~ "folders based on their title. Click \\"
-#~ msgstr ""
-#~ "À partir de la page d'une collection vous pouvez rechercher les "
-#~ "dossierspar leurs titres. Cliquer sur \\"
-
-#~ msgid ""
-#~ "Once you’ve selected a folder, you can search for digital files within "
-#~ "that folder. You can see additional metadata about the file by clicking \\"
-#~ msgstr ""
-#~ "À partir de la page d'un dossier, vous pouvez effectuer une recherche des "
-#~ "fichiers  qu'il contient. Vous accéderez aux métadonnées du fichier en "
-#~ "cliquant sur \\"
-
-#~ msgid "From the \\"
-#~ msgstr "À partir de \\"
-
-#~ msgid "Files can be downloaded as a package zip file (a \\"
-#~ msgstr ""
-#~ "Les fichiers individuels sont inclus dans un fichier zip qui peut être "
-#~ "téléchargé (a \\"
-
-#~ msgid "From the Folder page, click \\"
-#~ msgstr "À partir de la page d'un dossier, cliquer sur \\"
-
-#~ msgid "One common file to find here is a DFXML (<a href=\\"
-#~ msgstr "Le fichier DFXML est commun à ce dossier (<a href=\\"
-
-#~ msgid ""
-#~ "To access born digital content within an archive/collection, select \\"
-#~ msgstr ""
-#~ "Pour accéder aux documents numériques d'un fonds d'archives ou d'une "
-#~ "collection, sélectionner \\"
+msgstr[0] "<strong>%(counter)s</strong> utilisateur"
+msgstr[1] "<strong>%(counter)s</strong> utilisateurs"
