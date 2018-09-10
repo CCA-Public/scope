@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 16:57+0000\n"
+"POT-Creation-Date: 2018-09-10 19:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: accesspoc/settings.py:122
+#: accesspoc/settings.py:121
 msgid "English"
 msgstr ""
 
-#: accesspoc/settings.py:123
+#: accesspoc/settings.py:122
 msgid "French"
 msgstr ""
 
@@ -68,7 +68,7 @@ msgid ""
 msgstr ""
 
 #: dips/models.py:30
-msgid "Trace:"
+msgid "Error trace:"
 msgstr ""
 
 #: dips/models.py:114
@@ -139,11 +139,11 @@ msgstr ""
 msgid "collection"
 msgstr ""
 
-#: dips/models.py:276
-msgid "A related TaskResult could not be found."
+#: dips/models.py:277
+msgid "A related task result could not be found."
 msgstr ""
 
-#: dips/models.py:278
+#: dips/models.py:279
 #, python-format
 msgid ""
 "An error occurred during the process executed to extract and parse the METS "

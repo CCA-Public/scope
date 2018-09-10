@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 16:57+0000\n"
+"POT-Creation-Date: 2018-09-10 19:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: accesspoc/settings.py:122
+#: accesspoc/settings.py:121
 msgid "English"
 msgstr "Anglais"
 
-#: accesspoc/settings.py:123
+#: accesspoc/settings.py:122
 msgid "French"
 msgstr "Français"
 
@@ -58,21 +58,23 @@ msgstr "Les mots de passe entrés sont différents"
 
 #: dips/forms.py:132
 msgid "Optional fields"
-msgstr ""
+msgstr "Champs facultatifs"
 
 #: dips/forms.py:138
 msgid "Hide empty fields"
-msgstr ""
+msgstr "Masquer les champs vides"
 
 #: dips/forms.py:140
 msgid ""
 "Check to not display Dublin Core fields without data in the Collection and "
 "Folder view pages."
 msgstr ""
+"Cocher pour ne pas afficher les champs de métadonnées Dublin Core qui sont "
+"vides dans les enregistrements Collection et Dossier."
 
 #: dips/models.py:30
-msgid "Trace:"
-msgstr "Retrouver:"
+msgid "Error trace:"
+msgstr "Retrouver l'erreur:"
 
 #: dips/models.py:114
 msgid "identifier"
@@ -142,11 +144,11 @@ msgstr "fichier zip contenant les objets"
 msgid "collection"
 msgstr "collection"
 
-#: dips/models.py:276
-msgid "A related TaskResult could not be found."
-msgstr "Impossible de trouver un TaskResult relié."
+#: dips/models.py:277
+msgid "A related task result could not be found."
+msgstr "Un résultat de tâche connexe n'a pu être trouvé."
 
-#: dips/models.py:278
+#: dips/models.py:279
 #, python-format
 msgid ""
 "An error occurred during the process executed to extract and parse the METS "
@@ -392,7 +394,7 @@ msgstr "Date de modification"
 
 #: templates/digitalfile.html:27
 msgid "PRONOM ID"
-msgstr "ID PRONOM"
+msgstr "Identifiant PRONOM"
 
 #: templates/digitalfile.html:28
 msgid "METS amdSec"
@@ -819,7 +821,7 @@ msgstr "Choisir un fichier"
 
 #: templates/includes/header.html:4
 msgid "Toggle navigation"
-msgstr "Changement de navigation"
+msgstr "Changement de la navigation"
 
 #: templates/includes/header.html:8
 msgid "Canadian Centre for Architecture logo"
@@ -840,7 +842,7 @@ msgstr "Sélectionner la langue"
 
 #: templates/includes/header.html:64 templates/settings.html:6
 msgid "Settings"
-msgstr ""
+msgstr "Règlages"
 
 #: templates/includes/header.html:66
 msgid "Edit Users"
@@ -959,7 +961,7 @@ msgstr "Ajouter un nouvel utilisateur"
 
 #: templates/settings.html:14
 msgid "Dublin Core settings"
-msgstr ""
+msgstr "Paramètres Dublin Core"
 
 #: templates/users.html:11
 #, python-format
