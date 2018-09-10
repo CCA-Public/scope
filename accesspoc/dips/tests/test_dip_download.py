@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 from unittest.mock import patch
 

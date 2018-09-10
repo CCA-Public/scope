@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from elasticsearch.helpers import streaming_bulk
-from elasticsearch_dsl import analyzer, Index
+from elasticsearch_dsl import analyzer
 from elasticsearch_dsl.connections import connections
 from tqdm import tqdm
 
@@ -21,13 +21,11 @@ class Command(BaseCommand):
         for name, model in MODELS:
             print('Processing %s:' % name)
             document = model.es_doc
-            index_name = document._doc_type.index
-            index = Index(index_name)
+            index = document._index
             index.settings(**settings.ES_INDEXES_SETTINGS)
             # Use English analizer by default, other analyzers may be
             # defined in the documents declaration for specific fields.
             index.analyzer(analyzer('default', 'english'))
-            index.doc_type(document)
             print(' - Deleting index.')
             index.delete(ignore=404)
             print(' - Creating index.')
@@ -44,7 +42,7 @@ class Command(BaseCommand):
             for _ in streaming_bulk(
                 es,
                 (obj.get_es_data() for obj in model.objects.all().iterator()),
-                index=index_name,
+                index=index._name,
                 doc_type=document._doc_type.name,
             ):
                 progress_bar.update(1)

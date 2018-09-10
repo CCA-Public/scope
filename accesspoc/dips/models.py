@@ -104,7 +104,7 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
     def delete_es_doc(self):
         """Call to remove related document from the ES index."""
         delete_document(
-            index=self.es_doc._doc_type.index,
+            index=self.es_doc._index._name,
             doc_type=self.es_doc._doc_type.name,
             id=self.pk,
         )
@@ -214,6 +214,7 @@ class DIP(AbstractEsModel):
         Collection,
         related_name='dips',
         verbose_name=_('collection'),
+        on_delete=models.CASCADE,
     )
     dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
     # The TaskResult created by 'django_celery_results' are not added
@@ -304,7 +305,11 @@ class DigitalFile(AbstractEsModel):
     amdsec = models.CharField(max_length=12)
     hashtype = models.CharField(max_length=7)
     hashvalue = models.CharField(max_length=128)
-    dip = models.ForeignKey(DIP, related_name='digital_files')
+    dip = models.ForeignKey(
+        DIP,
+        related_name='digital_files',
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return self.uuid
@@ -343,7 +348,11 @@ class PREMISEvent(models.Model):
     detail = models.TextField(blank=True, null=True)
     outcome = models.TextField(blank=True, null=True)
     detailnote = models.TextField(blank=True, null=True)
-    digitalfile = models.ForeignKey(DigitalFile, related_name='premis_events')
+    digitalfile = models.ForeignKey(
+        DigitalFile,
+        related_name='premis_events',
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return self.uuid

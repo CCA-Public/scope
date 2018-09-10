@@ -27,7 +27,7 @@ class ModelsToDocsTests(TestCase):
             self.assertEqual(collection.pk, doc.meta.id)
             self.assertEqual(
                 repr(doc),
-                "CollectionDoc(index='accesspoc_collections', id=1)"
+                "CollectionDoc(id=1)"
             )
 
     def test_dip(self):
@@ -56,7 +56,7 @@ class ModelsToDocsTests(TestCase):
             self.assertEqual(dip.pk, doc.meta.id)
             self.assertEqual(
                 repr(doc),
-                "DIPDoc(index='accesspoc_dips', id=1)"
+                "DIPDoc(id=1)"
             )
 
     def test_digital_file(self):
@@ -85,6 +85,5 @@ class ModelsToDocsTests(TestCase):
             self.assertEqual(digital_file.uuid, doc.meta.id)
             self.assertEqual(
                 repr(doc),
-                "DigitalFileDoc(index='accesspoc_digital_files', "
-                "id='07263cdf-d11f-4d24-9e16-ef46f002d037')"
+                "DigitalFileDoc(id='07263cdf-d11f-4d24-9e16-ef46f002d037')"
             )

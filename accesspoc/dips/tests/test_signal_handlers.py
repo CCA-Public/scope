@@ -53,7 +53,7 @@ class SignalHandlerTests(TestCase):
         uuid = self.digital_file.uuid
         self.digital_file.delete()
         mock.assert_called_with(
-            index=DigitalFile.es_doc._doc_type.index,
+            index=DigitalFile.es_doc._index._name,
             doc_type=DigitalFile.es_doc._doc_type.name,
             id=uuid,
         )
@@ -63,7 +63,7 @@ class SignalHandlerTests(TestCase):
         pk = self.dip.pk
         self.dip.delete()
         mock.assert_called_with(
-            index=DIP.es_doc._doc_type.index,
+            index=DIP.es_doc._index._name,
             doc_type=DIP.es_doc._doc_type.name,
             id=pk,
         )
@@ -73,7 +73,7 @@ class SignalHandlerTests(TestCase):
         pk = self.collection.pk
         self.collection.delete()
         mock.assert_called_with(
-            index=Collection.es_doc._doc_type.index,
+            index=Collection.es_doc._index._name,
             doc_type=Collection.es_doc._doc_type.name,
             id=pk,
         )
