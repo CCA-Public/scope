@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 08:19+0000\n"
+"POT-Creation-Date: 2018-09-10 16:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,6 @@ msgid "French"
 msgstr "Français"
 
 #: dips/forms.py:14 dips/views.py:96 dips/views.py:334
-#: templates/includes/dc.html:4
 msgid "Identifier"
 msgstr "Identifiant"
 
@@ -43,7 +42,7 @@ msgstr "Administrateur"
 msgid "Groups"
 msgstr "Groupes"
 
-#: dips/forms.py:32 dips/forms.py:73
+#: dips/forms.py:32 dips/forms.py:73 dips/forms.py:133
 msgid "Ctrl + Click to select multiple or unselect."
 msgstr ""
 "Appuyer sur la touche Ctrl pour sélectionner ou désélectionner plusieurs "
@@ -57,83 +56,97 @@ msgstr "Le mot de passe doit contenir au moins 8 caractères"
 msgid "Password and password confirmation do not match"
 msgstr "Les mots de passe entrés sont différents"
 
-#: dips/models.py:29
+#: dips/forms.py:132
+msgid "Optional fields"
+msgstr ""
+
+#: dips/forms.py:138
+msgid "Hide empty fields"
+msgstr ""
+
+#: dips/forms.py:140
+msgid ""
+"Check to not display Dublin Core fields without data in the Collection and "
+"Folder view pages."
+msgstr ""
+
+#: dips/models.py:30
 msgid "Trace:"
 msgstr "Retrouver:"
 
-#: dips/models.py:113
+#: dips/models.py:114
 msgid "identifier"
 msgstr "identifiant de la ressource"
 
-#: dips/models.py:114
+#: dips/models.py:115 dips/tests/test_dublin_core_settings.py:10
 msgid "title"
 msgstr "titre"
 
-#: dips/models.py:115
+#: dips/models.py:116 dips/tests/test_dublin_core_settings.py:10
 msgid "creator"
 msgstr "créateur"
 
-#: dips/models.py:116
+#: dips/models.py:117 dips/tests/test_dublin_core_settings.py:11
 msgid "subject"
 msgstr "sujet"
 
-#: dips/models.py:117
+#: dips/models.py:118 dips/tests/test_dublin_core_settings.py:11
 msgid "description"
 msgstr "description"
 
-#: dips/models.py:118
+#: dips/models.py:119 dips/tests/test_dublin_core_settings.py:12
 msgid "publisher"
 msgstr "éditeur"
 
-#: dips/models.py:119
+#: dips/models.py:120 dips/tests/test_dublin_core_settings.py:12
 msgid "contributor"
 msgstr "contributeur"
 
-#: dips/models.py:120
+#: dips/models.py:121 dips/tests/test_dublin_core_settings.py:13
 msgid "date"
 msgstr "date"
 
-#: dips/models.py:121
+#: dips/models.py:122 dips/tests/test_dublin_core_settings.py:13
 msgid "type"
 msgstr "type"
 
-#: dips/models.py:122
+#: dips/models.py:123 dips/tests/test_dublin_core_settings.py:14
 msgid "format"
 msgstr "format"
 
-#: dips/models.py:123
+#: dips/models.py:124 dips/tests/test_dublin_core_settings.py:14
 msgid "source"
 msgstr "source"
 
-#: dips/models.py:124
+#: dips/models.py:125 dips/tests/test_dublin_core_settings.py:15
 msgid "language"
 msgstr "langue"
 
-#: dips/models.py:125
+#: dips/models.py:126 dips/tests/test_dublin_core_settings.py:15
 msgid "coverage"
 msgstr "couverture"
 
-#: dips/models.py:126
+#: dips/models.py:127 dips/tests/test_dublin_core_settings.py:16
 msgid "rights"
 msgstr "gestion des droits"
 
-#: dips/models.py:141
+#: dips/models.py:191
 msgid "finding aid"
 msgstr "instrument de recherche"
 
-#: dips/models.py:161
+#: dips/models.py:211
 msgid "objects zip file"
 msgstr "fichier zip contenant les objets"
 
-#: dips/models.py:166
+#: dips/models.py:216
 msgid "collection"
 msgstr "collection"
 
-#: dips/models.py:226
+#: dips/models.py:276
 msgid "A related TaskResult could not be found."
 msgstr "Impossible de trouver un TaskResult relié."
 
-#: dips/models.py:228
+#: dips/models.py:278
 #, python-format
 msgid ""
 "An error occurred during the process executed to extract and parse the METS "
@@ -142,15 +155,15 @@ msgstr ""
 "Une erreur s'est produite lors du traitement du fichier METS."
 "%(error_message)s Veuillez contacter un administrateur."
 
-#: dips/views.py:97 dips/views.py:335 templates/includes/dc.html:5
+#: dips/views.py:97 dips/views.py:335
 msgid "Title"
 msgstr "Titre"
 
-#: dips/views.py:98 dips/views.py:336 templates/includes/dc.html:6
+#: dips/views.py:98 dips/views.py:336
 msgid "Date"
 msgstr "Date"
 
-#: dips/views.py:99 dips/views.py:337 templates/includes/dc.html:9
+#: dips/views.py:99 dips/views.py:337
 msgid "Description"
 msgstr "Description"
 
@@ -191,7 +204,7 @@ msgstr "Modifier"
 msgid "Filepath"
 msgstr "Chemin d'accès"
 
-#: dips/views.py:285 dips/views.py:389 templates/includes/dc.html:8
+#: dips/views.py:285 dips/views.py:389
 msgid "Format"
 msgstr "Format"
 
@@ -211,7 +224,7 @@ msgstr "Voir le dossier parent"
 msgid "File details"
 msgstr "Détails du fichier"
 
-#: dips/views.py:490
+#: dips/views.py:493
 msgid ""
 "A background process has been launched to extract and parse the METS file. "
 "After the process finishes and the interface is reloaded, a link to the "
@@ -479,6 +492,7 @@ msgstr "Modifier la Collection"
 #: templates/edit_collection.html:18 templates/edit_dip.html:18
 #: templates/edit_user.html:17 templates/new_collection.html:17
 #: templates/new_dip.html:17 templates/new_user.html:15
+#: templates/settings.html:23
 msgid "Submit"
 msgstr "Soumettre"
 
@@ -799,42 +813,6 @@ msgstr "Rechercher dans les fichiers de nos collections"
 msgid "Browse our collections"
 msgstr "Parcourir la collection"
 
-#: templates/includes/dc.html:7
-msgid "Creator"
-msgstr "Créateur"
-
-#: templates/includes/dc.html:10
-msgid "Subject"
-msgstr "Sujet"
-
-#: templates/includes/dc.html:11
-msgid "Publisher"
-msgstr "Éditeur"
-
-#: templates/includes/dc.html:12
-msgid "Contributor"
-msgstr "Contributeur"
-
-#: templates/includes/dc.html:13
-msgid "Type"
-msgstr "Type"
-
-#: templates/includes/dc.html:14
-msgid "Source"
-msgstr "Source"
-
-#: templates/includes/dc.html:15
-msgid "Language"
-msgstr "Langue"
-
-#: templates/includes/dc.html:16
-msgid "Coverage"
-msgstr "Couverture"
-
-#: templates/includes/dc.html:17
-msgid "Rights"
-msgstr "Gestion des droits"
-
 #: templates/includes/form_field.html:13
 msgid "Choose file"
 msgstr "Choisir un fichier"
@@ -860,24 +838,28 @@ msgstr "Rechercher parmi tous les fichiers"
 msgid "Select language"
 msgstr "Sélectionner la langue"
 
-#: templates/includes/header.html:63
+#: templates/includes/header.html:64 templates/settings.html:6
+msgid "Settings"
+msgstr ""
+
+#: templates/includes/header.html:66
 msgid "Edit Users"
 msgstr "Modifier les utilisateurs"
 
-#: templates/includes/header.html:67 templates/new_collection.html:6
+#: templates/includes/header.html:70 templates/new_collection.html:6
 #: templates/new_collection.html:11
 msgid "Add new Collection"
 msgstr "Ajouter de nouvelles collections"
 
-#: templates/includes/header.html:68 templates/new_dip.html:11
+#: templates/includes/header.html:71 templates/new_dip.html:11
 msgid "Add new Folder"
 msgstr "Ajouter un nouveau dossier"
 
-#: templates/includes/header.html:71
+#: templates/includes/header.html:74
 msgid "Log out"
 msgstr "Déconnexion"
 
-#: templates/includes/header.html:75
+#: templates/includes/header.html:78
 msgid "Log in"
 msgstr "Connexion"
 
@@ -974,6 +956,10 @@ msgstr "Ajouter un nouveau DIP"
 #: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:42
 msgid "Add new User"
 msgstr "Ajouter un nouvel utilisateur"
+
+#: templates/settings.html:14
+msgid "Dublin Core settings"
+msgstr ""
 
 #: templates/users.html:11
 #, python-format

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 08:19+0000\n"
+"POT-Creation-Date: 2018-09-10 16:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,6 @@ msgid "French"
 msgstr ""
 
 #: dips/forms.py:14 dips/views.py:96 dips/views.py:334
-#: templates/includes/dc.html:4
 msgid "Identifier"
 msgstr ""
 
@@ -42,7 +41,7 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: dips/forms.py:32 dips/forms.py:73
+#: dips/forms.py:32 dips/forms.py:73 dips/forms.py:133
 msgid "Ctrl + Click to select multiple or unselect."
 msgstr ""
 
@@ -54,98 +53,112 @@ msgstr ""
 msgid "Password and password confirmation do not match"
 msgstr ""
 
-#: dips/models.py:29
+#: dips/forms.py:132
+msgid "Optional fields"
+msgstr ""
+
+#: dips/forms.py:138
+msgid "Hide empty fields"
+msgstr ""
+
+#: dips/forms.py:140
+msgid ""
+"Check to not display Dublin Core fields without data in the Collection and "
+"Folder view pages."
+msgstr ""
+
+#: dips/models.py:30
 msgid "Trace:"
 msgstr ""
 
-#: dips/models.py:113
+#: dips/models.py:114
 msgid "identifier"
 msgstr ""
 
-#: dips/models.py:114
+#: dips/models.py:115 dips/tests/test_dublin_core_settings.py:10
 msgid "title"
 msgstr ""
 
-#: dips/models.py:115
+#: dips/models.py:116 dips/tests/test_dublin_core_settings.py:10
 msgid "creator"
 msgstr ""
 
-#: dips/models.py:116
+#: dips/models.py:117 dips/tests/test_dublin_core_settings.py:11
 msgid "subject"
 msgstr ""
 
-#: dips/models.py:117
+#: dips/models.py:118 dips/tests/test_dublin_core_settings.py:11
 msgid "description"
 msgstr ""
 
-#: dips/models.py:118
+#: dips/models.py:119 dips/tests/test_dublin_core_settings.py:12
 msgid "publisher"
 msgstr ""
 
-#: dips/models.py:119
+#: dips/models.py:120 dips/tests/test_dublin_core_settings.py:12
 msgid "contributor"
 msgstr ""
 
-#: dips/models.py:120
+#: dips/models.py:121 dips/tests/test_dublin_core_settings.py:13
 msgid "date"
 msgstr ""
 
-#: dips/models.py:121
+#: dips/models.py:122 dips/tests/test_dublin_core_settings.py:13
 msgid "type"
 msgstr ""
 
-#: dips/models.py:122
+#: dips/models.py:123 dips/tests/test_dublin_core_settings.py:14
 msgid "format"
 msgstr ""
 
-#: dips/models.py:123
+#: dips/models.py:124 dips/tests/test_dublin_core_settings.py:14
 msgid "source"
 msgstr ""
 
-#: dips/models.py:124
+#: dips/models.py:125 dips/tests/test_dublin_core_settings.py:15
 msgid "language"
 msgstr ""
 
-#: dips/models.py:125
+#: dips/models.py:126 dips/tests/test_dublin_core_settings.py:15
 msgid "coverage"
 msgstr ""
 
-#: dips/models.py:126
+#: dips/models.py:127 dips/tests/test_dublin_core_settings.py:16
 msgid "rights"
 msgstr ""
 
-#: dips/models.py:141
+#: dips/models.py:191
 msgid "finding aid"
 msgstr ""
 
-#: dips/models.py:161
+#: dips/models.py:211
 msgid "objects zip file"
 msgstr ""
 
-#: dips/models.py:166
+#: dips/models.py:216
 msgid "collection"
 msgstr ""
 
-#: dips/models.py:226
+#: dips/models.py:276
 msgid "A related TaskResult could not be found."
 msgstr ""
 
-#: dips/models.py:228
+#: dips/models.py:278
 #, python-format
 msgid ""
 "An error occurred during the process executed to extract and parse the METS "
 "file. %(error_message)s Please, contact an administrator."
 msgstr ""
 
-#: dips/views.py:97 dips/views.py:335 templates/includes/dc.html:5
+#: dips/views.py:97 dips/views.py:335
 msgid "Title"
 msgstr ""
 
-#: dips/views.py:98 dips/views.py:336 templates/includes/dc.html:6
+#: dips/views.py:98 dips/views.py:336
 msgid "Date"
 msgstr ""
 
-#: dips/views.py:99 dips/views.py:337 templates/includes/dc.html:9
+#: dips/views.py:99 dips/views.py:337
 msgid "Description"
 msgstr ""
 
@@ -186,7 +199,7 @@ msgstr ""
 msgid "Filepath"
 msgstr ""
 
-#: dips/views.py:285 dips/views.py:389 templates/includes/dc.html:8
+#: dips/views.py:285 dips/views.py:389
 msgid "Format"
 msgstr ""
 
@@ -206,7 +219,7 @@ msgstr ""
 msgid "File details"
 msgstr ""
 
-#: dips/views.py:490
+#: dips/views.py:493
 msgid ""
 "A background process has been launched to extract and parse the METS file. "
 "After the process finishes and the interface is reloaded, a link to the "
@@ -458,6 +471,7 @@ msgstr ""
 #: templates/edit_collection.html:18 templates/edit_dip.html:18
 #: templates/edit_user.html:17 templates/new_collection.html:17
 #: templates/new_dip.html:17 templates/new_user.html:15
+#: templates/settings.html:23
 msgid "Submit"
 msgstr ""
 
@@ -702,42 +716,6 @@ msgstr ""
 msgid "Browse our collections"
 msgstr ""
 
-#: templates/includes/dc.html:7
-msgid "Creator"
-msgstr ""
-
-#: templates/includes/dc.html:10
-msgid "Subject"
-msgstr ""
-
-#: templates/includes/dc.html:11
-msgid "Publisher"
-msgstr ""
-
-#: templates/includes/dc.html:12
-msgid "Contributor"
-msgstr ""
-
-#: templates/includes/dc.html:13
-msgid "Type"
-msgstr ""
-
-#: templates/includes/dc.html:14
-msgid "Source"
-msgstr ""
-
-#: templates/includes/dc.html:15
-msgid "Language"
-msgstr ""
-
-#: templates/includes/dc.html:16
-msgid "Coverage"
-msgstr ""
-
-#: templates/includes/dc.html:17
-msgid "Rights"
-msgstr ""
-
 #: templates/includes/form_field.html:13
 msgid "Choose file"
 msgstr ""
@@ -763,24 +741,28 @@ msgstr ""
 msgid "Select language"
 msgstr ""
 
-#: templates/includes/header.html:63
+#: templates/includes/header.html:64 templates/settings.html:6
+msgid "Settings"
+msgstr ""
+
+#: templates/includes/header.html:66
 msgid "Edit Users"
 msgstr ""
 
-#: templates/includes/header.html:67 templates/new_collection.html:6
+#: templates/includes/header.html:70 templates/new_collection.html:6
 #: templates/new_collection.html:11
 msgid "Add new Collection"
 msgstr ""
 
-#: templates/includes/header.html:68 templates/new_dip.html:11
+#: templates/includes/header.html:71 templates/new_dip.html:11
 msgid "Add new Folder"
 msgstr ""
 
-#: templates/includes/header.html:71
+#: templates/includes/header.html:74
 msgid "Log out"
 msgstr ""
 
-#: templates/includes/header.html:75
+#: templates/includes/header.html:78
 msgid "Log in"
 msgstr ""
 
@@ -861,6 +843,10 @@ msgstr ""
 
 #: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:42
 msgid "Add new User"
+msgstr ""
+
+#: templates/settings.html:14
+msgid "Dublin Core settings"
 msgstr ""
 
 #: templates/users.html:11
