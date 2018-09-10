@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-10 19:25+0000\n"
+"POT-Creation-Date: 2018-09-10 20:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,83 +72,83 @@ msgstr ""
 "Cocher pour ne pas afficher les champs de métadonnées Dublin Core qui sont "
 "vides dans les enregistrements Collection et Dossier."
 
-#: dips/models.py:30
+#: dips/models.py:31
 msgid "Error trace:"
 msgstr "Retrouver l'erreur:"
 
-#: dips/models.py:114
+#: dips/models.py:115
 msgid "identifier"
 msgstr "identifiant de la ressource"
 
-#: dips/models.py:115 dips/tests/test_dublin_core_settings.py:10
+#: dips/models.py:116 dips/tests/test_dublin_core_settings.py:10
 msgid "title"
 msgstr "titre"
 
-#: dips/models.py:116 dips/tests/test_dublin_core_settings.py:10
+#: dips/models.py:117 dips/tests/test_dublin_core_settings.py:10
 msgid "creator"
 msgstr "créateur"
 
-#: dips/models.py:117 dips/tests/test_dublin_core_settings.py:11
+#: dips/models.py:118 dips/tests/test_dublin_core_settings.py:11
 msgid "subject"
 msgstr "sujet"
 
-#: dips/models.py:118 dips/tests/test_dublin_core_settings.py:11
+#: dips/models.py:119 dips/tests/test_dublin_core_settings.py:11
 msgid "description"
 msgstr "description"
 
-#: dips/models.py:119 dips/tests/test_dublin_core_settings.py:12
+#: dips/models.py:120 dips/tests/test_dublin_core_settings.py:12
 msgid "publisher"
 msgstr "éditeur"
 
-#: dips/models.py:120 dips/tests/test_dublin_core_settings.py:12
+#: dips/models.py:121 dips/tests/test_dublin_core_settings.py:12
 msgid "contributor"
 msgstr "contributeur"
 
-#: dips/models.py:121 dips/tests/test_dublin_core_settings.py:13
+#: dips/models.py:122 dips/tests/test_dublin_core_settings.py:13
 msgid "date"
 msgstr "date"
 
-#: dips/models.py:122 dips/tests/test_dublin_core_settings.py:13
+#: dips/models.py:123 dips/tests/test_dublin_core_settings.py:13
 msgid "type"
 msgstr "type"
 
-#: dips/models.py:123 dips/tests/test_dublin_core_settings.py:14
+#: dips/models.py:124 dips/tests/test_dublin_core_settings.py:14
 msgid "format"
 msgstr "format"
 
-#: dips/models.py:124 dips/tests/test_dublin_core_settings.py:14
+#: dips/models.py:125 dips/tests/test_dublin_core_settings.py:14
 msgid "source"
 msgstr "source"
 
-#: dips/models.py:125 dips/tests/test_dublin_core_settings.py:15
+#: dips/models.py:126 dips/tests/test_dublin_core_settings.py:15
 msgid "language"
 msgstr "langue"
 
-#: dips/models.py:126 dips/tests/test_dublin_core_settings.py:15
+#: dips/models.py:127 dips/tests/test_dublin_core_settings.py:15
 msgid "coverage"
 msgstr "couverture"
 
-#: dips/models.py:127 dips/tests/test_dublin_core_settings.py:16
+#: dips/models.py:128 dips/tests/test_dublin_core_settings.py:16
 msgid "rights"
 msgstr "gestion des droits"
 
-#: dips/models.py:191
+#: dips/models.py:201
 msgid "finding aid"
 msgstr "instrument de recherche"
 
-#: dips/models.py:211
+#: dips/models.py:221
 msgid "objects zip file"
 msgstr "fichier zip contenant les objets"
 
-#: dips/models.py:216
+#: dips/models.py:226
 msgid "collection"
 msgstr "collection"
 
-#: dips/models.py:277
+#: dips/models.py:287
 msgid "A related task result could not be found."
 msgstr "Un résultat de tâche connexe n'a pu être trouvé."
 
-#: dips/models.py:279
+#: dips/models.py:289
 #, python-format
 msgid ""
 "An error occurred during the process executed to extract and parse the METS "
