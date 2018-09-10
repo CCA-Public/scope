@@ -60,6 +60,9 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="user-menu">
             {% if user.is_manager %}
+              {% if user.is_superuser %}
+                <a class="dropdown-item" href="{% url 'settings' %}">{% trans "Settings" %}</a>
+              {% endif %}
               <a class="dropdown-item" href="{% url 'users' %}">{% trans "Edit Users" %}</a>
               <div class="dropdown-divider"></div>
             {% endif %}

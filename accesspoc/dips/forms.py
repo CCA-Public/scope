@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django.utils.translation import gettext_lazy as _
 from django import forms
-from .models import User, DublinCore
+from .models import User, DublinCore, Setting
 
 
 class DeleteByDublinCoreForm(forms.ModelForm):
@@ -98,3 +98,46 @@ class UserChangeForm(UserChangeForm):
         if commit:
             user.save()
         return user
+
+
+class SettingsForm(forms.Form):
+    """
+    Base form for `models.Setting` management:
+
+    - Field names declared in sub-forms must match the setting names.
+    - The field type and other properties must be defined in the sub-forms
+      based on the related setting expected value type.
+    - The `Setting.value` is a JSONField (only with auto encoding/decoding
+      capabilities); the initial value of the form fields will be populated
+      with the decoded setting value and the encoded form field value will be
+      saved on form submission.
+    """
+    settings = {}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            self.settings[name] = Setting.objects.get(name=name)
+            field.initial = self.settings[name].value
+
+    def save(self):
+        for name, field in self.fields.items():
+            self.settings[name].value = self.cleaned_data[name]
+            self.settings[name].save()
+
+
+class DublinCoreSettingsForm(SettingsForm):
+    enabled_optional_dc_fields = forms.MultipleChoiceField(
+        required=False,
+        label=_('Optional fields'),
+        help_text=_('Ctrl + Click to select multiple or unselect.'),
+        choices=DublinCore.get_optional_fields().items(),
+    )
+    hide_empty_dc_fields = forms.BooleanField(
+        required=False,
+        label=_('Hide empty fields'),
+        help_text=_(
+            'Check to not display Dublin Core fields without data '
+            'in the Collection and Folder view pages.'
+        ),
+    )

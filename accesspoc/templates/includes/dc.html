@@ -1,18 +1,5 @@
-{% load i18n %}
-
 {% if dc %}
-  <p><strong>{% trans "Identifier" %}:</strong> {{ dc.identifier }}</p>
-  <p><strong>{% trans "Title" %}:</strong> {{ dc.title }}</p>
-  <p><strong>{% trans "Date" %}:</strong> {{ dc.date }}</p>
-  <p><strong>{% trans "Creator" %}:</strong> {{ dc.creator }}</p>
-  <p><strong>{% trans "Format" %}:</strong> {{ dc.format|safe }}</p>
-  <p><strong>{% trans "Description" %}:</strong> {{ dc.description|safe }}</p>
-  <p><strong>{% trans "Subject" %}:</strong> {{ dc.subject }}</p>
-  <p><strong>{% trans "Publisher" %}:</strong> {{ dc.publisher }}</p>
-  <p><strong>{% trans "Contributor" %}:</strong> {{ dc.contributor }}</p>
-  <p><strong>{% trans "Type" %}:</strong> {{ dc.type }}</p>
-  <p><strong>{% trans "Source" %}:</strong> {{ dc.source }}</p>
-  <p><strong>{% trans "Language" %}:</strong> {{ dc.language }}</p>
-  <p><strong>{% trans "Coverage" %}:</strong> {{ dc.coverage }}</p>
-  <p><strong>{% trans "Rights" %}:</strong> {{ dc.rights }}</p>
+  {% for label, value in dc.get_display_data.items %}
+    <p><strong>{{ label|capfirst }}:</strong> {{ value }}</p>
+  {% endfor %}
 {% endif %}

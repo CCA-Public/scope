@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^user/(?P<pk>\d+)/edit$', views.edit_user, name='edit_user'),
     url(r'^new_user/', views.new_user, name='new_user'),
     url(r'^users/', views.users, name='users'),
+    url(r'^settings/', views.settings, name='settings'),
     url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ]

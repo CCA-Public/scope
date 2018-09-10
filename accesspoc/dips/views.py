@@ -7,7 +7,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from .models import User, Collection, DIP, DigitalFile, DublinCore
-from .forms import DeleteByDublinCoreForm, UserCreationForm, UserChangeForm
+from .forms import DeleteByDublinCoreForm, UserCreationForm, UserChangeForm, DublinCoreSettingsForm
 from .tasks import extract_and_parse_mets
 
 
@@ -429,7 +429,10 @@ def new_collection(request):
 
     CollectionForm = modelform_factory(Collection, fields=('link',))
     collection_form = CollectionForm(request.POST or None)
-    DublinCoreForm = modelform_factory(DublinCore, exclude=())
+    DublinCoreForm = modelform_factory(
+        DublinCore,
+        fields=DublinCore.enabled_fields(),
+    )
     dc_form = DublinCoreForm(request.POST or None)
 
     if request.method == 'POST' and collection_form.is_valid() and dc_form.is_valid():
@@ -512,7 +515,10 @@ def edit_collection(request, pk):
     collection = get_object_or_404(Collection, pk=pk)
     CollectionForm = modelform_factory(Collection, fields=('link',))
     collection_form = CollectionForm(request.POST or None, instance=collection)
-    DublinCoreForm = modelform_factory(DublinCore, exclude=())
+    DublinCoreForm = modelform_factory(
+        DublinCore,
+        fields=DublinCore.enabled_fields(),
+    )
     dc_form = DublinCoreForm(request.POST or None, instance=collection.dc)
 
     if request.method == 'POST' and collection_form.is_valid() and dc_form.is_valid():
@@ -536,7 +542,10 @@ def edit_dip(request, pk):
         return redirect('dip', pk=pk)
 
     dip = get_object_or_404(DIP, pk=pk)
-    DublinCoreForm = modelform_factory(DublinCore, exclude=())
+    DublinCoreForm = modelform_factory(
+        DublinCore,
+        fields=DublinCore.enabled_fields(),
+    )
     dc_form = DublinCoreForm(request.POST or None, instance=dip.dc)
 
     if request.method == 'POST' and dc_form.is_valid():
@@ -605,3 +614,18 @@ def download_dip(request, pk):
         return response
     except FileNotFoundError:
         raise Http404('ZIP file not found.')
+
+
+@login_required(login_url='/login/')
+def settings(request):
+    # Only admins can manage settings
+    if not request.user.is_superuser:
+        return redirect('home')
+
+    form = DublinCoreSettingsForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        # Redirect to not add validation classes
+        return redirect('settings')
+
+    return render(request, 'settings.html', {'form': form})

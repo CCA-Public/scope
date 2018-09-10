@@ -143,6 +143,14 @@ GET_PAGES = {
         ('basic', 200),
         ('viewer', 200),
     ],
+    'settings': [
+        ('unauth', 302),
+        ('admin', 200),
+        ('manager', 302),
+        ('editor', 302),
+        ('basic', 302),
+        ('viewer', 302),
+    ],
 }
 
 

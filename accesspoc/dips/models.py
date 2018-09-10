@@ -13,6 +13,7 @@ from django.contrib.auth.models import Group, AbstractUser
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
 from django_celery_results.models import TaskResult as CeleryTaskResult
+from jsonfield import JSONField
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 from search.functions import delete_document
@@ -125,16 +126,65 @@ class DublinCore(models.Model):
     coverage = models.CharField(_('coverage'), max_length=200, blank=True)
     rights = models.CharField(_('rights'), max_length=200, blank=True)
 
+    REQUIRED_FIELDS = ['identifier']
+
     def __str__(self):
         return self.identifier
 
     def get_es_inner_data(self):
+        """
+        Returns a dictionary with field name > value with the required data
+        to be stored in the Elasticsearch documents of related models.
+        """
         data = {'identifier': self.identifier}
         add_if_not_empty(data, 'title', self.title)
         add_if_not_empty(data, 'date', self.date)
         add_if_not_empty(data, 'description', self.description)
-
         return data
+
+    def get_display_data(self):
+        """
+        Returns a dictionary with display label > value from object fields,
+        checking the enabled fields and the hide empty fields configuration.
+        """
+        hide_empty = self.hide_empty_fields()
+        data = {}
+        for field_name in self.enabled_fields():
+            value = getattr(self, field_name)
+            if hide_empty and not value:
+                continue
+            field = self._meta.get_field(field_name)
+            data[field.verbose_name] = value
+        return data
+
+    @classmethod
+    def get_optional_fields(cls):
+        """
+        Returns a dictionary with optional fields name > verbose_name.
+        """
+        optional_fields = {}
+        for field in cls._meta.get_fields():
+            if field.auto_created or field.name in cls.REQUIRED_FIELDS:
+                continue
+            optional_fields[field.name] = field.verbose_name
+        return optional_fields
+
+    @classmethod
+    def enabled_fields(cls):
+        """
+        Returns a list with enabled field names based on
+        `enabled_dc_fields` setting.
+        """
+        setting = Setting.objects.get(name='enabled_optional_dc_fields')
+        return cls.REQUIRED_FIELDS + setting.value
+
+    @classmethod
+    def hide_empty_fields(cls):
+        """
+        Returns a boolean based on `hide_empty_dc_fields` setting.
+        """
+        setting = Setting.objects.get(name='hide_empty_dc_fields')
+        return setting.value
 
 
 class Collection(AbstractEsModel):
@@ -297,3 +347,21 @@ class PREMISEvent(models.Model):
 
     def __str__(self):
         return self.uuid
+
+
+class Setting(models.Model):
+    """
+    Name/value pairs for application settings.
+
+    A database-agnostic JSONField is used for the `value` field with auto
+    encoding/decoding but without extended querying capabilities. If new
+    settings are added and they are dictionaries where the order matters,
+    change the field declaration to:
+
+    `JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})`
+    """
+    name = models.CharField(max_length=50, unique=True)
+    value = JSONField(max_length=500)
+
+    def __str__(self):
+        return self.name
