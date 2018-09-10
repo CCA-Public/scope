@@ -206,7 +206,7 @@ Create a Python virtual environment and install the application requirements:
 ```
 virtualenv venv -p python3  
 source venv/bin/activate  
-pip install -r requirements/production.txt
+pip install -r requirements.txt
 ```
 
 Export the environment for the `manage.py` commands and go to the 'accesspoc' directory:
