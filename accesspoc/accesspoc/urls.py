@@ -15,7 +15,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import include, url
-from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
 from dips import views
@@ -41,6 +40,5 @@ urlpatterns = [
     url(r'^new_user/', views.new_user, name='new_user'),
     url(r'^users/', views.users, name='users'),
     url(r'^settings/', views.settings, name='settings'),
-    url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ]
