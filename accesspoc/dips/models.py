@@ -27,7 +27,7 @@ class TaskResult(CeleryTaskResult):
 
     def get_error_message(self):
         """Format traceback as HTML to display in alert"""
-        message = gettext('Trace:') + '<p><pre>%s</pre></p>' % self.traceback
+        message = gettext('Error trace:') + '<p><pre>%s</pre></p>' % self.traceback
         return message
 
 
@@ -274,7 +274,7 @@ class DIP(AbstractEsModel):
             result = TaskResult.objects.get(task_id=self.import_task_id)
             error = result.get_error_message()
         except TaskResult.DoesNotExist:
-            error = gettext('A related TaskResult could not be found.')
+            error = gettext('A related task result could not be found.')
         return gettext(
             'An error occurred during the process executed to extract '
             'and parse the METS file. %(error_message)s Please, contact '

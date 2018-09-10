@@ -45,7 +45,7 @@ class ImportFailureDisplayTests(TestCase):
         self.assertContains(response, '<div class="alert alert-danger')
         self.assertContains(
             response,
-            'A related TaskResult could not be found.',
+            'A related task result could not be found.',
         )
 
     def test_digital_file_view_error_message_with_trace(self):
@@ -66,5 +66,5 @@ class ImportFailureDisplayTests(TestCase):
         self.assertContains(response, '<div class="alert alert-danger')
         self.assertContains(
             response,
-            'A related TaskResult could not be found.',
+            'A related task result could not be found.',
         )
