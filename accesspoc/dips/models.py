@@ -9,6 +9,7 @@ and a `get_es_data` method to transform to a dictionary representation of
 the ES document.
 """
 from abc import ABCMeta, abstractmethod
+from collections import OrderedDict
 from django.contrib.auth.models import Group, AbstractUser
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
@@ -127,6 +128,11 @@ class DublinCore(models.Model):
     rights = models.CharField(_('rights'), max_length=200, blank=True)
 
     REQUIRED_FIELDS = ['identifier']
+    ORDERED_FIELDS = [
+        'identifier', 'title', 'creator', 'subject', 'description', 'publisher',
+        'contributor', 'date', 'type', 'format', 'source', 'language',
+        'coverage', 'rights',
+    ]
 
     def __str__(self):
         return self.identifier
@@ -148,8 +154,11 @@ class DublinCore(models.Model):
         checking the enabled fields and the hide empty fields configuration.
         """
         hide_empty = self.hide_empty_fields()
-        data = {}
-        for field_name in self.enabled_fields():
+        enabled_fields = self.enabled_fields()
+        data = OrderedDict()
+        for field_name in self.ORDERED_FIELDS:
+            if field_name not in enabled_fields:
+                continue
             value = getattr(self, field_name)
             if hide_empty and not value:
                 continue
@@ -162,8 +171,9 @@ class DublinCore(models.Model):
         """
         Returns a dictionary with optional fields name > verbose_name.
         """
-        optional_fields = {}
-        for field in cls._meta.get_fields():
+        optional_fields = OrderedDict()
+        for field_name in cls.ORDERED_FIELDS:
+            field = cls._meta.get_field(field_name)
             if field.auto_created or field.name in cls.REQUIRED_FIELDS:
                 continue
             optional_fields[field.name] = field.verbose_name
