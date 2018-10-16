@@ -180,12 +180,12 @@ Intall the Redis server, for example following [this tutorial from Digital Ocean
 Create user to own and run the application, log in and make sure you're placed in its home folder:
 
 ```
-adduser accesspoc
-su - accesspoc
+adduser scope
+su - scope
 cd ~
 ```
 
-Create an environment file in `~/accesspoc-env`, at least with the required variables, to reference it where it's needed, for example:
+Create an environment file in `~/scope-env`, at least with the required variables, to reference it where it's needed, for example:
 
 ```
 DJANGO_ALLOWED_HOSTS=example.com
@@ -209,11 +209,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Export the environment for the `manage.py` commands and go to the 'accesspoc' directory:
+Export the environment variables to run the `manage.py` commands:
 
 ```
-export $(cat ~/accesspoc-env)
-cd accesspoc
+export $(cat ~/scope-env)
 ```
 
 Create the `media` folder with read and execute permissions for the group:
@@ -252,7 +251,7 @@ Compile translation files:
 Compile CSS styles:
 
 ```
-sassc -mt compressed accesspoc/static/styles/main.scss accesspoc/static/styles/main.css
+sassc -mt compressed scope/static/styles/main.scss scope/static/styles/main.css
 ```
 
 Collect static files:
@@ -269,33 +268,33 @@ deactivate && exit
 
 ### Configure worker
 
-To execute asynchronous tasks, back as the 'root' user, create a systemd service file to run the Celery worker. In `/etc/systemd/system/accesspoc-worker.service`, with the following content:
+To execute asynchronous tasks, back as the 'root' user, create a systemd service file to run the Celery worker. In `/etc/systemd/system/scope-worker.service`, with the following content:
 
 ```
 [Unit]
-Description=Accesspoc Celery Worker
+Description=Scope Celery Worker
 After=network.target
 
 [Service]
 Type=forking
-User=accesspoc
-Group=accesspoc
-EnvironmentFile=/home/accesspoc/accesspoc-env
-Environment=CELERYD_PID_FILE=/home/accesspoc/accesspoc-worker.pid
-Environment=CELERYD_LOG_FILE=/home/accesspoc/accesspoc-worker.log
-WorkingDirectory=/home/accesspoc/dip-access-interface/accesspoc
-ExecStart=/home/accesspoc/dip-access-interface/venv/bin/celery \
-            multi start accesspoc-worker -A accesspoc \
+User=scope
+Group=scope
+EnvironmentFile=/home/scope/scope-env
+Environment=CELERYD_PID_FILE=/home/scope/scope-worker.pid
+Environment=CELERYD_LOG_FILE=/home/scope/scope-worker.log
+WorkingDirectory=/home/scope/dip-access-interface
+ExecStart=/home/scope/dip-access-interface/venv/bin/celery \
+            multi start scope-worker -A scope \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
-ExecReload=/home/accesspoc/dip-access-interface/venv/bin/celery \
-            multi restart accesspoc-worker -A accesspoc \
+ExecReload=/home/scope/dip-access-interface/venv/bin/celery \
+            multi restart scope-worker -A scope \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
-ExecStop=/home/accesspoc/dip-access-interface/venv/bin/celery \
-            multi stopwait accesspoc-worker \
+ExecStop=/home/scope/dip-access-interface/venv/bin/celery \
+            multi stopwait scope-worker \
             --pidfile=${CELERYD_PID_FILE}
 
 [Install]
@@ -305,37 +304,37 @@ WantedBy=multi-user.target
 Start and enable the service:
 
 ```
-systemctl start accesspoc-worker
-systemctl enable accesspoc-worker
+systemctl start scope-worker
+systemctl enable scope-worker
 ```
 
 To access the service logs, use:
 
 ```
-journalctl -u accesspoc-worker
+journalctl -u scope-worker
 ```
 
 ### Serve
 
-The application requirements install Gunicorn, Gevent and WhiteNoise to serve the application, including the static files. Create a systemd service file to run the Gunicorn daemon in `/etc/systemd/system/accesspoc-gunicorn.service`, with the following content:
+The application requirements install Gunicorn, Gevent and WhiteNoise to serve the application, including the static files. Create a systemd service file to run the Gunicorn daemon in `/etc/systemd/system/scope-gunicorn.service`, with the following content:
 
 ```
 [Unit]
-Description=Accesspoc Gunicorn daemon
+Description=Scope Gunicorn daemon
 After=network.target
 
 [Service]
-User=accesspoc
-Group=accesspoc
+User=scope
+Group=scope
 PrivateTmp=true
-PIDFile=/home/accesspoc/accesspoc-gunicorn.pid
-EnvironmentFile=/home/accesspoc/accesspoc-env
-WorkingDirectory=/home/accesspoc/dip-access-interface/accesspoc
-ExecStart=/home/accesspoc/dip-access-interface/venv/bin/gunicorn \
+PIDFile=/home/scope/scope-gunicorn.pid
+EnvironmentFile=/home/scope/scope-env
+WorkingDirectory=/home/scope/dip-access-interface
+ExecStart=/home/scope/dip-access-interface/venv/bin/gunicorn \
             --access-logfile /dev/null \
             --worker-class gevent \
-            --bind unix:/home/accesspoc/accesspoc-gunicorn.sock \
-            accesspoc.wsgi:application
+            --bind unix:/home/scope/scope-gunicorn.sock \
+            scope.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 
@@ -346,28 +345,28 @@ WantedBy=multi-user.target
 Start and enable the service:
 
 ```
-systemctl start accesspoc-gunicorn
-systemctl enable accesspoc-gunicorn
+systemctl start scope-gunicorn
+systemctl enable scope-gunicorn
 ```
 
 To access the service logs, use:
 
 ```
-journalctl -u accesspoc-gunicorn
+journalctl -u scope-gunicorn
 ```
 
 The Gunicorn service is using an Unix socket to listen for connections and we will use Nginx to proxy the application and to serve the uploaded ZIP files. The `client_max_body_size` and `proxy_read_timeout` values should be changed based on the biggest ZIP file and upload time expected. It should also be used to secure the site, but we won't cover that configuration in this example. Install Nginx and create a configuration file:
 
 ```
 apt-get install nginx
-nano /etc/nginx/sites-available/accesspoc
+nano /etc/nginx/sites-available/scope
 ```
 
 With the following configuration:
 
 ```
-upstream accesspoc {
-  server unix:/home/accesspoc/accesspoc-gunicorn.sock;
+upstream scope {
+  server unix:/home/scope/scope-gunicorn.sock;
 }
 
 server {
@@ -377,7 +376,7 @@ server {
 
   location /media/ {
     internal;
-    alias /home/accesspoc/dip-access-interface/accesspoc/media/;
+    alias /home/scope/dip-access-interface/media/;
   }
 
   location / {
@@ -386,7 +385,7 @@ server {
     proxy_redirect off;
     proxy_buffering off;
     proxy_read_timeout 600s;
-    proxy_pass http://accesspoc;
+    proxy_pass http://scope;
   }
 }
 ```
@@ -394,7 +393,7 @@ server {
 Link the site configuration to `sites-enabled` and remove the default configuration:
 
 ```
-ln -s /etc/nginx/sites-available/accesspoc /etc/nginx/sites-enabled
+ln -s /etc/nginx/sites-available/scope /etc/nginx/sites-enabled
 rm /etc/nginx/sites-available/default
 ```
 
@@ -405,10 +404,10 @@ nginx -t
 systemctl restart nginx
 ```
 
-Make sure that the user running Nginx (usually 'www-data') has access to the media folder and files by adding it to the 'accesspoc' group:
+Make sure that the user running Nginx (usually 'www-data') has access to the media folder and files by adding it to the 'scope' group:
 
 ```
-usermod -a -G accesspoc www-data
+usermod -a -G scope www-data
 ```
 
 Reboot to reflect user changes.
@@ -433,33 +432,33 @@ docker-compose up -d
 Initialize database:
 
 ```
-docker-compose exec accesspoc ./manage.py migrate
+docker-compose exec scope ./manage.py migrate
 ```
 
 Create search indexes:
 
 ```
-docker-compose exec accesspoc ./manage.py index_data
+docker-compose exec scope ./manage.py index_data
 ```
 
 Add a superuser:
 
 ```
-docker-compose exec accesspoc ./manage.py createsuperuser
+docker-compose exec scope ./manage.py createsuperuser
 ```
 
-Follow the instructions to create a user with full admin rights.
+Follow the instructions to create a user with full administrator rights.
 
 Compile translation files:
 
 ```
-docker-compose exec accesspoc ./manage.py compilemessages
+docker-compose exec scope ./manage.py compilemessages
 ```
 
 Compile CSS styles:
 
 ```
-docker-compose exec accesspoc sassc -mt compressed accesspoc/static/styles/main.scss accesspoc/static/styles/main.css
+docker-compose exec scope sassc -mt compressed scope/static/styles/main.scss scope/static/styles/main.css
 ```
 
 Until a system is included to compile and update the styles when needed per request, this command needs to be executed when changes are made over the SASS files to see those changes in the GUI.
@@ -474,7 +473,7 @@ docker run --rm -t -v `pwd`:/app omercnet/tox
 Access the logs:
 
 ```
-docker-compose logs -f accesspoc elasticsearch
+docker-compose logs -f scope elasticsearch nginx
 ```
 
 To access the application with the default options visit http://localhost:43430 in the browser.

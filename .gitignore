@@ -14,7 +14,7 @@ venv/
 *.sqlite3
 
 # Media
-accesspoc/media/
+media/
 
 # Coverage
 .coverage
@@ -25,8 +25,8 @@ coverage.xml
 *.mo
 
 # Collected static files
-accesspoc/static
+static/
 
 # Compiled CSS and map files
-accesspoc/accesspoc/static/styles/main.css
-accesspoc/accesspoc/static/styles/main.css.map
+scope/static/styles/main.css
+scope/static/styles/main.css.map

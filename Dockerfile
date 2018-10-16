@@ -30,8 +30,8 @@ RUN set -ex \
         \) -exec rm -rf '{}' + \
     && rm -rf /usr/src/python
 
-COPY ./accesspoc /src
+COPY . /src
 
 EXPOSE 8000
 
-CMD ["gunicorn", "accesspoc.wsgi:application", "-b=0:8000", "-k=gevent", "--reload"]
+CMD ["gunicorn", "scope.wsgi:application", "-b=0:8000", "-k=gevent", "--reload"]
