@@ -1,0 +1,44 @@
+.btn-outline-cca {
+  // Use Bootstrap mixin mixing blue and gray
+  @include button-outline-variant(
+    $cca-gray,
+    color-yiq($cca-gray),
+    $cca-blue,
+    $cca-blue
+  );
+
+  // Avoid double border inside inputs
+  .input-group-append & {
+    border-left: none;
+  }
+  .input-group-prepend & {
+    border-right: none;
+  }
+
+  // Force blue shadow in focus
+  &:focus,
+  &.focus {
+    box-shadow: 0 0 0 $btn-focus-width rgba($cca-blue, .5) !important;
+  }
+}
+
+.btn-sort-cca {
+  text-decoration: none !important;
+	color: $cca-gray;
+
+  &.active,
+  &:hover,
+  &:focus {
+  	color: $cca-blue;
+  }
+}
+
+.card-header button {
+  &:before {
+    content: "- ";
+  }
+
+  &.collapsed:before {
+    content: "+ ";
+  }
+}

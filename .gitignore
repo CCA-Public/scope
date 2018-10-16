@@ -14,7 +14,7 @@ venv/
 *.sqlite3
 
 # Media
-media/
+/media/
 
 # Coverage
 .coverage
@@ -25,7 +25,7 @@ coverage.xml
 *.mo
 
 # Collected static files
-static/
+/static/
 
 # Compiled CSS and map files
 scope/static/styles/main.css
