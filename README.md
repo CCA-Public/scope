@@ -29,7 +29,9 @@ The DIP Access Interface (real name pending) is a Django project designed to pro
 
 The primary application, "dips", allows users to add, organize, and interact with these DIPs and the digital files they contain, depending on user permissions.  
 
-[User stories](https://github.com/CCA-Public/dip-access-interface/wiki/User-Stories)
+See the [user stories](https://github.com/CCA-Public/dip-access-interface/wiki/User-Stories) for background on current and future features. 
+
+See the [user manual](https://docs.google.com/document/d/1pjmQSLCZGvmc05DfIs0XQn_60_DLwxGH-aF7-4R_zmQ/edit?usp=sharing) for instructions on how to use the DIP Access Interface.
 
 ## Data model
 
