@@ -33,7 +33,7 @@ Following these guidelines helps us assess your changes faster and makes it easi
 Issues can be filed using GitHub Issues in the
 [Issues repo](https://github.com/CCA-Public/dip-access-interface/issues). It is
 recommended to file issues there rather than in any of the Archivematica-related
-code repositories. Artefactual staff also use GitHub issues for any work they do
+code repositories. CCA and Artefactual staff also use GitHub issues for any work they do
 on this project.
 
 Useful questions to answer if you're having problems include:
@@ -59,13 +59,13 @@ sponsored for inclusion.
 ## Submitting code changes
 
 Every new feature and bugfix to a project is expected to go through code review before inclusion.
-This applies both to developers at Artefactual and to outside contributors.
+This applies both to developers at CCA and to outside contributors.
 
 Here's an outline of the contribution process:
 
 1. File an issue in the
    [Issues repo](https://github.com/CCA-Public/dip-access-interface/issues).
-2. Fork the Artefactual project on GitHub, and commit your changes to a branch
+2. Fork the project on GitHub, and commit your changes to a branch
    in your fork.
 3. Open a pull request.
 4. Back and forth discussion with developers on the branch.
@@ -76,12 +76,12 @@ Here's an outline of the contribution process:
 
 ### Getting started
 
-So you have something to contribute to an Artefactual project. Great!
+So you have something to contribute to SCOPE. Great!
 
 To install SCOPE, see our [development installation](https://github.com/CCA-Public/dip-access-interface#installation) instructions.
 
-Artefactual uses [GitHub](https://github.com/)'s pull request feature for code review.
-Every change being submitted to an Artefactual project should be submitted as a pull request to the appropriate repository.
+CCA uses [GitHub](https://github.com/)'s pull request feature for code review.
+Every change being submitted to an SCOPE should be submitted as a pull request to the appropriate repository.
 A branch being submitted for code review should contain commits covering a related section of code.
 Try not to bundle unrelated changes together in one branch; it makes review harder.
 
@@ -96,7 +96,7 @@ Don't be shy about submitting early.
 
 ### Opening the pull request
 
-GitHub has an [excellent](https://help.github.com/articles/using-pull-requests) guide on using the pull request feature.
+GitHub has an [excellent guide](https://help.github.com/articles/using-pull-requests) on using the pull request feature.
 
 ### Discussion
 
@@ -123,7 +123,7 @@ You can alter the commit history of a branch using git's powerful [interactive r
 
 ### Style
 
-Archivematica uses the Python [PEP8](https://www.python.org/dev/peps/pep-0008/) community style guidelines.
+SCOPE uses the Python [PEP8](https://www.python.org/dev/peps/pep-0008/) community style guidelines.
 Newly-written code should conform to PEP-8 style.
 PEP8 is a daunting document, but there are very good linters available that you can run to check style in your code.
 The [flake8](https://pypi.python.org/pypi/flake8) tool checks for style problems as well as errors and complexity.
@@ -140,12 +140,12 @@ A few additional stylistic preferences might not get flagged by linters:
 
 #### Exceptions
 
-Archivematica ignores the PEP8 rule concerning line length; lines longer than 80 characters are acceptable.
+SCOPE ignores the PEP8 rule concerning line length; lines longer than 80 characters are acceptable.
 This is error "501", for the purposes of silencing it in flake8 or other linting tools.
 
 #### Working with legacy code
 
-Older portions of the Archivematica codebase don't always conform to PEP8 rules; the codebase is slowly transitioning to PEP8 style.
+Older portions of the codebase don't always conform to PEP8 rules; the codebase is slowly transitioning to PEP8 style.
 Don't worry about rewriting existing code to conform to the guidelines when adding new code; however, if possible, it's great if your new code does conform.
 
 When working in sections of code that don't conform to PEP8, it's okay to relax a few PEP8 rules in order to match existing code.
