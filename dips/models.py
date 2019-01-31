@@ -310,7 +310,10 @@ class DigitalFile(AbstractEsModel):
     formatversion = models.CharField(max_length=200, blank=True, null=True)
     size_bytes = models.BigIntegerField()
     size_human = models.CharField(max_length=10, blank=True)
-    datemodified = models.CharField(max_length=30, blank=True)
+    # When support for time zones is enabled, Django stores datetime information
+    # in UTC in the database, uses time-zone-aware datetime objects internally,
+    # and translates them to the TIME_ZONE setting in templates and forms.
+    datemodified = models.DateTimeField(blank=True, null=True)
     puid = models.CharField(max_length=11, blank=True)
     amdsec = models.CharField(max_length=12)
     hashtype = models.CharField(max_length=7)
@@ -334,6 +337,8 @@ class DigitalFile(AbstractEsModel):
             'fileformat': self.fileformat,
             'size_bytes': self.size_bytes,
         }
+        # Datetimes are saved as UTC in ES. In this case,
+        # the TIME_ZONE setting is not considered.
         add_if_not_empty(data, 'datemodified', self.datemodified)
 
         if self.dip.dc:

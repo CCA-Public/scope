@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from django.core.exceptions import ValidationError
 from lxml import etree, objectify
 
@@ -211,14 +211,15 @@ class METS(object):
         if data['size_bytes'] != 0:
             data['size_human'] = convert_size(data['size_bytes'])
 
-        # Create human-readable version of last modified Unix
-        # time stamp if file was characterized by FITS.
+        # Transfrom timestamp. This timestamp comes from the FITS output,
+        # `fits/fileinfo/fslastmodified[@toolname="OIS File Information"]`
+        # element, and it seems to be an UTC timestamp.
         try:
             unixtime = int(data['datemodified']) / 1000
-        except ValueError:
-            data['datemodified'] = ''
-        else:
-            data['datemodified'] = datetime.fromtimestamp(unixtime).isoformat()
+            data['datemodified'] = datetime.fromtimestamp(
+                unixtime, tz=timezone.utc)
+        except (ValueError, OverflowError, OSError):
+            data['datemodified'] = None
 
         return data
 

@@ -258,7 +258,7 @@ def search(request):
         'path': 'filepath.raw',
         'format': 'fileformat.raw',
         'size': 'size_bytes',
-        'date': 'datemodified.raw',
+        'date': 'datemodified',
     }
     sort_option, sort_dir = get_sort_params(request, sort_options, 'path')
     sort_field = sort_options.get(sort_option)
@@ -366,7 +366,7 @@ def dip(request, pk):
         'path': 'filepath.raw',
         'format': 'fileformat.raw',
         'size': 'size_bytes',
-        'date': 'datemodified.raw',
+        'date': 'datemodified',
     }
     sort_option, sort_dir = get_sort_params(request, sort_options, 'path')
     sort_field = sort_options.get(sort_option)

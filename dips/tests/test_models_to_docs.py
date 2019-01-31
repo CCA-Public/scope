@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from django.test import TestCase
 from unittest.mock import patch
 
@@ -70,7 +71,8 @@ class ModelsToDocsTests(TestCase):
             'filepath': 'objects/example.ai',
             'fileformat': 'Adobe Illustrator',
             'size_bytes': 1080282,
-            'datemodified': '2018-02-08T20:00:57',
+            'datemodified': datetime(
+                2018, 2, 8, 20, 0, 57, tzinfo=timezone.utc),
             'dip': {
                 'id': 1,
                 'identifier': 'ABC',

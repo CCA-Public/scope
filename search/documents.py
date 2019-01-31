@@ -1,5 +1,5 @@
 from elasticsearch_dsl import analyzer, DocType, InnerDoc, Keyword, Long, \
-    MetaField, Object, Text, Integer
+    MetaField, Object, Text, Integer, Date
 
 
 class BaseDoc(DocType):
@@ -49,8 +49,8 @@ class DigitalFileDoc(BaseDoc):
     )
     fileformat = Text(fields={'raw': Keyword()})
     size_bytes = Long()
-    # TODO: Use date time field for datemodified, see #54
-    datemodified = Text(fields={'raw': Keyword()})
+    # Always saved as UTC, not just the default.
+    datemodified = Date(default_timezone='UTC')
     dip = Object(properties={
         'id': Integer(),
         'identifier': Text(),
