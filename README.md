@@ -29,7 +29,7 @@ SCOPE is a Django project designed to provide access to Dissemination Informatio
 
 The primary application, "dips", allows users to add, organize, and interact with these DIPs and the digital files they contain, depending on user permissions.  
 
-See the [user stories](https://github.com/CCA-Public/dip-access-interface/wiki/User-Stories) for background on current and future features. 
+See the [user stories](https://github.com/CCA-Public/dip-access-interface/wiki/User-Stories) for background on current and future features.
 
 See the [user manual](https://docs.google.com/document/d/1pjmQSLCZGvmc05DfIs0XQn_60_DLwxGH-aF7-4R_zmQ/edit?usp=sharing) for instructions on how to use SCOPE.
 
@@ -123,6 +123,7 @@ The following environment variables are used to run the application:
 * `DJANGO_ALLOWED_HOSTS` **[REQUIRED]**: List of host/domain names separated by comma that this instance can serve.
 * `DJANGO_SECRET_KEY` **[REQUIRED]**: A secret key for this instance, used to provide cryptographic signing, and should be set to a unique, unpredictable value.
 * `DJANGO_DEBUG`: Boolean that turns on/off debug mode. Never deploy a site into production with it turned on. *Default:* `False`.
+* `DJANGO_TIME_ZONE`: Timezone for the instance. E.g.: `America/Montreal`. *Default:* `UTC`.
 * `ES_HOSTS` **[REQUIRED]**: List of Elasticsearch hosts separated by comma. RFC-1738 formatted URLs can be used. E.g.: `https://user:secret@host:443/`.
 * `ES_TIMEOUT`: Timeout in seconds for Elasticsearch requests. *Default:* `10`.
 * `ES_POOL_SIZE`: Elasticsearch requests pool size. *Default:* `10`.
