@@ -1,5 +1,5 @@
 celery==4.2.1
-Django==2.1.5
+Django==2.1.7
 django_celery_results==1.0.1
 django-cleanup==2.1.0
 django-widget-tweaks==1.4.2
