@@ -26,8 +26,9 @@ class DcDeletionTests(TestCase):
 
     @patch('elasticsearch.client.Elasticsearch.delete')
     def test_collection_deletion(self, patch):
-        dc_count = DublinCore.objects.filter(identifier='1').count()
-        self.assertEqual(dc_count, 1)
+        dc_count = DublinCore.objects.all().count()
+        self.assertEqual(dc_count, 2)
         self.collection.delete()
-        dc_count = DublinCore.objects.filter(identifier='1').count()
+        # It should also delete the DIP DublinCore
+        dc_count = DublinCore.objects.all().count()
         self.assertEqual(dc_count, 0)

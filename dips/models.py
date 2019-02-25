@@ -107,8 +107,6 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
         Extended delete to update related documents in ES and remove related
         DublinCore in Collections and DIPs.
         """
-        if type(self) in [Collection, DIP] and self.dc:
-            self.dc.delete()
         self.delete_es_doc()
         super(AbstractEsModel, self).delete(*args, **kwargs)
 
