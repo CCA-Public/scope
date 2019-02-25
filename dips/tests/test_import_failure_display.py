@@ -10,8 +10,7 @@ from dips.models import DIP
 class ImportFailureDisplayTests(TestCase):
     fixtures = ['index_data']
 
-    @patch('elasticsearch_dsl.DocType.save')
-    def setUp(self, patch):
+    def setUp(self):
         User = get_user_model()
         User.objects.create_superuser('admin', 'admin@example.com', 'admin')
         self.client.login(username='admin', password='admin')
@@ -23,11 +22,11 @@ class ImportFailureDisplayTests(TestCase):
         dip = DIP.objects.get(pk=1)
         dip.import_status = DIP.IMPORT_FAILURE
         dip.import_task_id = 'task_id'
-        dip.save()
+        dip.save(update_es=False)
         dip = DIP.objects.get(pk=2)
         dip.import_status = DIP.IMPORT_FAILURE
         dip.import_task_id = 'non_existing_task_id'
-        dip.save()
+        dip.save(update_es=False)
 
     @patch('elasticsearch_dsl.Search.execute')
     @patch('elasticsearch_dsl.Search.count', return_value=0)

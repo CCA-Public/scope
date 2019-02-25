@@ -10,6 +10,9 @@ class AemNoMethod(AbstractEsModel):
 
     es_doc = None
 
+    def get_es_data(self):
+        pass
+
 
 class AemNoProperty(AbstractEsModel):
     # Set to abstract to avoid 'no such table error'
@@ -17,7 +20,10 @@ class AemNoProperty(AbstractEsModel):
         abstract = True
 
     def get_es_data(self):
-        """Implemented"""
+        pass
+
+    def requires_es_descendants_update(self):
+        pass
 
 
 class AemOkay(AbstractEsModel):
@@ -28,13 +34,16 @@ class AemOkay(AbstractEsModel):
     es_doc = None
 
     def get_es_data(self):
-        return {}
+        pass
+
+    def requires_es_descendants_update(self):
+        pass
 
 
 class AbstratEsModelTests(TestCase):
     def test_descendants_creation(self):
+        # Missing abstract method or property should raise
         self.assertRaises(TypeError, AemNoMethod)
         self.assertRaises(TypeError, AemNoProperty)
-        model = AemOkay()
-        self.assertIsNone(model.es_doc)
-        self.assertEqual(model.get_es_data(), {})
+        # All required abstract methods and properties should not raise
+        AemOkay()

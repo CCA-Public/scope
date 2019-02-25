@@ -285,6 +285,7 @@ def search(request):
         {'label': _('Format'), 'sort_param': 'format'},
         {'label': _('Size (bytes)'), 'sort_param': 'size'},
         {'label': _('Last modified'), 'sort_param': 'date'},
+        {'label': _('Collection name')},
         {'label': _('View parent folder')},
         {'label': _('File details')},
     ]
@@ -467,11 +468,9 @@ def new_dip(request):
     if request.method == 'POST' and dip_form.is_valid() and dc_form.is_valid():
         dip = dip_form.save(commit=False)
         dip.dc = dc_form.save()
-        # TODO: Avoid this save from updating the related ES
-        # documents, as a later save when the async_result id
-        # is added, will repeat the process. It may require
-        # stop using signals and move to a custom save method.
-        dip.save()
+        # Avoid this save from updating the related ES documents,
+        # as it will be made when the async_result id is added bellow.
+        dip.save(update_es=False)
 
         # Extract and parse METS file asynchronously
         async_result = extract_and_parse_mets.delay(dip.pk, dip.objectszip.path)
@@ -524,7 +523,12 @@ def edit_collection(request, pk):
     if request.method == 'POST' and collection_form.is_valid() and dc_form.is_valid():
         dc_form.save()
         collection_form.save()
-
+        if collection.requires_es_descendants_update():
+            messages.info(request, _(
+                'A background process has been launched to update the '
+                'Collection metadata in the Elasticsearch index for the '
+                'related Digital Files.'
+            ))
         return redirect('collection', pk=pk)
 
     return render(
@@ -552,6 +556,12 @@ def edit_dip(request, pk):
         dc_form.save()
         # Trigger ES update
         dip.save()
+        if dip.requires_es_descendants_update():
+            messages.info(request, _(
+                'A background process has been launched to update the '
+                'Folder metadata in the Elasticsearch index for the '
+                'related Digital Files.'
+            ))
         return redirect('dip', pk=pk)
 
     return render(request, 'edit_dip.html', {'form': dc_form, 'dip': dip})

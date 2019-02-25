@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'widget_tweaks',
 
-    'dips.apps.DipsConfig',
+    'dips',
     'search.apps.SearchConfig',
 
     'django_cleanup'  # deletes FileFields when objects are deleted

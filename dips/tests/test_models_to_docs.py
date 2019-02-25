@@ -44,10 +44,7 @@ class ModelsToDocsTests(TestCase):
                 'date': 'Example date',
                 'description': 'Example description',
             },
-            'collection': {
-                'id': 1,
-                'identifier': '123',
-            }
+            'collection': {'id': 1},
         }
         self.assertEqual(doc_dict, dip.get_es_data())
 
@@ -76,7 +73,13 @@ class ModelsToDocsTests(TestCase):
             'dip': {
                 'id': 1,
                 'identifier': 'ABC',
+                'title': 'Example DIP',
                 'import_status': 'SUCCESS',
+            },
+            'collection': {
+                'id': 1,
+                'identifier': '123',
+                'title': 'Example collection',
             }
         }
         self.assertEqual(doc_dict, digital_file.get_es_data())

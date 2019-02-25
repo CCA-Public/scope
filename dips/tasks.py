@@ -1,8 +1,10 @@
 from celery import shared_task, states, Task
 from django.db.utils import DatabaseError
 from elasticsearch.exceptions import TransportError
+from elasticsearch.helpers import bulk
+from elasticsearch_dsl.connections import connections
 from .parsemets import METS
-from .models import DIP
+from .models import Collection, DIP, DigitalFile
 
 import logging
 import os
@@ -32,13 +34,9 @@ class MetsTask(Task):
             dip.import_status = DIP.IMPORT_SUCCESS
         else:
             dip.import_status = DIP.IMPORT_FAILURE
+        # This save is triggering another Celery task (update_es_descendants),
+        # TODO: consider the use of task chains.
         dip.save()
-        # Update also related DigitalFiles in ES to reflect
-        # the import status of the parent DIP.
-        # TODO: Do it in signal or custom save method
-        # using partial updates and ideally bulk requests.
-        for digital_file in dip.digital_files.all():
-            digital_file.save()
 
 
 @shared_task(
@@ -69,3 +67,79 @@ def extract_and_parse_mets(dip_id, zip_path):
             logger.info('METS file extracted [Path: %s]' % path)
             mets = METS(path, dip_id)
             mets.parse_mets()
+
+
+@shared_task(
+    autoretry_for=(TransportError, DatabaseError,),
+    max_retries=10, default_retry_delay=30,
+)
+def update_es_descendants(class_name, pk):
+    """
+    Updates the related DigitalFiles documents in ES with the partial data from
+    the ancestor Collection or DIP.
+    """
+    if class_name not in ['Collection', 'DIP']:
+        raise Exception('Can not update descendants of %s.' % class_name)
+    logger.info('Updating DigitalFiles of %s [id: %s] ' % (class_name, pk))
+    if class_name == 'Collection':
+        ancestor = Collection.objects.get(pk=pk)
+        # Partial update with `doc` doesn't remove the fields missing in data,
+        # they have to be removed via script to clear the existing value,
+        # `script` and `doc` can't be combined in update actions, therefore
+        # it's required to generate a Painless script to perform the update.
+        script = {
+            'source': """
+                if (params.containsKey('identifier')) {
+                  ctx._source.collection.identifier = params.identifier;
+                } else {
+                  ctx._source.collection.remove('identifier');
+                }
+                if (params.containsKey('title')) {
+                  ctx._source.collection.title = params.title;
+                } else {
+                  ctx._source.collection.remove('title');
+                }
+            """,
+            'lang': 'painless',
+            'params': ancestor.get_es_data_for_files(),
+        }
+        files = DigitalFile.objects.filter(dip__collection__pk=pk).all()
+    else:
+        ancestor = DIP.objects.get(pk=pk)
+        script = {
+            'source': """
+                if (params.containsKey('identifier')) {
+                  ctx._source.dip.identifier = params.identifier;
+                } else {
+                  ctx._source.dip.remove('identifier');
+                }
+                if (params.containsKey('title')) {
+                  ctx._source.dip.title = params.title;
+                } else {
+                  ctx._source.dip.remove('title');
+                }
+                if (params.containsKey('import_status')) {
+                  ctx._source.dip.import_status = params.import_status;
+                } else {
+                  ctx._source.dip.remove('import_status');
+                }
+            """,
+            'lang': 'painless',
+            'params': ancestor.get_es_data_for_files(),
+        }
+        files = DigitalFile.objects.filter(dip__pk=pk).all()
+    # Get connection to ES
+    es = connections.get_connection()
+    # Bulk update with partial data
+    success_count, errors = bulk(es, ({
+        '_op_type': 'update',
+        '_index': DigitalFile.es_doc._index._name,
+        '_type': DigitalFile.es_doc._doc_type.name,
+        '_id': file.pk,
+        'script': script,
+    } for file in files.iterator()))
+    logger.info('%d/%d DigitalFiles updated.' % (success_count, files.count()))
+    if len(errors) > 0:
+        logger.info('The following errors were encountered:')
+        for error in errors:
+            logger.info('- %s' % error)

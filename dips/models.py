@@ -18,6 +18,7 @@ from jsonfield import JSONField
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 from search.functions import delete_document
+from scope.celery import app as celery_app
 from .helpers import add_if_not_empty
 
 
@@ -86,6 +87,31 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
     class Meta:
         abstract = True
 
+    def save(self, update_es=True, *args, **kwargs):
+        """Extended save to optionally update related documents in ES."""
+        super(AbstractEsModel, self).save(*args, **kwargs)
+        if not update_es:
+            return
+        # Use refresh to reflect the changes in the index in the same request
+        self.to_es_doc().save(refresh=True)
+        # Update descendant DigitalFiles if needed
+        if self.requires_es_descendants_update():
+            # Launch async. task by name to avoid circular imports
+            # or to import the task within this function.
+            celery_app.send_task(
+                'dips.tasks.update_es_descendants',
+                args=(self.__class__.__name__, self.pk))
+
+    def delete(self, *args, **kwargs):
+        """
+        Extended delete to update related documents in ES and remove related
+        DublinCore in Collections and DIPs.
+        """
+        if type(self) in [Collection, DIP] and self.dc:
+            self.dc.delete()
+        self.delete_es_doc()
+        super(AbstractEsModel, self).delete(*args, **kwargs)
+
     # Declaration in abstract class must be as property to allow decorators.
     # Implementation in descendats must be as attribute to avoid setter/getter.
     @property
@@ -96,6 +122,10 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
     @abstractmethod
     def get_es_data(self):
         """Model transformation to ES metadata dict."""
+
+    @abstractmethod
+    def requires_es_descendants_update(self):
+        """Checks if descendants need to be updated in ES."""
 
     def to_es_doc(self):
         """Model transformation to related DocType."""
@@ -216,6 +246,17 @@ class Collection(AbstractEsModel):
 
         return data
 
+    def get_es_data_for_files(self):
+        data = {'id': self.pk}
+        if self.dc:
+            add_if_not_empty(data, 'identifier', self.dc.identifier)
+            add_if_not_empty(data, 'title', self.dc.title)
+        return data
+
+    def requires_es_descendants_update(self):
+        count = DigitalFile.objects.filter(dip__collection__pk=self.pk).count()
+        return count > 0
+
 
 class DIP(AbstractEsModel):
     objectszip = models.FileField(_('objects zip file'))
@@ -270,13 +311,21 @@ class DIP(AbstractEsModel):
         if self.dc:
             data['dc'] = self.dc.get_es_inner_data()
 
-        if self.collection.dc:
-            data['collection'] = {
-                'id': self.collection.pk,
-                'identifier': self.collection.dc.identifier,
-            }
+        if self.collection:
+            data['collection'] = {'id': self.collection.pk}
 
         return data
+
+    def get_es_data_for_files(self):
+        data = {'id': self.pk}
+        add_if_not_empty(data, 'import_status', self.import_status)
+        if self.dc:
+            add_if_not_empty(data, 'identifier', self.dc.identifier)
+            add_if_not_empty(data, 'title', self.dc.title)
+        return data
+
+    def requires_es_descendants_update(self):
+        return self.digital_files.count() > 0
 
     def get_import_error_message(self):
         # Try to get error info from TaskResult
@@ -341,19 +390,16 @@ class DigitalFile(AbstractEsModel):
         # the TIME_ZONE setting is not considered.
         add_if_not_empty(data, 'datemodified', self.datemodified)
 
-        if self.dip.dc:
-            data['dip'] = {
-                'id': self.dip.pk,
-                'identifier': self.dip.dc.identifier,
-            }
-            # Reflect import status from the parent DIP
-            add_if_not_empty(
-                data['dip'],
-                'import_status',
-                self.dip.import_status,
-            )
+        # Ancestors data
+        if self.dip:
+            data['dip'] = self.dip.get_es_data_for_files()
+            if self.dip.collection:
+                data['collection'] = self.dip.collection.get_es_data_for_files()
 
         return data
+
+    def requires_es_descendants_update(self):
+        return False
 
 
 class PREMISEvent(models.Model):

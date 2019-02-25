@@ -313,7 +313,8 @@ class UserAccessTests(TestCase):
         self.client.logout()
 
     @patch('elasticsearch_dsl.DocType.save')
-    def test_post_collection(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_post_collection(self, patch, patch_2):
         """
         Makes post requests to create and edit collection pages with different
         user types logged in and verifies the results.
@@ -412,7 +413,8 @@ class UserAccessTests(TestCase):
         self.client.logout()
 
     @patch('elasticsearch_dsl.DocType.save')
-    def test_post_dip(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_post_dip(self, patch, patch_2):
         """
         Makes post requests to create and edit DIP pages with different
         user types logged in and verifies the results.

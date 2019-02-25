@@ -24,10 +24,7 @@ class CollectionDoc(BaseDoc):
 
 class DIPDoc(BaseDoc):
     dc = Object(DublinCoreDoc)
-    collection = Object(properties={
-        'id': Integer(),
-        'identifier': Text(),
-    })
+    collection = Object(properties={'id': Integer()})
     import_task_id = Keyword()
     import_status = Keyword()
 
@@ -54,7 +51,13 @@ class DigitalFileDoc(BaseDoc):
     dip = Object(properties={
         'id': Integer(),
         'identifier': Text(),
+        'title': Text(),
         'import_status': Keyword(),
+    })
+    collection = Object(properties={
+        'id': Integer(),
+        'identifier': Text(),
+        'title': Text(),
     })
 
     class Index:

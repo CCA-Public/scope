@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
-from unittest.mock import patch
 
 from dips.models import DIP
 
@@ -9,14 +8,13 @@ from dips.models import DIP
 class ImportPendingRedirectTests(TestCase):
     fixtures = ['models_to_docs']
 
-    @patch('elasticsearch_dsl.DocType.save')
-    def setUp(self, patch):
+    def setUp(self):
         User = get_user_model()
         User.objects.create_superuser('admin', 'admin@example.com', 'admin')
         self.client.login(username='admin', password='admin')
         self.dip = DIP.objects.get(pk=1)
         self.dip.import_status = DIP.IMPORT_PENDING
-        self.dip.save()
+        self.dip.save(update_es=False)
 
     def test_dip_view_redirect(self):
         url = reverse('dip', kwargs={'pk': 1})

@@ -2,7 +2,7 @@ from django.test import TestCase
 from unittest.mock import patch, Mock
 
 from dips.models import DIP
-from dips.tasks import extract_and_parse_mets, MetsTask
+from dips.tasks import extract_and_parse_mets, MetsTask, update_es_descendants
 
 
 class TasksTests(TestCase):
@@ -26,7 +26,7 @@ class TasksTests(TestCase):
         mock_1.assert_called_with('/mets.xml', 1)
         mock_2.assert_called()
 
-    @patch('dips.models.DigitalFile.save')
+    @patch('dips.models.celery_app.send_task')
     @patch('elasticsearch_dsl.DocType.save')
     def test_mets_task_after_return(self, patch, mock):
         task = MetsTask()
@@ -62,4 +62,42 @@ class TasksTests(TestCase):
         self.assertEqual(dip_1.import_status, DIP.IMPORT_SUCCESS)
         self.assertEqual(dip_2.import_status, DIP.IMPORT_FAILURE)
         # All DigitalFile descendants should be saved
-        self.assertEqual(mock.call_count, 12)
+        self.assertEqual(mock.call_count, 2)
+
+    def test_update_es_descendants_wrong_class(self):
+        with self.assertRaises(Exception):
+            update_es_descendants('DigitalFile', 1)
+
+    @patch('dips.tasks.bulk', return_value=(1, []))
+    @patch('dips.models.Collection.get_es_data_for_files')
+    @patch('dips.models.DigitalFile.objects.filter')
+    def test_update_es_descendants_collection(self, mock, mock_2, mock_3):
+        update_es_descendants('Collection', 1)
+        # The DigitalFiles should be filtered
+        mock.assert_called_with(dip__collection__pk=1)
+        # The Collection data should be obtained (actual
+        # data is tested in `test_models_to_docs`)
+        mock_2.assert_called()
+        # It's hard to assert the bulk call parameters as the second
+        # one is a generator so we'll only check that it has been called.
+        mock_3.assert_called()
+
+    @patch('dips.tasks.bulk', return_value=(1, []))
+    @patch('dips.models.DIP.get_es_data_for_files')
+    @patch('dips.models.DigitalFile.objects.filter')
+    def test_update_es_descendants_dip(self, mock, mock_2, mock_3):
+        update_es_descendants('DIP', 1)
+        # The DigitalFiles should be filtered
+        mock.assert_called_with(dip__pk=1)
+        # The DIP data should be obtained (actual
+        # data is tested in `test_models_to_docs`)
+        mock_2.assert_called()
+        # It's hard to assert the bulk call parameters as the second
+        # one is a generator so we'll only check that it has been called.
+        mock_3.assert_called()
+
+    @patch('dips.tasks.logger.info')
+    @patch('dips.tasks.bulk', return_value=(1, ['error_1', 'error_2']))
+    def test_update_es_descendants_errors_logged(self, patch, mock):
+        update_es_descendants('DIP', 1)
+        self.assertEqual(mock.call_count, 5)
