@@ -17,7 +17,8 @@ class DcDeletionTests(TestCase):
         )
 
     @patch('elasticsearch.client.Elasticsearch.delete')
-    def test_dip_deletion(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_dip_deletion(self, patch, patch_2):
         dc_count = DublinCore.objects.filter(identifier='A').count()
         self.assertEqual(dc_count, 1)
         self.dip.delete()
@@ -25,7 +26,8 @@ class DcDeletionTests(TestCase):
         self.assertEqual(dc_count, 0)
 
     @patch('elasticsearch.client.Elasticsearch.delete')
-    def test_collection_deletion(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_collection_deletion(self, patch, patch_2):
         dc_count = DublinCore.objects.all().count()
         self.assertEqual(dc_count, 2)
         self.collection.delete()

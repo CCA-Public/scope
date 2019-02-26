@@ -143,3 +143,31 @@ def update_es_descendants(class_name, pk):
         logger.info('The following errors were encountered:')
         for error in errors:
             logger.info('- %s' % error)
+
+
+@shared_task(
+    autoretry_for=(TransportError,),
+    max_retries=10, default_retry_delay=30,
+)
+def delete_es_descendants(class_name, pk):
+    """Deletes the related documents in ES based on the ancestor id."""
+    if class_name not in ['Collection', 'DIP']:
+        raise Exception('Can not delete descendants of %s.' % class_name)
+    logger.info('Deleting descendants of %s [id: %s] ' % (class_name, pk))
+    if class_name == 'Collection':
+        # DIPs and DigitalFiles use the same field to store the Collection id
+        # so we can perform a single delete_by_query request over both indexes.
+        indexes = '%s,%s' % (
+            DIP.es_doc._index._name, DigitalFile.es_doc._index._name)
+        body = {'query': {'match': {'collection.id': pk}}}
+    else:
+        indexes = DigitalFile.es_doc._index._name
+        body = {'query': {'match': {'dip.id': pk}}}
+    es = connections.get_connection()
+    response = es.delete_by_query(index=indexes, body=body)
+    logger.info('%d/%d descendants deleted.' % (
+        response['deleted'], response['total']))
+    if response['failures'] and len(response['failures']) > 0:
+        logger.info('The following errors were encountered:')
+        for error in response['failures']:
+            logger.info('- %s' % error)

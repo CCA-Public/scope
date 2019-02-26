@@ -103,11 +103,15 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
                 args=(self.__class__.__name__, self.pk))
 
     def delete(self, *args, **kwargs):
-        """
-        Extended delete to update related documents in ES and remove related
-        DublinCore in Collections and DIPs.
-        """
+        """Extended delete to remove related documents in ES."""
         self.delete_es_doc()
+        # Delete descendants if needed
+        if self.requires_es_descendants_delete():
+            # Launch async. task by name to avoid circular imports
+            # or to import the task within this function.
+            celery_app.send_task(
+                'dips.tasks.delete_es_descendants',
+                args=(self.__class__.__name__, self.pk))
         super(AbstractEsModel, self).delete(*args, **kwargs)
 
     # Declaration in abstract class must be as property to allow decorators.
@@ -123,6 +127,10 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
 
     @abstractmethod
     def requires_es_descendants_update(self):
+        """Checks if descendants need to be updated in ES."""
+
+    @abstractmethod
+    def requires_es_descendants_delete(self):
         """Checks if descendants need to be updated in ES."""
 
     def to_es_doc(self):
@@ -252,8 +260,13 @@ class Collection(AbstractEsModel):
         return data
 
     def requires_es_descendants_update(self):
+        # No metadata needs to be updated in descandant DIPs
         count = DigitalFile.objects.filter(dip__collection__pk=self.pk).count()
         return count > 0
+
+    def requires_es_descendants_delete(self):
+        # There won't be DigitalFiles if there are no DIPs
+        return self.dips.count() > 0
 
 
 class DIP(AbstractEsModel):
@@ -324,6 +337,9 @@ class DIP(AbstractEsModel):
 
     def requires_es_descendants_update(self):
         return self.digital_files.count() > 0
+
+    def requires_es_descendants_delete(self):
+        return self.requires_es_descendants_update()
 
     def get_import_error_message(self):
         # Try to get error info from TaskResult
@@ -397,6 +413,9 @@ class DigitalFile(AbstractEsModel):
         return data
 
     def requires_es_descendants_update(self):
+        return False
+
+    def requires_es_descendants_delete(self):
         return False
 
 

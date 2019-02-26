@@ -511,7 +511,8 @@ class UserAccessTests(TestCase):
         self.client.logout()
 
     @patch('dips.models.delete_document')
-    def test_delete_dip(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_delete_dip(self, patch, patch_2):
         """
         Makes post request to delete a DIP with different
         user types logged in and verifies the results.
@@ -571,7 +572,8 @@ class UserAccessTests(TestCase):
         self.assertEqual(before_count, after_count + 1)
 
     @patch('dips.models.delete_document')
-    def test_delete_collection(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_delete_collection(self, patch, patch_2):
         """
         Makes post request to delete a collection with different
         user types logged in and verifies the results.

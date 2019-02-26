@@ -31,7 +31,8 @@ class DcByDcFormTests(TestCase):
         self.assertTrue(form.fields['identifier'].error_messages)
 
     @patch('elasticsearch.client.Elasticsearch.delete')
-    def test_dip_deletion_success(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_dip_deletion_success(self, patch, patch_2):
         url = reverse('delete_dip', kwargs={'pk': self.dip.pk})
         self.assertTrue(DIP.objects.filter(dc__identifier='A').exists())
         self.client.post(url, {'identifier': 'A'})
@@ -47,7 +48,8 @@ class DcByDcFormTests(TestCase):
         self.assertTrue(form.fields['identifier'].error_messages)
 
     @patch('elasticsearch.client.Elasticsearch.delete')
-    def test_collection_deletion_success(self, patch):
+    @patch('dips.models.celery_app.send_task')
+    def test_collection_deletion_success(self, patch, patch_2):
         url = reverse('delete_collection', kwargs={'pk': self.collection.pk})
         self.assertTrue(Collection.objects.filter(dc__identifier='1').exists())
         self.client.post(url, {'identifier': '1'})

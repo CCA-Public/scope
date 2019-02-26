@@ -1,8 +1,9 @@
 from django.test import TestCase
 from unittest.mock import patch, Mock
 
-from dips.models import DIP
-from dips.tasks import extract_and_parse_mets, MetsTask, update_es_descendants
+from dips.models import DIP, DigitalFile
+from dips.tasks import (extract_and_parse_mets, MetsTask, update_es_descendants,
+                        delete_es_descendants)
 
 
 class TasksTests(TestCase):
@@ -101,3 +102,29 @@ class TasksTests(TestCase):
     def test_update_es_descendants_errors_logged(self, patch, mock):
         update_es_descendants('DIP', 1)
         self.assertEqual(mock.call_count, 5)
+
+    def test_delete_es_descendants_wrong_class(self):
+        with self.assertRaises(Exception):
+            delete_es_descendants('DigitalFile', 1)
+
+    @patch('elasticsearch.Elasticsearch.delete_by_query')
+    def test_delete_es_descendants_collection(self, mock):
+        indexes = '%s,%s' % (
+            DIP.es_doc._index._name, DigitalFile.es_doc._index._name)
+        body = {'query': {'match': {'collection.id': 1}}}
+        delete_es_descendants('Collection', 1)
+        mock.assert_called_with(index=indexes, body=body)
+
+    @patch('elasticsearch.Elasticsearch.delete_by_query')
+    def test_delete_es_descendants_dip(self, mock):
+        indexes = DigitalFile.es_doc._index._name
+        body = {'query': {'match': {'dip.id': 1}}}
+        delete_es_descendants('DIP', 1)
+        mock.assert_called_with(index=indexes, body=body)
+
+    @patch('dips.tasks.logger.info')
+    @patch('elasticsearch.Elasticsearch.delete_by_query',
+           return_value={'total': 1, 'deleted': 1, 'failures': ['error']})
+    def test_delete_es_descendants_errors_logged(self, patch, mock):
+        delete_es_descendants('DIP', 1)
+        self.assertEqual(mock.call_count, 4)

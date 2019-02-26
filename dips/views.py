@@ -581,6 +581,12 @@ def delete_collection(request, pk):
         initial={'identifier': ''},
     )
     if form.is_valid():
+        if collection.requires_es_descendants_delete():
+            messages.info(request, _(
+                'A background process has been launched to delete the '
+                'descendant Folders and Digital Files from the Elasticsearch '
+                'indexes.'
+            ))
         collection.delete()
         return redirect('collections')
 
@@ -606,6 +612,11 @@ def delete_dip(request, pk):
     )
     if form.is_valid():
         collection_pk = dip.collection.pk
+        if dip.requires_es_descendants_delete():
+            messages.info(request, _(
+                'A background process has been launched to delete the '
+                'descendant Digital Files from the Elasticsearch index.'
+            ))
         dip.delete()
         return redirect('collection', pk=collection_pk)
 
