@@ -71,7 +71,7 @@ def extract_and_parse_mets(dip_id, zip_path):
 
 @shared_task(
     autoretry_for=(TransportError, DatabaseError,),
-    max_retries=10, default_retry_delay=30,
+    max_retries=10, default_retry_delay=30, ignore_result=True
 )
 def update_es_descendants(class_name, pk):
     """
@@ -147,7 +147,7 @@ def update_es_descendants(class_name, pk):
 
 @shared_task(
     autoretry_for=(TransportError,),
-    max_retries=10, default_retry_delay=30,
+    max_retries=10, default_retry_delay=30, ignore_result=True
 )
 def delete_es_descendants(class_name, pk):
     """Deletes the related documents in ES based on the ancestor id."""
