@@ -272,7 +272,7 @@ def search(request):
             'terms',
             **{'dip.import_status': [DIP.IMPORT_PENDING, DIP.IMPORT_FAILURE]},
         )
-    fields = ['filepath', 'fileformat', 'datemodified', 'dip.identifier']
+    fields = ['filepath', 'fileformat', 'dip.identifier']
     search = add_query_to_search(search, request, fields)
     search = search.sort({sort_field: {'order': sort_dir}})
 
@@ -377,7 +377,7 @@ def dip(request, pk):
         'match',
         **{'dip.id': pk},
     )
-    fields = ['filepath', 'fileformat', 'datemodified', 'dip.identifier']
+    fields = ['filepath', 'fileformat', 'dip.identifier']
     search = add_query_to_search(search, request, fields)
     search = search.sort({sort_field: {'order': sort_dir}})
 
