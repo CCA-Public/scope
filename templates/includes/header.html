@@ -24,7 +24,7 @@
         <a class="nav-link{% if request.path == '/faq/' %} active{% endif %}" href="{% url 'faq' %}">{% trans "FAQ" %}</a>
       </li>
     </ul>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and request.path != '/' and request.path != '/search/' %}
       <form method="get" action="{% url 'search' %}" class="form-inline mt-2 mt-md-0 mr-md-2 ml-md-4">
         <div class="input-group input-group-sm">
           <input type="text" name="query" class="form-control" placeholder="{% trans "Search all digital files" %}">
