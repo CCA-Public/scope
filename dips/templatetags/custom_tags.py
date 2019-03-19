@@ -1,5 +1,7 @@
 from django import template
 
+import os
+
 register = template.Library()
 
 
@@ -34,3 +36,9 @@ def render_label(field):
 def render_label_with_class(field, class_attr):
     """Add class attribute to field label tag and render without suffix."""
     return field.label_tag(attrs={'class': class_attr}, label_suffix='')
+
+
+@register.filter
+def basename(path):
+    """Returns the filename from a path."""
+    return os.path.basename(path)

@@ -16,7 +16,8 @@
   </ol>
   <div class="row">
     <div class="col-md-7">
-      <h2 class="mb-3">{% trans "Digital file description" %}</h2>
+      <h2 class="mb-4">{% trans "Digital file description" %}</h2>
+      <p class="mb-4"><strong>{{ digitalfile.filepath|basename }}</strong></p>
       <p><strong>{% trans "UUID" %}:</strong> {{ digitalfile.uuid }}</p>
       <p><strong>{% trans "Filepath" %}:</strong> {{ digitalfile.filepath }}</p>
       <p><strong>{% trans "File format" %}:</strong> {{ digitalfile.fileformat }}</p>
