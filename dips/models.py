@@ -377,7 +377,7 @@ class DigitalFile(AbstractEsModel):
     # in UTC in the database, uses time-zone-aware datetime objects internally,
     # and translates them to the TIME_ZONE setting in templates and forms.
     datemodified = models.DateTimeField(blank=True, null=True)
-    puid = models.CharField(max_length=11, blank=True)
+    puid = models.CharField(max_length=200, blank=True)
     amdsec = models.CharField(max_length=12)
     hashtype = models.CharField(max_length=7)
     hashvalue = models.CharField(max_length=128)
