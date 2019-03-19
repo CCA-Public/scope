@@ -56,7 +56,7 @@
         <tr>
           <td>{{ digital_file.filepath }}</td>
           <td>{{ digital_file.fileformat }}</td>
-          <td>{{ digital_file.size_bytes }}</td>
+          <td>{{ digital_file.size_bytes|filesizeformat }}</td>
           <td>{{ digital_file.datemodified|default:'' }}</td>
           <td>
             {% if 'import_status' not in digital_file.dip or digital_file.dip.import_status == statuses.SUCCESS %}

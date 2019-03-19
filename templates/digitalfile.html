@@ -22,7 +22,7 @@
       <p><strong>{% trans "File format" %}:</strong> {{ digitalfile.fileformat }}</p>
       <p><strong>{% trans "File format version" %}:</strong> {{ digitalfile.formatversion }}</p>
       <p><strong>{% trans "Size (bytes)" %}:</strong> {{ digitalfile.size_bytes }}</p>
-      <p><strong>{% trans "Size (human readable)" %}:</strong> {{ digitalfile.size_human }}</p>
+      <p><strong>{% trans "Size (human readable)" %}:</strong> {{ digitalfile.size_bytes|filesizeformat }}</p>
       <p><strong>{% trans "Date modified" %}:</strong> {{ digitalfile.datemodified|default:"" }}</p>
       <p><strong>{% trans "PRONOM ID" %}:</strong> <a href="http://nationalarchives.gov.uk/PRONOM/{{digitalfile.puid}}">{{ digitalfile.puid }}</a></p>
       <p><strong>{% trans "METS amdSec" %}:</strong> {{ digitalfile.amdsec }}</p>

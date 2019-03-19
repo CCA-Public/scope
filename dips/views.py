@@ -274,7 +274,7 @@ def search(request):
     table_headers = [
         {'label': _('Filepath'), 'sort_param': 'path'},
         {'label': _('Format'), 'sort_param': 'format'},
-        {'label': _('Size (bytes)'), 'sort_param': 'size'},
+        {'label': _('Size'), 'sort_param': 'size'},
         {'label': _('Last modified'), 'sort_param': 'date'},
         {'label': _('Collection name')},
         {'label': _('File details')},
@@ -386,7 +386,7 @@ def dip(request, pk):
     table_headers = [
         {'label': _('Filepath'), 'sort_param': 'path'},
         {'label': _('Format'), 'sort_param': 'format'},
-        {'label': _('Size (bytes)'), 'sort_param': 'size'},
+        {'label': _('Size'), 'sort_param': 'size'},
         {'label': _('Last modified'), 'sort_param': 'date'},
         {'label': _('File details')},
     ]
