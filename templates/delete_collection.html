@@ -7,8 +7,9 @@
 
 {% block content %}
   <ol class="breadcrumb">
+    {% trans "Untitled" as untitled %}
     <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'collection' collection.pk %}">{{ collection }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collection' collection.pk %}">{{ collection.dc.title|default:untitled }}</a></li>
     <li class="breadcrumb-item active">{% trans "Delete" %}</li>
   </ol>
   <h3>{% trans "Confirm Deletion" %}</h3>

@@ -9,9 +9,10 @@
 
 {% block content %}
   <ol class="breadcrumb">
+    {% trans "Untitled" as untitled %}
     <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection }}</a></li>
-    <li class="breadcrumb-item active">{{ dip }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection.dc.title|default:untitled }}</a></li>
+    <li class="breadcrumb-item active">{{ dip.dc.title|default:untitled }}</li>
   </ol>
   <div class="row">
     <div class="col-md-7">

@@ -9,10 +9,11 @@
 
 {% block content %}
   <ol class="breadcrumb">
+    {% trans "Untitled" as untitled %}
     <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'collection' digitalfile.dip.collection.pk %}">{{ digitalfile.dip.collection }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'dip' digitalfile.dip.pk %}">{{ digitalfile.dip }}</a></li>
-    <li class="breadcrumb-item active">{{ digitalfile.uuid }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'collection' digitalfile.dip.collection.pk %}">{{ digitalfile.dip.collection.dc.title|default:untitled }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dip' digitalfile.dip.pk %}">{{ digitalfile.dip.dc.title|default:untitled }}</a></li>
+    <li class="breadcrumb-item active">{{ digitalfile.filepath|basename }}</li>
   </ol>
   <div class="row">
     <div class="col-md-7">
