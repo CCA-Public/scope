@@ -258,7 +258,7 @@ def search(request):
             'terms',
             **{'dip.import_status': [DIP.IMPORT_PENDING, DIP.IMPORT_FAILURE]},
         )
-    fields = ['filepath', 'fileformat', 'dip.identifier', 'collection.title']
+    fields = ['filepath', 'fileformat', 'collection.title']
     search = add_query_to_search(search, request.GET.get('query', ''), fields)
     search = search.sort({sort_field: {'order': sort_dir}})
 
@@ -277,7 +277,6 @@ def search(request):
         {'label': _('Size (bytes)'), 'sort_param': 'size'},
         {'label': _('Last modified'), 'sort_param': 'date'},
         {'label': _('Collection name')},
-        {'label': _('View parent folder')},
         {'label': _('File details')},
     ]
 
