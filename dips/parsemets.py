@@ -89,7 +89,7 @@ class METS(object):
             try:
                 digitalfile = DigitalFile.objects.get(uuid=uuid)
                 # Don't update DigitalFile from other DIP
-                if digitalfile.dip.id != dip.id:
+                if digitalfile.dip.pk != dip.pk:
                     raise METSError(
                         'An original file in this METS file has the same UUID '
                         'as an existing one from another DIP '
@@ -125,7 +125,7 @@ class METS(object):
                 try:
                     premisevent = PREMISEvent.objects.get(uuid=uuid)
                     # Don't update PREMISEvent from other DigitalFile
-                    if premisevent.digitalfile.id != digitalfile.id:
+                    if premisevent.digitalfile.uuid != digitalfile.uuid:
                         raise METSError(
                             'A PREMISEvent in this METS file has the same '
                             'UUID as an existing one from another DIP '
