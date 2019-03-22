@@ -154,10 +154,8 @@ class METS(object):
         dc_data = self._parse_dc()
         if dc_data:
             logger.info('Updating DIP Dublin Core metadata')
-            # Do not change identifier
-            dc_data.pop('identifier', None)
-            # No validation is needed as all the other fields
-            # are non required string fields.
+            # No validation is needed as all the fields are non
+            # required string fields initiated with empty strings.
             dip.dc = update_instance_from_dict(dip.dc, dc_data)
             dip.dc.save()
         else:
@@ -251,9 +249,17 @@ class METS(object):
                 dc_xml = dmd.find('mdWrap/xmlData/dublincore')
                 break
 
-        # Parse all DC elements to a dictionary
-        dc_model = dict()
+        # Parse all DC elements to a dictionary. Ignore identifier and
+        # initiate all fields with empty strings as no one can be null.
+        dc_model = {
+            'title': '', 'creator': '', 'subject': '', 'description': '',
+            'publisher': '', 'contributor': '', 'date': '', 'type': '',
+            'format': '', 'source': '', 'language': '', 'coverage': '',
+            'rights': '',
+        }
         for elem in dc_xml:
-            dc_model[str(elem.tag)] = elem.text
+            key = str(elem.tag)
+            if key in dc_model:
+                dc_model[key] = elem.text
 
         return dc_model
