@@ -1,5 +1,5 @@
 {% if dc %}
   {% for label, value in dc.get_display_data.items %}
-    <p><strong>{{ label|capfirst }}:</strong> {{ value }}</p>
+    <p><strong>{{ label|capfirst }}:</strong> {{ value|linebreaksbr }}</p>
   {% endfor %}
 {% endif %}

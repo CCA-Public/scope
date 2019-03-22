@@ -159,7 +159,7 @@ class DublinCore(models.Model):
     type = models.CharField(_('type'), max_length=200, blank=True)
     format = models.TextField(_('format'), blank=True)
     source = models.CharField(_('source'), max_length=200, blank=True)
-    language = models.CharField(_('language'), max_length=20, blank=True)
+    language = models.CharField(_('language'), max_length=200, blank=True)
     coverage = models.CharField(_('coverage'), max_length=200, blank=True)
     rights = models.CharField(_('rights'), max_length=200, blank=True)
 
