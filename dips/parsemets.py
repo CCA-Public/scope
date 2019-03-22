@@ -259,7 +259,8 @@ class METS(object):
         }
         for elem in dc_xml:
             key = str(elem.tag)
-            if key in dc_model:
-                dc_model[key] = elem.text
+            value = str(elem.text)
+            if key in dc_model and value:
+                dc_model[key] = value
 
         return dc_model
