@@ -1,0 +1,21 @@
+{% load i18n %}
+
+{% for format in filters.formats %}
+  <a href="#" class="badge badge-primary mb-1 mr-1 digital-file-filter-tag" data-remove-param="for" data-remove-value="{{ format }}">
+    {{ format }}
+    <i class="fas fa-times ml-1"></i>
+  </a>
+{% endfor %}
+{% if filters.start_date or filters.end_date %}
+  {% trans "Undefined" as undefined %}
+  <a href="#" class="badge badge-primary mb-1 mr-1 digital-file-filter-tag" data-remove-param="dates">
+    {{ filters.start_date|default:undefined }} - {{ filters.end_date|default:undefined }}
+    <i class="fas fa-times ml-1"></i>
+  </a>
+{% endif %}
+{% for collection in filters.collections %}
+  <a href="#" class="badge badge-primary mb-1 mr-1 digital-file-filter-tag" data-remove-param="col" data-remove-value="{{ collection }}">
+    {{ collection }}
+    <i class="fas fa-times ml-1"></i>
+  </a>
+{% endfor %}

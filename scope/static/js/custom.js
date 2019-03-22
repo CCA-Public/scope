@@ -7,7 +7,7 @@ $(document).ready(function() {
     orientation: 'bottom auto',
     language: $('html')[0].lang,
   });
-  
+
   /*
   Language link click listener:
   Changes the language hidden input value on the sibling language
@@ -86,5 +86,36 @@ $(document).ready(function() {
     if (event.which == 13) {
       $(this).closest('form').submit();
     }
+  });
+
+  /* Remove digital file filter(s) on filter tag click. */
+  $('body').on('click', '.digital-file-filter-tag', function () {
+    var $this = $(this);
+    var url = new URL(document.location);
+    var param = $this.data('removeParam');
+    // Special case for dates
+    if (param === 'dates') {
+      // Remove both start_date and end_date params
+      url.searchParams.delete('start_date');
+      url.searchParams.delete('end_date');
+    } else {
+      // Remove only selected value on multiple selection params
+      var removeValue = $this.data('removeValue');
+      var values = url.searchParams.getAll(param);
+      var index = values.indexOf(removeValue);
+      if (index >= 0) {
+        values.splice(index, 1);
+        // Remove all values from URL
+        url.searchParams.delete(param);
+        // Add them one by one with append to use the same URL format
+        // as submitting the form, wich is `param=value1&param=value2`
+        // instead of `param=value1,value2` (used in set with array).
+        values.forEach(function(value) {
+          url.searchParams.append(param, value);
+        });
+      }
+    }
+    // Redirect with transformed URL
+    document.location.href = url.href;
   });
 });

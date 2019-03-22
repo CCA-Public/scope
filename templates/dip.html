@@ -38,14 +38,15 @@
   </div>
   <h2 class="mt-3">{% trans "Digital files in this folder" %}</h2>
   {% include 'includes/digital_file_filters.html' %}
-  <span class="d-inline-block mt-3 mb-2">
+  <span class="d-inline-block mt-3 mb-1 mr-1">
     {% blocktrans trimmed count counter=page.paginator.count %}
       <strong>{{ counter }}</strong> digital file
     {% plural %}
       <strong>{{ counter }}</strong> digital files
     {% endblocktrans %}
   </span>
-  <div class="table-responsive">
+  {% include 'includes/digital_file_filter_tags.html' %}
+  <div class="table-responsive pt-2">
     <table class="table table-striped table-condensed mb-0 border">
       {% include 'includes/table_header.html' with headers=table_headers %}
       {% if not digital_files %}
