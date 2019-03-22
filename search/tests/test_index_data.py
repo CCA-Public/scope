@@ -6,6 +6,7 @@ from dips.models import Collection, DIP, DigitalFile
 
 
 class IndexDataTests(TestCase):
+    # This fixture is located in the dips app to avoid duplication
     fixtures = ['index_data']
 
     # Patch tqdm and print to disable output

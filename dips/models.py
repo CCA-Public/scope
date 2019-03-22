@@ -17,7 +17,7 @@ from django_celery_results.models import TaskResult as CeleryTaskResult
 from jsonfield import JSONField
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
-from search.functions import delete_document
+from search.helpers import delete_document
 from scope.celery import app as celery_app
 from .helpers import add_if_not_empty
 

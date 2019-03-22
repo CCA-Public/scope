@@ -57,7 +57,7 @@ class DigitalFileDoc(BaseDoc):
     collection = Object(properties={
         'id': Integer(),
         'identifier': Text(),
-        'title': Text(),
+        'title': Text(fields={'raw': Keyword()}),
     })
 
     class Index:

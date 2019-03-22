@@ -1,4 +1,5 @@
 from django.db.models import FieldDoesNotExist
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 import math
 
@@ -36,3 +37,46 @@ def update_instance_from_dict(instance, dict):
             continue
         setattr(instance, field, value)
     return instance
+
+
+def get_sort_params(params, options, default):
+    """
+    Get sort option and direction from params. Check options dict. for
+    available choices and use default if no option is passed on the params
+    or if the option is not valid. Defaults to asc. sort direction.
+    """
+    option = params.get('sort', default)
+    if option not in list(options.keys()):
+        option = default
+
+    direction = params.get('sort_dir', 'asc')
+    if direction not in ['asc', 'desc']:
+        direction = 'asc'
+
+    return (option, direction)
+
+
+def get_page_from_search(search, params):
+    """
+    Create paginator and return current page based on the current search
+    and the page and limit parameters. Limit defaults to 10 and
+    can't be set over 100. The search parameter can be an Elasticsearch
+    search or a Django model QuerySet.
+    """
+    try:
+        limit = int(params.get('limit', 10))
+        if limit <= 0 or limit > 100:
+            raise ValueError
+    except ValueError:
+        limit = 10
+
+    paginator = Paginator(search, limit)
+    page_no = params.get('page')
+    try:
+        page = paginator.page(page_no)
+    except PageNotAnInteger:
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+
+    return page

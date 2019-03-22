@@ -1,72 +1,55 @@
+from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms import modelform_factory
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
+from .helpers import get_sort_params, get_page_from_search
 from .models import User, Collection, DIP, DigitalFile, DublinCore
-from .forms import DeleteByDublinCoreForm, UserCreationForm, UserChangeForm, DublinCoreSettingsForm
+from .forms import (DeleteByDublinCoreForm, UserCreationForm, UserChangeForm,
+                    DublinCoreSettingsForm)
 from .tasks import extract_and_parse_mets
+from search.helpers import (add_query_to_search, add_digital_file_aggs,
+                            add_digital_file_filters)
 
 
-def get_sort_params(request, options, default):
+def _get_and_validate_digital_file_filters(request):
     """
-    Get sort option and direction from request. Check options dict. for
-    available choices and use default if no option is passed on the request
-    or if the option is not valid. Defaults to asc. sort direction.
+    Obtains the digital file filters from the request GET parameteres and
+    validates the start and end dates. Returns two dics, the first one with
+    all the filters set (to maintain their value in the templates) and the
+    second one with only the valid filters (to be applied to the search).
+    Adds error messages to the request for invalid dates.
     """
-    option = default
-    if 'sort' in request.GET and request.GET['sort'] in list(options.keys()):
-        option = request.GET['sort']
+    filters = {
+        'formats': request.GET.getlist('for', []),
+        'collections': request.GET.getlist('col', []),
+        'start_date': request.GET.get('start_date', ''),
+        'end_date': request.GET.get('end_date', ''),
+    }
+    valid_filters = filters.copy()
+    if filters['start_date']:
+        try:
+            datetime.strptime(filters['start_date'], '%Y-%m-%d')
+        except ValueError:
+            messages.error(request, _(
+                'Incorrect date format for start date (%(date)s). '
+                'Expected: yyyy-mm-dd.' % {'date': filters['start_date']}
+            ))
+            valid_filters.pop('start_date')
+    if filters['end_date']:
+        try:
+            datetime.strptime(filters['end_date'], '%Y-%m-%d')
+        except ValueError:
+            messages.error(request, _(
+                'Incorrect date format for end date (%(date)s). '
+                'Expected: yyyy-mm-dd.' % {'date': filters['end_date']}
+            ))
+            valid_filters.pop('end_date')
 
-    direction = 'asc'
-    if 'sort_dir' in request.GET and request.GET['sort_dir'] in ['asc', 'desc']:
-        direction = request.GET['sort_dir']
-
-    return (option, direction)
-
-
-def add_query_to_search(search, request, fields):
-    """
-    Check if a `query` parameter has been sent in the request and add a
-    `simple_query_string` to the search over a given list of fields.
-    """
-    if 'query' in request.GET and request.GET['query']:
-        search = search.query(
-            'simple_query_string',
-            query=request.GET['query'],
-            default_operator='and',
-            fields=fields,
-        )
-
-    return search
-
-
-def get_page_from_search(search, request):
-    """
-    Create paginator and return current page based on the current search
-    and the page and limit request parameters. Limit defaults to 10 and
-    can't be set over 100.
-    """
-    try:
-        limit = int(request.GET.get('limit', 10))
-        if limit <= 0 or limit > 100:
-            raise ValueError
-    except ValueError:
-        limit = 10
-
-    paginator = Paginator(search, limit)
-    page_no = request.GET.get('page')
-    try:
-        page = paginator.page(page_no)
-    except PageNotAnInteger:
-        page = paginator.page(1)
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
-
-    return page
+    return (filters, valid_filters)
 
 
 @login_required(login_url='/login/')
@@ -76,7 +59,8 @@ def collections(request, template):
         'identifier': 'dc.identifier.raw',
         'title': 'dc.title.raw',
     }
-    sort_option, sort_dir = get_sort_params(request, sort_options, 'identifier')
+    sort_option, sort_dir = get_sort_params(
+        request.GET, sort_options, 'identifier')
     sort_field = sort_options.get(sort_option)
 
     # Search:
@@ -85,11 +69,12 @@ def collections(request, template):
     # the collections page.
     search = Collection.es_doc.search()
     if template == 'collections.html':
-        search = add_query_to_search(search, request, ['dc.*'])
+        search = add_query_to_search(
+            search, request.GET.get('query', ''), ['dc.*'])
     search = search.sort({sort_field: {'order': sort_dir}})
 
     # Pagination
-    page = get_page_from_search(search, request)
+    page = get_page_from_search(search, request.GET)
     collections = page.object_list.execute()
 
     table_headers = [
@@ -131,7 +116,8 @@ def users(request):
         'email': 'email',
         'groups': 'group_names'
     }
-    sort_option, sort_dir = get_sort_params(request, sort_options, 'username')
+    sort_option, sort_dir = get_sort_params(
+        request.GET, sort_options, 'username')
     sort_field = sort_options.get(sort_option)
     if sort_dir == 'desc':
         sort_field = '-%s' % sort_field
@@ -143,7 +129,7 @@ def users(request):
     users = User.get_users(query, sort_field)
 
     # Pagination
-    page = get_page_from_search(users, request)
+    page = get_page_from_search(users, request.GET)
     users = page.object_list
 
     table_headers = [
@@ -260,7 +246,7 @@ def search(request):
         'size': 'size_bytes',
         'date': 'datemodified',
     }
-    sort_option, sort_dir = get_sort_params(request, sort_options, 'path')
+    sort_option, sort_dir = get_sort_params(request.GET, sort_options, 'path')
     sort_field = sort_options.get(sort_option)
 
     # Search
@@ -273,12 +259,17 @@ def search(request):
             **{'dip.import_status': [DIP.IMPORT_PENDING, DIP.IMPORT_FAILURE]},
         )
     fields = ['filepath', 'fileformat', 'dip.identifier', 'collection.title']
-    search = add_query_to_search(search, request, fields)
+    search = add_query_to_search(search, request.GET.get('query', ''), fields)
     search = search.sort({sort_field: {'order': sort_dir}})
 
+    # Aggregations and filters
+    search = add_digital_file_aggs(search)
+    filters, valid_filters = _get_and_validate_digital_file_filters(request)
+    search = add_digital_file_filters(search, valid_filters)
+
     # Pagination
-    page = get_page_from_search(search, request)
-    digital_files = page.object_list.execute()
+    page = get_page_from_search(search, request.GET)
+    es_response = page.object_list.execute()
 
     table_headers = [
         {'label': _('Filepath'), 'sort_param': 'path'},
@@ -291,7 +282,9 @@ def search(request):
     ]
 
     return render(request, 'search.html', {
-        'digital_files': digital_files,
+        'digital_files': es_response.hits,
+        'aggs': es_response.aggregations,
+        'filters': filters,
         'table_headers': table_headers,
         'sort_option': sort_option,
         'sort_dir': sort_dir,
@@ -309,7 +302,8 @@ def collection(request, pk):
         'identifier': 'dc.identifier.raw',
         'title': 'dc.title.raw',
     }
-    sort_option, sort_dir = get_sort_params(request, sort_options, 'identifier')
+    sort_option, sort_dir = get_sort_params(
+        request.GET, sort_options, 'identifier')
     sort_field = sort_options.get(sort_option)
 
     # Search
@@ -324,11 +318,11 @@ def collection(request, pk):
             'terms',
             import_status=[DIP.IMPORT_PENDING, DIP.IMPORT_FAILURE],
         )
-    search = add_query_to_search(search, request, ['dc.*'])
+    search = add_query_to_search(search, request.GET.get('query', ''), ['dc.*'])
     search = search.sort({sort_field: {'order': sort_dir}})
 
     # Pagination
-    page = get_page_from_search(search, request)
+    page = get_page_from_search(search, request.GET)
     dips = page.object_list.execute()
 
     table_headers = [
@@ -369,7 +363,7 @@ def dip(request, pk):
         'size': 'size_bytes',
         'date': 'datemodified',
     }
-    sort_option, sort_dir = get_sort_params(request, sort_options, 'path')
+    sort_option, sort_dir = get_sort_params(request.GET, sort_options, 'path')
     sort_field = sort_options.get(sort_option)
 
     # Search
@@ -378,12 +372,17 @@ def dip(request, pk):
         **{'dip.id': pk},
     )
     fields = ['filepath', 'fileformat']
-    search = add_query_to_search(search, request, fields)
+    search = add_query_to_search(search, request.GET.get('query', ''), fields)
     search = search.sort({sort_field: {'order': sort_dir}})
 
+    # Aggregations and filters
+    search = add_digital_file_aggs(search, collections=False)
+    filters, valid_filters = _get_and_validate_digital_file_filters(request)
+    search = add_digital_file_filters(search, valid_filters)
+
     # Pagination
-    page = get_page_from_search(search, request)
-    digital_files = page.object_list.execute()
+    page = get_page_from_search(search, request.GET)
+    es_response = page.object_list.execute()
 
     table_headers = [
         {'label': _('Filepath'), 'sort_param': 'path'},
@@ -395,7 +394,9 @@ def dip(request, pk):
 
     return render(request, 'dip.html', {
         'dip': dip,
-        'digital_files': digital_files,
+        'digital_files': es_response.hits,
+        'aggs': es_response.aggregations,
+        'filters': filters,
         'table_headers': table_headers,
         'sort_option': sort_option,
         'sort_dir': sort_dir,
