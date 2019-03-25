@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-16 10:39+0000\n"
+"POT-Creation-Date: 2019-03-25 14:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: dips/forms.py:14 dips/views.py:96 dips/views.py:334
+#: dips/forms.py:14 dips/views.py:81 dips/views.py:328
 msgid "Identifier"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Administrator"
 msgstr ""
 
-#: dips/forms.py:31 dips/forms.py:72 dips/views.py:154
+#: dips/forms.py:31 dips/forms.py:72 dips/views.py:140
 msgid "Groups"
 msgstr ""
 
@@ -59,163 +59,197 @@ msgid ""
 "Folder view pages."
 msgstr ""
 
-#: dips/models.py:31
+#: dips/models.py:32
 msgid "Error trace:"
 msgstr ""
 
-#: dips/models.py:115
+#: dips/models.py:151
 msgid "identifier"
 msgstr ""
 
-#: dips/models.py:116 dips/tests/test_dublin_core_settings.py:10
+#: dips/models.py:152 dips/tests/test_dublin_core_settings.py:10
 msgid "title"
 msgstr ""
 
-#: dips/models.py:117 dips/tests/test_dublin_core_settings.py:10
+#: dips/models.py:153 dips/tests/test_dublin_core_settings.py:10
 msgid "creator"
 msgstr ""
 
-#: dips/models.py:118 dips/tests/test_dublin_core_settings.py:11
+#: dips/models.py:154 dips/tests/test_dublin_core_settings.py:11
 msgid "subject"
 msgstr ""
 
-#: dips/models.py:119 dips/tests/test_dublin_core_settings.py:11
+#: dips/models.py:155 dips/tests/test_dublin_core_settings.py:11
 msgid "description"
 msgstr ""
 
-#: dips/models.py:120 dips/tests/test_dublin_core_settings.py:12
+#: dips/models.py:156 dips/tests/test_dublin_core_settings.py:12
 msgid "publisher"
 msgstr ""
 
-#: dips/models.py:121 dips/tests/test_dublin_core_settings.py:12
+#: dips/models.py:157 dips/tests/test_dublin_core_settings.py:12
 msgid "contributor"
 msgstr ""
 
-#: dips/models.py:122 dips/tests/test_dublin_core_settings.py:13
+#: dips/models.py:158 dips/tests/test_dublin_core_settings.py:13
 msgid "date"
 msgstr ""
 
-#: dips/models.py:123 dips/tests/test_dublin_core_settings.py:13
+#: dips/models.py:159 dips/tests/test_dublin_core_settings.py:13
 msgid "type"
 msgstr ""
 
-#: dips/models.py:124 dips/tests/test_dublin_core_settings.py:14
+#: dips/models.py:160 dips/tests/test_dublin_core_settings.py:14
 msgid "format"
 msgstr ""
 
-#: dips/models.py:125 dips/tests/test_dublin_core_settings.py:14
+#: dips/models.py:161 dips/tests/test_dublin_core_settings.py:14
 msgid "source"
 msgstr ""
 
-#: dips/models.py:126 dips/tests/test_dublin_core_settings.py:15
+#: dips/models.py:162 dips/tests/test_dublin_core_settings.py:15
 msgid "language"
 msgstr ""
 
-#: dips/models.py:127 dips/tests/test_dublin_core_settings.py:15
+#: dips/models.py:163 dips/tests/test_dublin_core_settings.py:15
 msgid "coverage"
 msgstr ""
 
-#: dips/models.py:128 dips/tests/test_dublin_core_settings.py:16
+#: dips/models.py:164 dips/tests/test_dublin_core_settings.py:16
 msgid "rights"
 msgstr ""
 
-#: dips/models.py:201
+#: dips/models.py:237
 msgid "finding aid"
 msgstr ""
 
-#: dips/models.py:221
+#: dips/models.py:273
 msgid "objects zip file"
 msgstr ""
 
-#: dips/models.py:226
+#: dips/models.py:278
 msgid "collection"
 msgstr ""
 
-#: dips/models.py:287
+#: dips/models.py:350
 msgid "A related task result could not be found."
 msgstr ""
 
-#: dips/models.py:289
+#: dips/models.py:352
 #, python-format
 msgid ""
 "An error occurred during the process executed to extract and parse the METS "
 "file. %(error_message)s Please, contact an administrator."
 msgstr ""
 
-#: dips/views.py:97 dips/views.py:335
+#: dips/views.py:38
+#, python-format
+msgid "Incorrect date format for start date (%(date)s). Expected: yyyy-mm-dd."
+msgstr ""
+
+#: dips/views.py:47
+#, python-format
+msgid "Incorrect date format for end date (%(date)s). Expected: yyyy-mm-dd."
+msgstr ""
+
+#: dips/views.py:82 dips/views.py:329
 msgid "Title"
 msgstr ""
 
-#: dips/views.py:98 dips/views.py:336
+#: dips/views.py:83 dips/views.py:330
 msgid "Date"
 msgstr ""
 
-#: dips/views.py:99 dips/views.py:337
+#: dips/views.py:84 dips/views.py:331
 msgid "Description"
 msgstr ""
 
-#: dips/views.py:100 dips/views.py:338
+#: dips/views.py:85 dips/views.py:332
 msgid "Details"
 msgstr ""
 
-#: dips/views.py:150
+#: dips/views.py:136
 msgid "Username"
 msgstr ""
 
-#: dips/views.py:151
+#: dips/views.py:137
 msgid "First name"
 msgstr ""
 
-#: dips/views.py:152
+#: dips/views.py:138
 msgid "Last name"
 msgstr ""
 
-#: dips/views.py:153
+#: dips/views.py:139
 msgid "Email"
 msgstr ""
 
-#: dips/views.py:155
+#: dips/views.py:141
 msgid "Active"
 msgstr ""
 
-#: dips/views.py:156
+#: dips/views.py:142
 msgid "Admin"
 msgstr ""
 
-#: dips/views.py:157 templates/collection.html:22 templates/dip.html:21
-#: templates/edit_collection.html:12 templates/edit_dip.html:13
+#: dips/views.py:143 templates/collection.html:23 templates/dip.html:22
+#: templates/edit_collection.html:13 templates/edit_dip.html:14
 msgid "Edit"
 msgstr ""
 
-#: dips/views.py:284 dips/views.py:388 templates/digitalfile.html:21
+#: dips/views.py:275 dips/views.py:387 templates/digitalfile.html:22
 msgid "Filepath"
 msgstr ""
 
-#: dips/views.py:285 dips/views.py:389
+#: dips/views.py:276 dips/views.py:388
 msgid "Format"
 msgstr ""
 
-#: dips/views.py:286 dips/views.py:390 templates/digitalfile.html:24
-msgid "Size (bytes)"
+#: dips/views.py:277 dips/views.py:389
+msgid "Size"
 msgstr ""
 
-#: dips/views.py:287 dips/views.py:391
+#: dips/views.py:278 dips/views.py:390
 msgid "Last modified"
 msgstr ""
 
-#: dips/views.py:288
-msgid "View parent folder"
+#: dips/views.py:279
+msgid "Collection name"
 msgstr ""
 
-#: dips/views.py:289 dips/views.py:392
+#: dips/views.py:280 dips/views.py:391
 msgid "File details"
 msgstr ""
 
-#: dips/views.py:493
+#: dips/views.py:492
 msgid ""
 "A background process has been launched to extract and parse the METS file. "
 "After the process finishes and the interface is reloaded, a link to the "
 "Folder will show up in the Folders table at the related Collection page."
+msgstr ""
+
+#: dips/views.py:528
+msgid ""
+"A background process has been launched to update the Collection metadata in "
+"the Elasticsearch index for the related Digital Files."
+msgstr ""
+
+#: dips/views.py:561
+msgid ""
+"A background process has been launched to update the Folder metadata in the "
+"Elasticsearch index for the related Digital Files."
+msgstr ""
+
+#: dips/views.py:586
+msgid ""
+"A background process has been launched to delete the descendant Folders and "
+"Digital Files from the Elasticsearch indexes."
+msgstr ""
+
+#: dips/views.py:617
+msgid ""
+"A background process has been launched to delete the descendant Digital "
+"Files from the Elasticsearch index."
 msgstr ""
 
 #: scope/settings.py:121
@@ -234,59 +268,66 @@ msgstr ""
 #: templates/collection.html:12 templates/delete_collection.html:10
 #: templates/delete_dip.html:10 templates/digitalfile.html:12
 #: templates/dip.html:12 templates/edit_collection.html:10
-#: templates/edit_dip.html:10 templates/includes/header.html:20
-#: templates/new_collection.html:10 templates/new_dip.html:10
+#: templates/edit_dip.html:10 templates/search.html:33
+msgid "Untitled"
+msgstr ""
+
+#: templates/collection.html:13 templates/delete_collection.html:11
+#: templates/delete_dip.html:11 templates/digitalfile.html:13
+#: templates/dip.html:13 templates/edit_collection.html:11
+#: templates/edit_dip.html:11 templates/includes/digital_file_filters.html:34
+#: templates/includes/header.html:20 templates/new_collection.html:10
+#: templates/new_dip.html:10
 msgid "Collections"
 msgstr ""
 
-#: templates/collection.html:17
+#: templates/collection.html:18
 msgid "Collection description"
 msgstr ""
 
-#: templates/collection.html:20
+#: templates/collection.html:21
 msgid "Finding aid"
 msgstr ""
 
-#: templates/collection.html:25 templates/delete_collection.html:12
-#: templates/delete_collection.html:19 templates/delete_dip.html:13
-#: templates/delete_dip.html:20 templates/dip.html:24
+#: templates/collection.html:26 templates/delete_collection.html:13
+#: templates/delete_collection.html:20 templates/delete_dip.html:14
+#: templates/delete_dip.html:21 templates/dip.html:25
 msgid "Delete"
 msgstr ""
 
-#: templates/collection.html:30
+#: templates/collection.html:31
 msgid "Folders in this collection"
 msgstr ""
 
-#: templates/collection.html:32
+#: templates/collection.html:33
 #, python-format
 msgid "<strong>%(counter)s</strong> folder"
 msgid_plural "<strong>%(counter)s</strong> folders"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/collection.html:38 templates/dip.html:46 templates/search.html:6
-#: templates/users.html:17
+#: templates/collection.html:39 templates/search.html:6 templates/users.html:17
 msgid "Search"
 msgstr ""
 
-#: templates/collection.html:45 templates/collections.html:24
-#: templates/dip.html:53 templates/home.html:36 templates/search.html:24
+#: templates/collection.html:46 templates/collections.html:24
+#: templates/dip.html:54 templates/home.html:36 templates/search.html:24
 #: templates/users.html:24
 msgid "No matching records found"
 msgstr ""
 
-#: templates/collection.html:56 templates/collections.html:33
-#: templates/dip.html:64 templates/home.html:44 templates/search.html:36
+#: templates/collection.html:57 templates/collections.html:33
+#: templates/dip.html:65 templates/home.html:44 templates/search.html:37
 #: templates/users.html:36
 msgid "See more"
 msgstr ""
 
-#: templates/collection.html:58 templates/dip.html:66 templates/search.html:38
+#: templates/collection.html:59 templates/dip.html:67 templates/search.html:39
 msgid "See error"
 msgstr ""
 
-#: templates/collection.html:60 templates/collection.html:61
-#: templates/search.html:40 templates/search.html:41
+#: templates/collection.html:61 templates/collection.html:62
+#: templates/search.html:41 templates/search.html:42
 msgid "Import in progress"
 msgstr ""
 
@@ -321,11 +362,11 @@ msgstr ""
 msgid "Delete Collection"
 msgstr ""
 
-#: templates/delete_collection.html:14
+#: templates/delete_collection.html:15
 msgid "Confirm Deletion"
 msgstr ""
 
-#: templates/delete_collection.html:15
+#: templates/delete_collection.html:16
 msgid ""
 "Note: Deleting this Collection will also delete all child records (DIPs, "
 "digital files, and PREMIS events)."
@@ -335,11 +376,11 @@ msgstr ""
 msgid "Delete Folder"
 msgstr ""
 
-#: templates/delete_dip.html:15
+#: templates/delete_dip.html:16
 msgid "Confirm deletion"
 msgstr ""
 
-#: templates/delete_dip.html:16
+#: templates/delete_dip.html:17
 msgid ""
 "Note: Deleting this DIP will also delete all child records (digital files "
 "and PREMIS events)."
@@ -350,91 +391,78 @@ msgstr ""
 msgid "Digital file %(digitalfile)s"
 msgstr ""
 
-#: templates/digitalfile.html:19
+#: templates/digitalfile.html:20
 msgid "Digital file description"
 msgstr ""
 
-#: templates/digitalfile.html:20
-msgid "UUID"
-msgstr ""
-
-#: templates/digitalfile.html:22
+#: templates/digitalfile.html:23
 msgid "File format"
 msgstr ""
 
-#: templates/digitalfile.html:23
+#: templates/digitalfile.html:24
 msgid "File format version"
 msgstr ""
 
 #: templates/digitalfile.html:25
-msgid "Size (human readable)"
+msgid "Size (bytes)"
 msgstr ""
 
 #: templates/digitalfile.html:26
-msgid "Date modified"
+msgid "Size (human readable)"
 msgstr ""
 
 #: templates/digitalfile.html:27
-msgid "PRONOM ID"
+msgid "Date modified"
 msgstr ""
 
-#: templates/digitalfile.html:28
-msgid "METS amdSec"
-msgstr ""
-
-#: templates/digitalfile.html:29
-#, python-format
-msgid "Checksum (%(digitalfile.hashtype)s)"
-msgstr ""
-
-#: templates/digitalfile.html:32 templates/dip.html:28
+#: templates/digitalfile.html:30 templates/dip.html:29
 msgid "Attachments"
 msgstr ""
 
-#: templates/digitalfile.html:35 templates/dip.html:31
+#: templates/digitalfile.html:33 templates/dip.html:32
 msgid "Digital files"
 msgstr ""
 
-#: templates/digitalfile.html:36
+#: templates/digitalfile.html:34
 msgid ""
 "By clicking on the button below you'll download all the digital files "
 "included in the same folder."
 msgstr ""
 
-#: templates/digitalfile.html:37 templates/dip.html:33
+#: templates/digitalfile.html:35 templates/dip.html:34
 msgid "Download zip file"
 msgstr ""
 
-#: templates/digitalfile.html:46
+#: templates/digitalfile.html:44
 msgid "Preservation metadata"
 msgstr ""
 
-#: templates/digitalfile.html:52
+#: templates/digitalfile.html:50
 msgid "Event log from our digital preservation repository for this file."
 msgstr ""
 
-#: templates/digitalfile.html:54
+#: templates/digitalfile.html:52
 #, python-format
 msgid "Event: %(event.uuid)s"
 msgstr ""
 
-#: templates/digitalfile.html:55
+#: templates/digitalfile.html:53
 msgid "Event type"
 msgstr ""
 
-#: templates/digitalfile.html:56
+#: templates/digitalfile.html:54
 msgid "Datetime"
 msgstr ""
 
-#: templates/digitalfile.html:57
+#: templates/digitalfile.html:55
 msgid "Event detail"
 msgstr ""
 
-#: templates/digitalfile.html:58
+#: templates/digitalfile.html:56
 msgid "Event outcome"
 msgstr ""
 
-#: templates/digitalfile.html:59
+#: templates/digitalfile.html:57
 msgid "Event detail note"
 msgstr ""
 
@@ -443,21 +471,21 @@ msgstr ""
 msgid "Folder %(dip)s"
 msgstr ""
 
-#: templates/dip.html:18
+#: templates/dip.html:19
 msgid "Folder description"
 msgstr ""
 
-#: templates/dip.html:32
+#: templates/dip.html:33
 msgid ""
 "By clicking on the button below you'll download all the digital files "
 "included in this folder."
 msgstr ""
 
-#: templates/dip.html:38
+#: templates/dip.html:39
 msgid "Digital files in this folder"
 msgstr ""
 
-#: templates/dip.html:40 templates/search.html:11
+#: templates/dip.html:42 templates/search.html:12
 #, python-format
 msgid "<strong>%(counter)s</strong> digital file"
 msgid_plural "<strong>%(counter)s</strong> digital files"
@@ -468,7 +496,7 @@ msgstr[1] ""
 msgid "Edit Collection"
 msgstr ""
 
-#: templates/edit_collection.html:18 templates/edit_dip.html:18
+#: templates/edit_collection.html:19 templates/edit_dip.html:19
 #: templates/edit_user.html:17 templates/new_collection.html:17
 #: templates/new_dip.html:17 templates/new_user.html:15
 #: templates/settings.html:23
@@ -716,6 +744,42 @@ msgstr ""
 msgid "Browse our collections"
 msgstr ""
 
+#: templates/includes/digital_file_filter_tags.html:10
+msgid "Undefined"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:5
+msgid "Formats"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:9
+msgid "Years"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:18
+msgid "Start date"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:25
+msgid "End date"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:38
+msgid "Objects types"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:41
+msgid "Tags"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:43
+msgid "Type any text"
+msgstr ""
+
+#: templates/includes/digital_file_filters.html:43
+msgid "Search input with drop-down filters"
+msgstr ""
+
 #: templates/includes/form_field.html:13
 msgid "Choose file"
 msgstr ""
@@ -733,7 +797,6 @@ msgid "FAQ"
 msgstr ""
 
 #: templates/includes/header.html:30 templates/search.html:9
-#: templates/search.html:17
 msgid "Search all digital files"
 msgstr ""
 
