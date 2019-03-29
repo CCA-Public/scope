@@ -33,7 +33,7 @@
           <td>{{ user.group_names|default:'' }}</td>
           <td>{{ user.is_active }}</td>
           <td>{{ user.is_superuser }}</td>
-          <td><a href="{% url 'edit_user' user.pk %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a></td>
+          <td class="text-nowrap"><a href="{% url 'edit_user' user.pk %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a></td>
         </tr>
       {% endfor %}
     </table>

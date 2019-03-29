@@ -30,3 +30,6 @@ coverage.xml
 # Compiled CSS and map files
 scope/static/styles/main.css
 scope/static/styles/main.css.map
+
+# Node modules
+node_modules/

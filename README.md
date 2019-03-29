@@ -133,7 +133,7 @@ The following environment variables are used to run the application:
 
 ### Setup
 
-As the root user, install pip, virtualenv and needed libraries:
+As the root user, install pip, virtualenv and other needed libraries:
 
 ```
 apt-get update
@@ -204,12 +204,14 @@ git clone https://github.com/CCA-Public/dip-access-interface
 cd dip-access-interface
 ```
 
-Create a Python virtual environment and install the application requirements:
+Create a Python virtual environment and install the application dependencies:
 
 ```
 virtualenv venv -p python3  
 source venv/bin/activate  
 pip install -r requirements.txt
+nodeenv --python-virtualenv
+npm install
 ```
 
 Export the environment variables to run the `manage.py` commands:
@@ -251,16 +253,11 @@ Compile translation files:
 ./manage.py compilemessages
 ```
 
-Compile CSS styles:
-
-```
-sassc -mt compressed scope/static/styles/main.scss scope/static/styles/main.css
-```
-
-Collect static files:
+Collect and build static files:
 
 ```
 ./manage.py collectstatic
+./manage.py compress
 ```
 
 You can now deactivate the environment and go back to the root session:
@@ -457,14 +454,6 @@ Compile translation files:
 ```
 docker-compose exec scope ./manage.py compilemessages
 ```
-
-Compile CSS styles:
-
-```
-docker-compose exec scope sassc -mt compressed scope/static/styles/main.scss scope/static/styles/main.css
-```
-
-Until a system is included to compile and update the styles when needed per request, this command needs to be executed when changes are made over the SASS files to see those changes in the GUI.
 
 To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
 

@@ -31,10 +31,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'scope.staticfiles.Config',
 
     'django_celery_results',
     'widget_tweaks',
+    'compressor',
 
     'dips.apps.DipsConfig',
     'search.apps.SearchConfig',
@@ -150,9 +151,36 @@ MESSAGE_TAGS = {
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'scope', 'static'),
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+    'npm.finders.NpmFinder',
 ]
+
+# Compress
+
+COMPRESS_OFFLINE = not DEBUG
+COMPRESS_PRECOMPILERS = [
+    ('text/x-scss', 'sassc {infile} {outfile}'),
+]
+
+# NPM
+
+NPM_ROOT_PATH = BASE_DIR
+NPM_STATIC_FILES_PREFIX = 'lib'
+NPM_FILE_PATTERNS = {
+    '@fortawesome': ['fontawesome-free/webfonts/fa-solid-900.*'],
+    'bootstrap': ['dist/js/bootstrap.min.*'],
+    'bootstrap-datepicker': [
+        'dist/css/bootstrap-datepicker3.standalone.min.css',
+        'dist/js/bootstrap-datepicker.min.js',
+        'dist/locales/bootstrap-datepicker.fr.min.js',
+    ],
+    'jquery': ['dist/jquery.slim.min.*'],
+    'popper.js': ['dist/umd/popper.min.*'],
+    'typeface-roboto': ['files/roboto-latin-400.*'],
+}
 
 # Media
 

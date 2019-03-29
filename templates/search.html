@@ -32,7 +32,7 @@
           <td>{{ digital_file.datemodified|default:'' }}</td>
           {% trans "Untitled" as untitled %}
           <td><a href="{% url 'collection' digital_file.collection.id %}">{{ digital_file.collection.title|default:untitled }}</a></td>
-          <td>
+          <td class="text-nowrap">
             {% if 'import_status' not in digital_file.dip or digital_file.dip.import_status == statuses.SUCCESS %}
               <a href="{% url 'digital_file' digital_file.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a>
             {% elif digital_file.dip.import_status == statuses.FAILURE %}

@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load compress %}
 {% get_current_language as lang_code %}
 <!DOCTYPE html>
 <html lang="{{ lang_code }}">
@@ -7,8 +8,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'vendor/bootstrap-datepicker/css/bootstrap-datepicker3.standalone.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    {% compress css %}
+      <link rel="stylesheet" href="{% static 'lib/bootstrap-datepicker/dist/css/bootstrap-datepicker3.standalone.min.css' %}" />
+      <link rel="stylesheet" type="text/x-scss" href="{% static 'styles/main.scss' %}">
+    {% endcompress %}
   </head>
   <body>
     {% include 'includes/header.html' %}
@@ -17,11 +20,13 @@
       {% block content %}
       {% endblock %}
     </div>
-    <script type="text/javascript" src="{% static 'vendor/jquery/jquery-3.3.1.slim.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'vendor/popper/popper.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'vendor/bootstrap-datepicker/locales/bootstrap-datepicker.fr.min.js' %}" charset="UTF-8"></script>
-    <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+    {% compress js %}
+      <script type="text/javascript" src="{% static 'lib/jquery/dist/jquery.slim.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'lib/popper.js/dist/umd/popper.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'lib/bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js' %}" charset="UTF-8"></script>
+      <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+    {% endcompress %}
   </body>
 </html>

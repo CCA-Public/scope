@@ -2,9 +2,9 @@ FROM python:3.6-alpine
 
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /src
+COPY . /src
 
-COPY requirements /src/requirements
+WORKDIR /src
 
 RUN set -ex \
     && apk add --update --no-cache --virtual .buildDeps \
@@ -20,7 +20,8 @@ RUN set -ex \
             | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 \
                 { next } { print "so:" $1 }' \
     )" \
-    && apk add --no-cache --virtual .runDeps $runDeps gettext \
+    && apk add --no-cache --virtual .runDeps $runDeps gettext nodejs \
+    && npm install \
     && apk del .buildDeps \
     && find /usr/local -depth \
         \( \
@@ -29,8 +30,6 @@ RUN set -ex \
             \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
         \) -exec rm -rf '{}' + \
     && rm -rf /usr/src/python
-
-COPY . /src
 
 EXPOSE 8000
 

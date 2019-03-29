@@ -60,7 +60,7 @@
           <td>{{ digital_file.fileformat }}</td>
           <td>{{ digital_file.size_bytes|filesizeformat }}</td>
           <td>{{ digital_file.datemodified|default:'' }}</td>
-          <td>
+          <td class="text-nowrap">
             {% if 'import_status' not in digital_file.dip or digital_file.dip.import_status == statuses.SUCCESS %}
               <a href="{% url 'digital_file' digital_file.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a>
             {% else %}

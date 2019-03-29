@@ -52,7 +52,7 @@
           <td>{{ dip.dc.title|default:'' }}</td>
           <td>{{ dip.dc.date|default:'' }}</td>
           <td>{{ dip.dc.description|default:''|safe }}</td>
-          <td>
+          <td class="text-nowrap">
             {% if 'import_status' not in dip or dip.import_status == statuses.SUCCESS %}
               <a href="{% url 'dip' dip.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a>
             {% elif dip.import_status == statuses.FAILURE %}

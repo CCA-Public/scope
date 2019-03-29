@@ -41,7 +41,7 @@
           <td>{{ collection.dc.identifier }}</td>
           <td>{{ collection.dc.title|default:'' }}</td>
           <td>{{ collection.dc.description|default:''|safe }}</td>
-          <td><a href="{% url 'collection' collection.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a></td>
+          <td class="text-nowrap"><a href="{% url 'collection' collection.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a></td>
         </tr>
       {% endfor %}
     </table>

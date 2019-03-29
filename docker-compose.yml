@@ -4,6 +4,7 @@ version: '3'
 volumes:
   es_data:
   redis_data:
+  node_modules:
 
 services:
   scope:
@@ -15,6 +16,7 @@ services:
       - ES_HOSTS=elasticsearch:9200
       - CELERY_BROKER_URL=redis://redis:6379
     volumes:
+      - node_modules:/src/node_modules
       - .:/src
 
   worker:
@@ -26,8 +28,9 @@ services:
       - ES_HOSTS=elasticsearch:9200
       - CELERY_BROKER_URL=redis://redis:6379
     volumes:
+      - node_modules:/src/node_modules
       - .:/src
-    command: 'celery -A scope worker -l info'
+    command: 'watchmedo auto-restart -p *.py -R -- celery -A scope worker -l info'
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
