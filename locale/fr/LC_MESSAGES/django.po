@@ -152,12 +152,12 @@ msgstr ""
 #: dips/views.py:38
 #, python-format
 msgid "Incorrect date format for start date (%(date)s). Expected: yyyy-mm-dd."
-msgstr ""
+msgstr "Inscrire la date de début (%(date)s) selon le format AAAA-MM-JJ."
 
 #: dips/views.py:47
 #, python-format
 msgid "Incorrect date format for end date (%(date)s). Expected: yyyy-mm-dd."
-msgstr ""
+msgstr "Inscrire la date de fin (%(date)s) selon le format AAAA-MM-JJ."
 
 #: dips/views.py:82 dips/views.py:329
 msgid "Title"
@@ -214,7 +214,7 @@ msgstr "Format"
 
 #: dips/views.py:277 dips/views.py:389
 msgid "Size"
-msgstr ""
+msgstr "Taille"
 
 #: dips/views.py:278 dips/views.py:390
 msgid "Last modified"
@@ -222,7 +222,7 @@ msgstr "Dernière modification"
 
 #: dips/views.py:279
 msgid "Collection name"
-msgstr ""
+msgstr "Nom de la Collection"
 
 #: dips/views.py:280 dips/views.py:391
 msgid "File details"
@@ -243,24 +243,32 @@ msgid ""
 "A background process has been launched to update the Collection metadata in "
 "the Elasticsearch index for the related Digital Files."
 msgstr ""
+"Un processus d'arrière-plan est en cours afin de mettre à jour les métadonnées "
+"de la Collection dans l'index Elasticsearch pour les fichiers concernés."
 
 #: dips/views.py:561
 msgid ""
 "A background process has been launched to update the Folder metadata in the "
 "Elasticsearch index for the related Digital Files."
 msgstr ""
+"Un processus en arrière-plan est en cours afin de mettre à jour les métadonnées "
+"des Dossiers dans l'index Elasticsearch pour les fichiers concernés."
 
 #: dips/views.py:586
 msgid ""
 "A background process has been launched to delete the descendant Folders and "
 "Digital Files from the Elasticsearch indexes."
 msgstr ""
+"Un processus en arrière-plan est en cours afin de retirer les Dossiers "
+"et Fichiers des niveaux inférieurs dans l'index Elasticsearch."
 
 #: dips/views.py:617
 msgid ""
 "A background process has been launched to delete the descendant Digital "
 "Files from the Elasticsearch index."
 msgstr ""
+"Un processus en arrière-plan est en cours afin de retirer les Fichiers "
+"de niveaux inférieurs dans l'index Elasticsearch."
 
 #: scope/settings.py:121
 msgid "English"
@@ -280,7 +288,7 @@ msgstr "Collection %(collection)s"
 #: templates/dip.html:12 templates/edit_collection.html:10
 #: templates/edit_dip.html:10 templates/search.html:33
 msgid "Untitled"
-msgstr ""
+msgstr "Sans titre"
 
 #: templates/collection.html:13 templates/delete_collection.html:11
 #: templates/delete_dip.html:11 templates/digitalfile.html:13
@@ -845,39 +853,39 @@ msgstr "Parcourir la collection"
 
 #: templates/includes/digital_file_filter_tags.html:10
 msgid "Undefined"
-msgstr ""
+msgstr "Non défini"
 
 #: templates/includes/digital_file_filters.html:5
 msgid "Formats"
-msgstr ""
+msgstr "Formats"
 
 #: templates/includes/digital_file_filters.html:9
 msgid "Years"
-msgstr ""
+msgstr "Années"
 
 #: templates/includes/digital_file_filters.html:18
 msgid "Start date"
-msgstr ""
+msgstr "Date de début"
 
 #: templates/includes/digital_file_filters.html:25
 msgid "End date"
-msgstr ""
+msgstr "Date de fin"
 
 #: templates/includes/digital_file_filters.html:38
 msgid "Objects types"
-msgstr ""
+msgstr "Types d'objets"
 
 #: templates/includes/digital_file_filters.html:41
 msgid "Tags"
-msgstr ""
+msgstr "Étiquettes"
 
 #: templates/includes/digital_file_filters.html:43
 msgid "Type any text"
-msgstr ""
+msgstr "Inscrire l'expression recherchée"
 
 #: templates/includes/digital_file_filters.html:43
 msgid "Search input with drop-down filters"
-msgstr ""
+msgstr "Raffiner la recherche à l'aide des menus déroulants"
 
 #: templates/includes/form_field.html:13
 msgid "Choose file"
