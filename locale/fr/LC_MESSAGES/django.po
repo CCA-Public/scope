@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-25 14:08+0000\n"
+"POT-Creation-Date: 2019-03-29 18:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -243,38 +243,40 @@ msgid ""
 "A background process has been launched to update the Collection metadata in "
 "the Elasticsearch index for the related Digital Files."
 msgstr ""
-"Un processus d'arrière-plan est en cours afin de mettre à jour les métadonnées "
-"de la Collection dans l'index Elasticsearch pour les fichiers concernés."
+"Un processus d'arrière-plan est en cours afin de mettre à jour les "
+"métadonnées de la Collection dans l'index Elasticsearch pour les fichiers "
+"concernés."
 
 #: dips/views.py:561
 msgid ""
 "A background process has been launched to update the Folder metadata in the "
 "Elasticsearch index for the related Digital Files."
 msgstr ""
-"Un processus en arrière-plan est en cours afin de mettre à jour les métadonnées "
-"des Dossiers dans l'index Elasticsearch pour les fichiers concernés."
+"Un processus en arrière-plan est en cours afin de mettre à jour les "
+"métadonnées des Dossiers dans l'index Elasticsearch pour les fichiers "
+"concernés."
 
 #: dips/views.py:586
 msgid ""
 "A background process has been launched to delete the descendant Folders and "
 "Digital Files from the Elasticsearch indexes."
 msgstr ""
-"Un processus en arrière-plan est en cours afin de retirer les Dossiers "
-"et Fichiers des niveaux inférieurs dans l'index Elasticsearch."
+"Un processus en arrière-plan est en cours afin de retirer les Dossiers et "
+"Fichiers des niveaux inférieurs dans l'index Elasticsearch."
 
 #: dips/views.py:617
 msgid ""
 "A background process has been launched to delete the descendant Digital "
 "Files from the Elasticsearch index."
 msgstr ""
-"Un processus en arrière-plan est en cours afin de retirer les Fichiers "
-"de niveaux inférieurs dans l'index Elasticsearch."
+"Un processus en arrière-plan est en cours afin de retirer les Fichiers de "
+"niveaux inférieurs dans l'index Elasticsearch."
 
-#: scope/settings.py:121
+#: scope/settings.py:122
 msgid "English"
 msgstr "Anglais"
 
-#: scope/settings.py:122
+#: scope/settings.py:123
 msgid "French"
 msgstr "Français"
 

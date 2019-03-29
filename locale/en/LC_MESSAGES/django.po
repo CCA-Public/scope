@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-25 14:08+0000\n"
+"POT-Creation-Date: 2019-03-29 18:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -252,11 +252,11 @@ msgid ""
 "Files from the Elasticsearch index."
 msgstr ""
 
-#: scope/settings.py:121
+#: scope/settings.py:122
 msgid "English"
 msgstr ""
 
-#: scope/settings.py:122
+#: scope/settings.py:123
 msgid "French"
 msgstr ""
 
