@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-25 14:08+0000\n"
+"POT-Creation-Date: 2019-03-29 14:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,12 +152,12 @@ msgstr ""
 #: dips/views.py:38
 #, python-format
 msgid "Incorrect date format for start date (%(date)s). Expected: yyyy-mm-dd."
-msgstr ""
+msgstr "Format de date incorrect pour la date de début (% (date) s). Attendu: aaaa-mm-jj."
 
 #: dips/views.py:47
 #, python-format
 msgid "Incorrect date format for end date (%(date)s). Expected: yyyy-mm-dd."
-msgstr ""
+msgstr "Format de date incorrect pour la date de fin (% (date) s). Attendu: aaaa-mm-jj."
 
 #: dips/views.py:82 dips/views.py:329
 msgid "Title"
@@ -214,7 +214,7 @@ msgstr "Format"
 
 #: dips/views.py:277 dips/views.py:389
 msgid "Size"
-msgstr ""
+msgstr "Taille."
 
 #: dips/views.py:278 dips/views.py:390
 msgid "Last modified"
@@ -222,7 +222,7 @@ msgstr "Dernière modification"
 
 #: dips/views.py:279
 msgid "Collection name"
-msgstr ""
+msgstr "Nom de la collection"
 
 #: dips/views.py:280 dips/views.py:391
 msgid "File details"
@@ -243,24 +243,34 @@ msgid ""
 "A background process has been launched to update the Collection metadata in "
 "the Elasticsearch index for the related Digital Files."
 msgstr ""
+"Un processus en arrière-plan a été lancé pour mettre à jour les métadonnées Collection dans "
+"l'index Elasticsearch pour les fichiers numériques associés."
+
 
 #: dips/views.py:561
 msgid ""
 "A background process has been launched to update the Folder metadata in the "
 "Elasticsearch index for the related Digital Files."
 msgstr ""
+"Un processus en arrière-plan a été lancé pour mettre à jour les métadonnées de dossier dans le répertoire "
+"l'index Elasticsearch pour les fichiers numériques associés."
 
 #: dips/views.py:586
 msgid ""
 "A background process has been launched to delete the descendant Folders and "
 "Digital Files from the Elasticsearch indexes."
 msgstr ""
+"Un processus en arrière-plan a été lancé pour supprimer les dossiers descendants et "
+"Fichiers numériques des index Elasticsearch."
+
 
 #: dips/views.py:617
 msgid ""
 "A background process has been launched to delete the descendant Digital "
 "Files from the Elasticsearch index."
 msgstr ""
+"Un processus en arrière-plan a été lancé pour supprimer le descendant Digital "
+"Fichiers de l'index Elasticsearch."
 
 #: scope/settings.py:121
 msgid "English"
@@ -280,7 +290,7 @@ msgstr "Collection %(collection)s"
 #: templates/dip.html:12 templates/edit_collection.html:10
 #: templates/edit_dip.html:10 templates/search.html:33
 msgid "Untitled"
-msgstr ""
+msgstr "Sans titre"
 
 #: templates/collection.html:13 templates/delete_collection.html:11
 #: templates/delete_dip.html:11 templates/digitalfile.html:13
@@ -845,39 +855,39 @@ msgstr "Parcourir la collection"
 
 #: templates/includes/digital_file_filter_tags.html:10
 msgid "Undefined"
-msgstr ""
+msgstr "Indéfini"
 
 #: templates/includes/digital_file_filters.html:5
 msgid "Formats"
-msgstr ""
+msgstr "Les formats"
 
 #: templates/includes/digital_file_filters.html:9
 msgid "Years"
-msgstr ""
+msgstr "Années"
 
 #: templates/includes/digital_file_filters.html:18
 msgid "Start date"
-msgstr ""
+msgstr "Date de début"
 
 #: templates/includes/digital_file_filters.html:25
 msgid "End date"
-msgstr ""
+msgstr "Date de fin"
 
 #: templates/includes/digital_file_filters.html:38
 msgid "Objects types"
-msgstr ""
+msgstr "Types d'objets"
 
 #: templates/includes/digital_file_filters.html:41
 msgid "Tags"
-msgstr ""
+msgstr "Mots clés"
 
 #: templates/includes/digital_file_filters.html:43
 msgid "Type any text"
-msgstr ""
+msgstr "Tapez n'importe quel texte"
 
 #: templates/includes/digital_file_filters.html:43
 msgid "Search input with drop-down filters"
-msgstr ""
+msgstr "Entrée de recherche avec filtres déroulants"
 
 #: templates/includes/form_field.html:13
 msgid "Choose file"
