@@ -1,5 +1,4 @@
-"""
-WSGI config for scope project.
+"""WSGI config for SCOPE project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

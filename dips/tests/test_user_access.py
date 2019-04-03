@@ -188,7 +188,8 @@ class UserAccessTests(TestCase):
     @patch("elasticsearch_dsl.Search.execute")
     @patch("elasticsearch_dsl.Search.count", return_value=0)
     def test_get_pages(self, mock_es_count, mock_es_exec):
-        """
+        """Get pages test.
+
         Makes get requests to pages with different user types logged in
         and verifies if the user can see the page or gets redirected.
         """
@@ -212,7 +213,8 @@ class UserAccessTests(TestCase):
                 self.client.logout()
 
     def test_post_user(self):
-        """
+        """Post user test.
+
         Makes post requests to create and edit user pages with different
         user types logged in and verifies the results.
         """
@@ -310,7 +312,8 @@ class UserAccessTests(TestCase):
     @patch("elasticsearch_dsl.DocType.save")
     @patch("dips.models.celery_app.send_task")
     def test_post_collection(self, mock_send_task, mock_es_save):
-        """
+        """Post collection test.
+
         Makes post requests to create and edit collection pages with different
         user types logged in and verifies the results.
         """
@@ -410,7 +413,8 @@ class UserAccessTests(TestCase):
     @patch("elasticsearch_dsl.DocType.save")
     @patch("dips.models.celery_app.send_task")
     def test_post_dip(self, mock_send_task, mock_es_save):
-        """
+        """Post DIP test.
+
         Makes post requests to create and edit DIP pages with different
         user types logged in and verifies the results.
         """
@@ -499,7 +503,8 @@ class UserAccessTests(TestCase):
     @patch("dips.models.delete_document")
     @patch("dips.models.celery_app.send_task")
     def test_delete_dip(self, mock_send_task, mock_es_delete):
-        """
+        """Delete DIP test.
+
         Makes post request to delete a DIP with different
         user types logged in and verifies the results.
         """
@@ -558,7 +563,8 @@ class UserAccessTests(TestCase):
     @patch("dips.models.delete_document")
     @patch("dips.models.celery_app.send_task")
     def test_delete_collection(self, mock_send_task, mock_es_delete):
-        """
+        """Delete collection test.
+
         Makes post request to delete a collection with different
         user types logged in and verifies the results.
         """

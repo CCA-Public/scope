@@ -20,10 +20,10 @@ logger = logging.getLogger("dips.tasks")
 
 class MetsTask(Task):
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        """
-        Update DIP `import_status` when the task ends. Make sure it's one
-        of Celery's READY_STATES and set it to 'FAILURE' for all possible
-        non 'SUCCESS' states.
+        """Update DIP `import_status` when the task ends.
+
+        Make sure it's one of Celery's READY_STATES and set it to 'FAILURE' for
+        all possible non 'SUCCESS' states.
         """
         if status not in states.READY_STATES:
             return
@@ -45,12 +45,12 @@ class MetsTask(Task):
     default_retry_delay=30,
 )
 def extract_and_parse_mets(dip_id, zip_path):
-    """
-    Extracts a METS file from a given DIP zip file and uses the METS class
-    to parse its content, create the related DigitalFiles and update the DIP
-    DC metadata. Creates and deletes a temporary directory to hold the METS
-    file during its parsing. This function is meant to be called with
-    `.delay()` to be executed asynchronously by the Celery worker.
+    """Extract and parse a METS file from a given DIP zip file.
+
+    Uses the METS class to parse its content, create the related DigitalFiles
+    and update the DIP DC metadata. Creates and deletes a temporary directory
+    to hold the METS file during its parsing. This function is meant to be called
+    with `.delay()` to be executed asynchronously by the Celery worker.
     """
     logger.info("Extracting METS file from ZIP [Path: %s]" % zip_path)
     with tempfile.TemporaryDirectory() as dir_:
@@ -77,9 +77,9 @@ def extract_and_parse_mets(dip_id, zip_path):
     ignore_result=True,
 )
 def update_es_descendants(class_name, pk):
-    """
-    Updates the related DigitalFiles documents in ES with the partial data from
-    the ancestor Collection or DIP.
+    """Update the related DigitalFiles documents in ES.
+
+    With the partial data from the ancestor Collection or DIP.
     """
     if class_name not in ["Collection", "DIP"]:
         raise Exception("Can not update descendants of %s." % class_name)

@@ -23,7 +23,8 @@ from search.helpers import (
 
 
 def _get_and_validate_digital_file_filters(request):
-    """
+    """Process digital file filters.
+
     Obtains the digital file filters from the request GET parameteres and
     validates the start and end dates. Returns two dics, the first one with
     all the filters set (to maintain their value in the templates) and the

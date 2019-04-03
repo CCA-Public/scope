@@ -47,9 +47,7 @@ class GetUsersTests(TestCase):
                     user.groups.add(group)
 
     def test_get_users_no_params(self):
-        """
-        Get all users without filtering, sorted by default (username).
-        """
+        """Get all users without filtering, sorted by default (username)."""
         users = User.get_users()
         self.assertEqual(users.count(), 4)
         first_user = users[0]
@@ -58,9 +56,7 @@ class GetUsersTests(TestCase):
         self.assertEqual(last_user.username, "MariaPerez")
 
     def test_get_users_sort_by_group(self):
-        """
-        Get all users, sorted by group names concatenation.
-        """
+        """Get all users, sorted by group names concatenation."""
         users = User.get_users(sort_field="group_names")
         self.assertEqual(users.count(), 4)
         first_user = users[0]

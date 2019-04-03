@@ -1,5 +1,4 @@
-"""
-Model classes declaration for dips app:
+"""Model classes declaration for dips app:
 
 To connect Django models to elasticsearch-dsl documents declared in
 search.documents, an AbstractEsModel has been created with the ABC and
@@ -46,13 +45,13 @@ class User(AbstractUser):
 
     @classmethod
     def get_users(cls, query=None, sort_field="username"):
-        """
-        Get users based on a query string, querying over 'username',
-        'first_name', 'last_name', 'email' and a concatenation of related
-        group names separated by ', '. The group name concatenation
-        can be used to sort and display in the 'group_names' field and the
-        output will be the same as the equally called function from this model.
-        The resulting users will be ordered by a given 'sort_field'. Returns
+        """Get users based on a query string.
+
+        Querying over 'username', 'first_name', 'last_name', 'email' and a
+        concatenation of related group names separated by ', '. The group name
+        concatenation can be used to sort and display in the 'group_names' field
+        and the output will be the same as the equally called function from this
+        model. The resulting users will be ordered by a given 'sort_field'. Returns
         all users if no query is given and sorts by 'username' by default.
         """
 
@@ -185,7 +184,8 @@ class DublinCore(models.Model):
         return self.identifier
 
     def get_es_inner_data(self):
-        """
+        """Get data for inner objects in other ES docs.
+
         Returns a dictionary with field name > value with the required data
         to be stored in the Elasticsearch documents of related models.
         """
@@ -196,7 +196,8 @@ class DublinCore(models.Model):
         return data
 
     def get_display_data(self):
-        """
+        """Get ordered data for display.
+
         Returns a dictionary with display label > value from object fields,
         checking the enabled fields and the hide empty fields configuration.
         """
@@ -215,9 +216,7 @@ class DublinCore(models.Model):
 
     @classmethod
     def get_optional_fields(cls):
-        """
-        Returns a dictionary with optional fields name > verbose_name.
-        """
+        """Returns a dictionary with optional fields name > verbose_name."""
         optional_fields = OrderedDict()
         for field_name in cls.ORDERED_FIELDS:
             field = cls._meta.get_field(field_name)
@@ -228,18 +227,16 @@ class DublinCore(models.Model):
 
     @classmethod
     def enabled_fields(cls):
-        """
-        Returns a list with enabled field names based on
-        `enabled_dc_fields` setting.
+        """Returns a list with enabled field names.
+
+        Based on `enabled_dc_fields` setting.
         """
         setting = Setting.objects.get(name="enabled_optional_dc_fields")
         return cls.REQUIRED_FIELDS + setting.value
 
     @classmethod
     def hide_empty_fields(cls):
-        """
-        Returns a boolean based on `hide_empty_dc_fields` setting.
-        """
+        """Returns a boolean based on `hide_empty_dc_fields` setting."""
         setting = Setting.objects.get(name="hide_empty_dc_fields")
         return setting.value
 
@@ -362,7 +359,8 @@ class DIP(AbstractEsModel):
         )
 
     def is_visible_by_user(self, user):
-        """
+        """Check if a user can see the instance.
+
         Retrun `False` if there is an import pending for the DIP or if
         the import failed and the user is not an editor or an admin.
         Otherwise, return `True`.
@@ -438,8 +436,7 @@ class PREMISEvent(models.Model):
 
 
 class Setting(models.Model):
-    """
-    Name/value pairs for application settings.
+    """Name/value pairs for application settings.
 
     A database-agnostic JSONField is used for the `value` field with auto
     encoding/decoding but without extended querying capabilities. If new

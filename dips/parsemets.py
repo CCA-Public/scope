@@ -16,9 +16,7 @@ class METSError(Exception):
 
 
 class METS(object):
-    """
-    Class for METS file parsing methods.
-    """
+    """Class for METS file parsing methods."""
 
     # Fields and xpaths for DigitalFile
     FILE_ELEMENTS = [
@@ -75,9 +73,7 @@ class METS(object):
         return self.path
 
     def _get_mets_root(self):
-        """
-        Open XML and return the root element with all namespaces stripped.
-        """
+        """Open XML and return the root element with all namespaces stripped."""
         tree = etree.parse(self.path)
         root = tree.getroot()
         for elem in root.getiterator():
@@ -90,9 +86,7 @@ class METS(object):
         return root
 
     def parse_mets(self):
-        """
-        Parse METS and save data to DIP, DigitalFile, and PremisEvent models.
-        """
+        """Parse METS and save data to DIP, DigitalFile, and PremisEvent models."""
         # Get DIP object
         dip = DIP.objects.get(pk=self.dip_id)
         logger.info(
@@ -192,9 +186,7 @@ class METS(object):
             logger.info("No DIP Dublin Core metadata found")
 
     def _parse_file_metadata(self, amdsec_id):
-        """
-        Parse file metadata into a dict and an events list.
-        """
+        """Parse file metadata into a dict and an events list."""
         # Create new dictionary for this item's info, including
         # the amdSec id, and new list of dicts for premis events.
         data = {"amdsec": amdsec_id}
@@ -227,9 +219,7 @@ class METS(object):
         return (data, events)
 
     def _transform_file_metadata(self, data):
-        """
-        Transform file metadata to be saved in DigitalFile fields.
-        """
+        """Transform file metadata to be saved in DigitalFile fields."""
         # Format filepath
         data["filepath"] = data["filepath"].replace("%transferDirectory%", "")
 
@@ -251,8 +241,8 @@ class METS(object):
         return data
 
     def _parse_dc(self):
-        """
-        Parse SIP-level Dublin Core metadata into dc_model dictionary.
+        """Parse SIP-level Dublin Core metadata into dc_model dictionary.
+
         Based on `parse_dc` from Archivematica parse_mets_to_db.py script
         (src/MCPClient/lib/clientScripts/parse_mets_to_db.py).
         """

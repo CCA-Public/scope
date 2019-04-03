@@ -11,7 +11,8 @@ import os
 
 @contextmanager
 def _sized_tmp_file(path, size):
-    """
+    """Manage sized temporary file.
+
     Context manager that creates a file (raising FileExistsError if it exists)
     in a given path and with a given size, yields it and deletes it at the end.
     """

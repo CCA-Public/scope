@@ -11,9 +11,9 @@ def add_if_not_empty(data_dict, key, value):
 
 
 def convert_size(size):
-    """
-    Convert size to human-readable form using base 2. Should this be using
-    using base 10? https://wiki.ubuntu.com/UnitsPolicy
+    """Convert size to human-readable form using base 2.
+
+    Should this be using using base 10? https://wiki.ubuntu.com/UnitsPolicy
     """
     size_name = ("bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
     i = int(math.floor(math.log(size, 1024)))
@@ -25,10 +25,7 @@ def convert_size(size):
 
 
 def update_instance_from_dict(instance, dict):
-    """
-    Update model instance attributes from dict key, value pairs.
-    Return the updated instance without saving.
-    """
+    """Update instance attributes from dict key, value pairs without saving."""
     for field, value in dict.items():
         # Check field existence in model instance
         try:
@@ -40,10 +37,10 @@ def update_instance_from_dict(instance, dict):
 
 
 def get_sort_params(params, options, default):
-    """
-    Get sort option and direction from params. Check options dict. for
-    available choices and use default if no option is passed on the params
-    or if the option is not valid. Defaults to asc. sort direction.
+    """Get sort option and direction from params.
+
+    Check options dict. for available choices and use default if no option is passed
+    on the paramsor if the option is not valid. Defaults to asc. sort direction.
     """
     option = params.get("sort", default)
     if option not in list(options.keys()):
@@ -57,11 +54,11 @@ def get_sort_params(params, options, default):
 
 
 def get_page_from_search(search, params):
-    """
-    Create paginator and return current page based on the current search
-    and the page and limit parameters. Limit defaults to 10 and
-    can't be set over 100. The search parameter can be an Elasticsearch
-    search or a Django model QuerySet.
+    """Create paginator and return current page.
+
+    Based on the current search and the page and limit parameters. Limit
+    defaults to 10 and can't be set over 100. The search parameter can be an
+    Elasticsearch search or a Django model QuerySet.
     """
     try:
         limit = int(params.get("limit", 10))

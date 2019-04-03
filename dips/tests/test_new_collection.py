@@ -35,9 +35,10 @@ class NewCollectionTests(TestCase):
         self.assertTrue(collection)
 
     def test_new_topic_invalid_post_data_empty_fields(self):
-        """
-        Invalid post data should not redirect
-        The expected behavior is to show the form again with validation errors
+        """Test invalid post data.
+
+        Invalid post data should not redirect. The expected behavior
+        is to show the form again with validation errors.
         """
         url = reverse("new_collection")
         response = self.client.post(url, {})

@@ -125,8 +125,7 @@ class UserChangeForm(UserChangeForm):
 
 
 class SettingsForm(forms.Form):
-    """
-    Base form for `models.Setting` management:
+    """Base form for `models.Setting` management.
 
     - Field names declared in sub-forms must match the setting names.
     - The field type and other properties must be defined in the sub-forms

@@ -12,7 +12,8 @@ def sort_by(queryset, order):
 
 @register.simple_tag
 def update_and_encode_params(querydict, *args, **kwargs):
-    """
+    """Format parameters for relative URL.
+
     Copy the request GET QueryDict and update it with the key/value pairs
     sent in kwargs. Removes key if the value sent is None. Return the updated
     parameters encoded to use in a relative URL.

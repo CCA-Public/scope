@@ -9,10 +9,10 @@ from dips.models import DublinCore, Setting
 
 
 def migrate_permissions(apps, schema_editor):
-    """
-    Create permissions in migration before they are created in a
-    post_migrate signal handler. They are needed to create the user
-    group and the signal handler won't create duplicated permissions.
+    """Create permissions in migrations.
+
+    Needed before they are created in a post_migrate signal handler to create
+    the user groups. The signal handler won't create duplicated permissions.
     This must be executed after the auth and dips apps are migrated.
     """
     for app_config in apps.get_app_configs():
