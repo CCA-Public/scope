@@ -13,7 +13,7 @@ matrix:
     - python: "3.6"
       env: TOXENV=py36
     - python: "3.6"
-      env: TOXENV=py36-flake8
+      env: TOXENV=linting
 
 after_success:
   - tox -e coverage
