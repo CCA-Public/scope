@@ -7,19 +7,19 @@ from unittest.mock import patch
 class HomeTests(TestCase):
     def setUp(self):
         User = get_user_model()
-        User.objects.create_user('temp', 'temp@example.com', 'temp')
-        self.client.login(username='temp', password='temp')
+        User.objects.create_user("temp", "temp@example.com", "temp")
+        self.client.login(username="temp", password="temp")
 
-    @patch('elasticsearch_dsl.Search.execute')
-    @patch('elasticsearch_dsl.Search.count', return_value=0)
+    @patch("elasticsearch_dsl.Search.execute")
+    @patch("elasticsearch_dsl.Search.count", return_value=0)
     def test_home_template(self, patch, patch_2):
-        url = reverse('home')
+        url = reverse("home")
         response = self.client.get(url)
-        self.assertTemplateUsed(response, 'home.html')
+        self.assertTemplateUsed(response, "home.html")
 
-    @patch('elasticsearch_dsl.Search.execute')
-    @patch('elasticsearch_dsl.Search.count', return_value=0)
+    @patch("elasticsearch_dsl.Search.execute")
+    @patch("elasticsearch_dsl.Search.count", return_value=0)
     def test_collections_template(self, patch, patch_2):
-        url = reverse('collections')
+        url = reverse("collections")
         response = self.client.get(url)
-        self.assertTemplateUsed(response, 'collections.html')
+        self.assertTemplateUsed(response, "collections.html")

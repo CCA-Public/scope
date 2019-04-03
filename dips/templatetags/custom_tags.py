@@ -29,13 +29,13 @@ def update_and_encode_params(querydict, *args, **kwargs):
 @register.filter
 def render_label(field):
     """Render field label tag without suffix."""
-    return field.label_tag(label_suffix='')
+    return field.label_tag(label_suffix="")
 
 
 @register.filter
 def render_label_with_class(field, class_attr):
     """Add class attribute to field label tag and render without suffix."""
-    return field.label_tag(attrs={'class': class_attr}, label_suffix='')
+    return field.label_tag(attrs={"class": class_attr}, label_suffix="")
 
 
 @register.filter

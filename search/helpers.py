@@ -17,10 +17,7 @@ def add_query_to_search(search, query, fields):
     """
     if query.strip():
         search = search.query(
-            'simple_query_string',
-            query=query,
-            default_operator='and',
-            fields=fields,
+            "simple_query_string", query=query, default_operator="and", fields=fields
         )
 
     return search
@@ -35,7 +32,7 @@ def add_digital_file_aggs(search, collections=True):
     - Add JSON endpoint to get subsequent pages and filter query.
     - Add Javascript/Typescript code to request new pages and query.
     """
-    search.aggs.bucket('formats', 'terms', field='fileformat.raw', size=10000)
+    search.aggs.bucket("formats", "terms", field="fileformat.raw", size=10000)
     # The collections agg. is made directly over the title to avoid hitting
     # the ORM to get the title with the id or to use a composite agg. with
     # multiple sources. The biggest downside is that the titles are used as
@@ -43,7 +40,8 @@ def add_digital_file_aggs(search, collections=True):
     # selection is allowed. This agg. is optional and not added in DIP pages.
     if collections:
         search.aggs.bucket(
-            'collections', 'terms', field='collection.title.raw', size=10000)
+            "collections", "terms", field="collection.title.raw", size=10000
+        )
 
     return search
 
@@ -57,22 +55,21 @@ def add_digital_file_filters(search, filters):
     - start_date: string with `yyyy-MM-dd` date format.
     - end_date: string with `yyyy-MM-dd` date format.
     """
-    if 'formats' in filters and filters['formats']:
-        search = search.query('terms', **{'fileformat.raw': filters['formats']})
-    if 'collections' in filters and filters['collections']:
+    if "formats" in filters and filters["formats"]:
+        search = search.query("terms", **{"fileformat.raw": filters["formats"]})
+    if "collections" in filters and filters["collections"]:
         search = search.query(
-            'terms', **{'collection.title.raw': filters['collections']})
-    if 'start_date' in filters and filters['start_date']:
+            "terms", **{"collection.title.raw": filters["collections"]}
+        )
+    if "start_date" in filters and filters["start_date"]:
         search = search.query(
-            'range', **{'datemodified': {
-                'gte': filters['start_date'],
-                'format': 'yyyy-MM-dd'
-            }})
-    if 'end_date' in filters and filters['end_date']:
+            "range",
+            **{"datemodified": {"gte": filters["start_date"], "format": "yyyy-MM-dd"}}
+        )
+    if "end_date" in filters and filters["end_date"]:
         search = search.query(
-            'range', **{'datemodified': {
-                'lte': filters['end_date'],
-                'format': 'yyyy-MM-dd'
-            }})
+            "range",
+            **{"datemodified": {"lte": filters["end_date"], "format": "yyyy-MM-dd"}}
+        )
 
     return search

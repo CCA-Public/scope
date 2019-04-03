@@ -5,7 +5,7 @@ from elasticsearch_dsl.connections import connections
 
 
 class SearchConfig(AppConfig):
-    name = 'search'
+    name = "search"
 
     def ready(self):
         """

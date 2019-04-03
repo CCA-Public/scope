@@ -24,33 +24,28 @@ from .helpers import add_if_not_empty
 
 class TaskResult(CeleryTaskResult):
     """Proxy model to generate error message from Celery TaskResult"""
+
     class Meta:
         proxy = True
 
     def get_error_message(self):
         """Format traceback as HTML to display in alert"""
-        message = gettext('Error trace:') + '<p><pre>%s</pre></p>' % self.traceback
+        message = gettext("Error trace:") + "<p><pre>%s</pre></p>" % self.traceback
         return message
 
 
 class User(AbstractUser):
     def group_names(self):
-        return ', '.join(list(self.groups.values_list('name', flat=True)))
+        return ", ".join(list(self.groups.values_list("name", flat=True)))
 
     def is_editor(self):
-        return (
-            self.is_superuser or
-            self.groups.filter(name='Editors').exists()
-        )
+        return self.is_superuser or self.groups.filter(name="Editors").exists()
 
     def is_manager(self):
-        return (
-            self.is_superuser or
-            self.groups.filter(name='Managers').exists()
-        )
+        return self.is_superuser or self.groups.filter(name="Managers").exists()
 
     @classmethod
-    def get_users(cls, query=None, sort_field='username'):
+    def get_users(cls, query=None, sort_field="username"):
         """
         Get users based on a query string, querying over 'username',
         'first_name', 'last_name', 'email' and a concatenation of related
@@ -60,21 +55,23 @@ class User(AbstractUser):
         The resulting users will be ordered by a given 'sort_field'. Returns
         all users if no query is given and sorts by 'username' by default.
         """
+
         class GroupsSQ(models.Subquery):
             """Subquery to concatenate group names, requires MySQL or SQLite"""
+
             template = "(SELECT GROUP_CONCAT(name, ', ') FROM (%(subquery)s))"
             output_field = models.CharField()
 
-        subquery = GroupsSQ(Group.objects.filter(user=models.OuterRef('pk')))
+        subquery = GroupsSQ(Group.objects.filter(user=models.OuterRef("pk")))
         users = cls.objects.annotate(group_names=subquery).order_by(sort_field)
         if not query:
             return users.all()
         return users.filter(
-            models.Q(username__icontains=query) |
-            models.Q(first_name__icontains=query) |
-            models.Q(last_name__icontains=query) |
-            models.Q(email__icontains=query) |
-            models.Q(group_names__icontains=query)
+            models.Q(username__icontains=query)
+            | models.Q(first_name__icontains=query)
+            | models.Q(last_name__icontains=query)
+            | models.Q(email__icontains=query)
+            | models.Q(group_names__icontains=query)
         )
 
 
@@ -84,6 +81,7 @@ class AbstractModelMeta(ABCMeta, type(models.Model)):
 
 class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
     """Abstract base model for models related to ES DocTypes."""
+
     class Meta:
         abstract = True
 
@@ -99,8 +97,9 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
             # Launch async. task by name to avoid circular imports
             # or to import the task within this function.
             celery_app.send_task(
-                'dips.tasks.update_es_descendants',
-                args=(self.__class__.__name__, self.pk))
+                "dips.tasks.update_es_descendants",
+                args=(self.__class__.__name__, self.pk),
+            )
 
     def delete(self, *args, **kwargs):
         """Extended delete to remove related documents in ES."""
@@ -110,8 +109,9 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
             # Launch async. task by name to avoid circular imports
             # or to import the task within this function.
             celery_app.send_task(
-                'dips.tasks.delete_es_descendants',
-                args=(self.__class__.__name__, self.pk))
+                "dips.tasks.delete_es_descendants",
+                args=(self.__class__.__name__, self.pk),
+            )
         super(AbstractEsModel, self).delete(*args, **kwargs)
 
     # Declaration in abstract class must be as property to allow decorators.
@@ -136,7 +136,7 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
     def to_es_doc(self):
         """Model transformation to related DocType."""
         data = self.get_es_data()
-        return self.es_doc(meta={'id': data.pop('_id')}, **data)
+        return self.es_doc(meta={"id": data.pop("_id")}, **data)
 
     def delete_es_doc(self):
         """Call to remove related document from the ES index."""
@@ -148,26 +148,37 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
 
 
 class DublinCore(models.Model):
-    identifier = models.CharField(_('identifier'), max_length=50)
-    title = models.CharField(_('title'), max_length=200, blank=True)
-    creator = models.CharField(_('creator'), max_length=200, blank=True)
-    subject = models.CharField(_('subject'), max_length=200, blank=True)
-    description = models.TextField(_('description'), blank=True)
-    publisher = models.CharField(_('publisher'), max_length=200, blank=True)
-    contributor = models.CharField(_('contributor'), max_length=200, blank=True)
-    date = models.CharField(_('date'), max_length=21, blank=True)
-    type = models.CharField(_('type'), max_length=200, blank=True)
-    format = models.TextField(_('format'), blank=True)
-    source = models.CharField(_('source'), max_length=200, blank=True)
-    language = models.CharField(_('language'), max_length=200, blank=True)
-    coverage = models.CharField(_('coverage'), max_length=200, blank=True)
-    rights = models.CharField(_('rights'), max_length=200, blank=True)
+    identifier = models.CharField(_("identifier"), max_length=50)
+    title = models.CharField(_("title"), max_length=200, blank=True)
+    creator = models.CharField(_("creator"), max_length=200, blank=True)
+    subject = models.CharField(_("subject"), max_length=200, blank=True)
+    description = models.TextField(_("description"), blank=True)
+    publisher = models.CharField(_("publisher"), max_length=200, blank=True)
+    contributor = models.CharField(_("contributor"), max_length=200, blank=True)
+    date = models.CharField(_("date"), max_length=21, blank=True)
+    type = models.CharField(_("type"), max_length=200, blank=True)
+    format = models.TextField(_("format"), blank=True)
+    source = models.CharField(_("source"), max_length=200, blank=True)
+    language = models.CharField(_("language"), max_length=200, blank=True)
+    coverage = models.CharField(_("coverage"), max_length=200, blank=True)
+    rights = models.CharField(_("rights"), max_length=200, blank=True)
 
-    REQUIRED_FIELDS = ['identifier']
+    REQUIRED_FIELDS = ["identifier"]
     ORDERED_FIELDS = [
-        'identifier', 'title', 'creator', 'subject', 'description', 'publisher',
-        'contributor', 'date', 'type', 'format', 'source', 'language',
-        'coverage', 'rights',
+        "identifier",
+        "title",
+        "creator",
+        "subject",
+        "description",
+        "publisher",
+        "contributor",
+        "date",
+        "type",
+        "format",
+        "source",
+        "language",
+        "coverage",
+        "rights",
     ]
 
     def __str__(self):
@@ -178,10 +189,10 @@ class DublinCore(models.Model):
         Returns a dictionary with field name > value with the required data
         to be stored in the Elasticsearch documents of related models.
         """
-        data = {'identifier': self.identifier}
-        add_if_not_empty(data, 'title', self.title)
-        add_if_not_empty(data, 'date', self.date)
-        add_if_not_empty(data, 'description', self.description)
+        data = {"identifier": self.identifier}
+        add_if_not_empty(data, "title", self.title)
+        add_if_not_empty(data, "date", self.date)
+        add_if_not_empty(data, "description", self.description)
         return data
 
     def get_display_data(self):
@@ -221,7 +232,7 @@ class DublinCore(models.Model):
         Returns a list with enabled field names based on
         `enabled_dc_fields` setting.
         """
-        setting = Setting.objects.get(name='enabled_optional_dc_fields')
+        setting = Setting.objects.get(name="enabled_optional_dc_fields")
         return cls.REQUIRED_FIELDS + setting.value
 
     @classmethod
@@ -229,12 +240,12 @@ class DublinCore(models.Model):
         """
         Returns a boolean based on `hide_empty_dc_fields` setting.
         """
-        setting = Setting.objects.get(name='hide_empty_dc_fields')
+        setting = Setting.objects.get(name="hide_empty_dc_fields")
         return setting.value
 
 
 class Collection(AbstractEsModel):
-    link = models.URLField(_('finding aid'), blank=True)
+    link = models.URLField(_("finding aid"), blank=True)
     dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -243,20 +254,18 @@ class Collection(AbstractEsModel):
     es_doc = CollectionDoc
 
     def get_es_data(self):
-        data = {
-            '_id': self.pk,
-        }
+        data = {"_id": self.pk}
 
         if self.dc:
-            data['dc'] = self.dc.get_es_inner_data()
+            data["dc"] = self.dc.get_es_inner_data()
 
         return data
 
     def get_es_data_for_files(self):
-        data = {'id': self.pk}
+        data = {"id": self.pk}
         if self.dc:
-            add_if_not_empty(data, 'identifier', self.dc.identifier)
-            add_if_not_empty(data, 'title', self.dc.title)
+            add_if_not_empty(data, "identifier", self.dc.identifier)
+            add_if_not_empty(data, "title", self.dc.title)
         return data
 
     def requires_es_descendants_update(self):
@@ -270,12 +279,12 @@ class Collection(AbstractEsModel):
 
 
 class DIP(AbstractEsModel):
-    objectszip = models.FileField(_('objects zip file'))
+    objectszip = models.FileField(_("objects zip file"))
     uploaded = models.DateTimeField(auto_now_add=True)
     collection = models.ForeignKey(
         Collection,
-        related_name='dips',
-        verbose_name=_('collection'),
+        related_name="dips",
+        verbose_name=_("collection"),
         on_delete=models.CASCADE,
     )
     dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
@@ -294,9 +303,9 @@ class DIP(AbstractEsModel):
     import_status = models.CharField(max_length=7, null=True)
 
     # Import statuses
-    IMPORT_PENDING = 'PENDING'
-    IMPORT_SUCCESS = 'SUCCESS'
-    IMPORT_FAILURE = 'FAILURE'
+    IMPORT_PENDING = "PENDING"
+    IMPORT_SUCCESS = "SUCCESS"
+    IMPORT_FAILURE = "FAILURE"
 
     def __str__(self):
         return str(self.dc) or str(self.pk)
@@ -305,34 +314,32 @@ class DIP(AbstractEsModel):
     def import_statuses(cls):
         """Return dictionary with available statuses"""
         return {
-            'PENDING': cls.IMPORT_PENDING,
-            'SUCCESS': cls.IMPORT_SUCCESS,
-            'FAILURE': cls.IMPORT_FAILURE,
+            "PENDING": cls.IMPORT_PENDING,
+            "SUCCESS": cls.IMPORT_SUCCESS,
+            "FAILURE": cls.IMPORT_FAILURE,
         }
 
     es_doc = DIPDoc
 
     def get_es_data(self):
-        data = {
-            '_id': self.pk,
-        }
-        add_if_not_empty(data, 'import_status', self.import_status)
-        add_if_not_empty(data, 'import_task_id', self.import_task_id)
+        data = {"_id": self.pk}
+        add_if_not_empty(data, "import_status", self.import_status)
+        add_if_not_empty(data, "import_task_id", self.import_task_id)
 
         if self.dc:
-            data['dc'] = self.dc.get_es_inner_data()
+            data["dc"] = self.dc.get_es_inner_data()
 
         if self.collection:
-            data['collection'] = {'id': self.collection.pk}
+            data["collection"] = {"id": self.collection.pk}
 
         return data
 
     def get_es_data_for_files(self):
-        data = {'id': self.pk}
-        add_if_not_empty(data, 'import_status', self.import_status)
+        data = {"id": self.pk}
+        add_if_not_empty(data, "import_status", self.import_status)
         if self.dc:
-            add_if_not_empty(data, 'identifier', self.dc.identifier)
-            add_if_not_empty(data, 'title', self.dc.title)
+            add_if_not_empty(data, "identifier", self.dc.identifier)
+            add_if_not_empty(data, "title", self.dc.title)
         return data
 
     def requires_es_descendants_update(self):
@@ -347,11 +354,11 @@ class DIP(AbstractEsModel):
             result = TaskResult.objects.get(task_id=self.import_task_id)
             error = result.get_error_message()
         except TaskResult.DoesNotExist:
-            error = gettext('A related task result could not be found.')
+            error = gettext("A related task result could not be found.")
         return gettext(
-            'An error occurred during the process executed to extract '
-            'and parse the METS file. %(error_message)s Please, contact '
-            'an administrator.' % {'error_message': error}
+            "An error occurred during the process executed to extract "
+            "and parse the METS file. %(error_message)s Please, contact "
+            "an administrator." % {"error_message": error}
         )
 
     def is_visible_by_user(self, user):
@@ -360,10 +367,10 @@ class DIP(AbstractEsModel):
         the import failed and the user is not an editor or an admin.
         Otherwise, return `True`.
         """
-        return not (self.import_status == self.IMPORT_PENDING or (
-            self.import_status == self.IMPORT_FAILURE and
-            not user.is_editor()
-        ))
+        return not (
+            self.import_status == self.IMPORT_PENDING
+            or (self.import_status == self.IMPORT_FAILURE and not user.is_editor())
+        )
 
 
 class DigitalFile(AbstractEsModel):
@@ -381,11 +388,7 @@ class DigitalFile(AbstractEsModel):
     amdsec = models.CharField(max_length=12)
     hashtype = models.CharField(max_length=7)
     hashvalue = models.CharField(max_length=128)
-    dip = models.ForeignKey(
-        DIP,
-        related_name='digital_files',
-        on_delete=models.CASCADE,
-    )
+    dip = models.ForeignKey(DIP, related_name="digital_files", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.uuid
@@ -394,21 +397,21 @@ class DigitalFile(AbstractEsModel):
 
     def get_es_data(self):
         data = {
-            '_id': self.pk,
-            'uuid': self.uuid,
-            'filepath': self.filepath,
-            'fileformat': self.fileformat,
-            'size_bytes': self.size_bytes,
+            "_id": self.pk,
+            "uuid": self.uuid,
+            "filepath": self.filepath,
+            "fileformat": self.fileformat,
+            "size_bytes": self.size_bytes,
         }
         # Datetimes are saved as UTC in ES. In this case,
         # the TIME_ZONE setting is not considered.
-        add_if_not_empty(data, 'datemodified', self.datemodified)
+        add_if_not_empty(data, "datemodified", self.datemodified)
 
         # Ancestors data
         if self.dip:
-            data['dip'] = self.dip.get_es_data_for_files()
+            data["dip"] = self.dip.get_es_data_for_files()
             if self.dip.collection:
-                data['collection'] = self.dip.collection.get_es_data_for_files()
+                data["collection"] = self.dip.collection.get_es_data_for_files()
 
         return data
 
@@ -427,9 +430,7 @@ class PREMISEvent(models.Model):
     outcome = models.TextField(blank=True, null=True)
     detailnote = models.TextField(blank=True, null=True)
     digitalfile = models.ForeignKey(
-        DigitalFile,
-        related_name='premis_events',
-        on_delete=models.CASCADE,
+        DigitalFile, related_name="premis_events", on_delete=models.CASCADE
     )
 
     def __str__(self):
@@ -447,6 +448,7 @@ class Setting(models.Model):
 
     `JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})`
     """
+
     name = models.CharField(max_length=50, unique=True)
     value = JSONField(max_length=500)
 

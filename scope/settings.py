@@ -18,64 +18,59 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS', cast=list, subcast=str)
+ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS", cast=list, subcast=str)
 
-SECRET_KEY = env('DJANGO_SECRET_KEY')
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-DEBUG = env.bool('DJANGO_DEBUG', default=False)
+DEBUG = env.bool("DJANGO_DEBUG", default=False)
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'scope.staticfiles.Config',
-
-    'django_celery_results',
-    'widget_tweaks',
-    'compressor',
-
-    'dips.apps.DipsConfig',
-    'search.apps.SearchConfig',
-
-    'django_cleanup'  # deletes FileFields when objects are deleted
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "scope.staticfiles.Config",
+    "django_celery_results",
+    "widget_tweaks",
+    "compressor",
+    "dips.apps.DipsConfig",
+    "search.apps.SearchConfig",
+    "django_cleanup",  # deletes FileFields when objects are deleted
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'scope.urls'
+ROOT_URLCONF = "scope.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ]
         },
-    },
+    }
 ]
 
-WSGI_APPLICATION = 'scope.wsgi.application'
+WSGI_APPLICATION = "scope.wsgi.application"
 
 
 # Database
@@ -83,12 +78,10 @@ WSGI_APPLICATION = 'scope.wsgi.application'
 
 # Requires MySQL or SQLite, the GROUP_CONCAT() function is being used
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'OPTIONS': {
-            'timeout': 10,
-        },
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "OPTIONS": {"timeout": 10},
     }
 }
 
@@ -98,36 +91,25 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-AUTH_USER_MODEL = 'dips.User'
+AUTH_USER_MODEL = "dips.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-LANGUAGES = [
-    ('en', _('English')),
-    ('fr', _('French')),
-]
+LANGUAGES = [("en", _("English")), ("fr", _("French"))]
 
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
+LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 
-TIME_ZONE = env('DJANGO_TIME_ZONE', default='UTC')
+TIME_ZONE = env("DJANGO_TIME_ZONE", default="UTC")
 
 USE_I18N = True
 
@@ -139,81 +121,74 @@ USE_TZ = True
 
 # Force cookie storage to reduce the possibility of looking the database
 # when using SessionStorage, which saves the data in the database by default.
-MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 # Fix mismatch with Bootstrap alert classes
-MESSAGE_TAGS = {
-    messages.DEBUG: 'secondary',
-    messages.ERROR: 'danger',
-}
+MESSAGE_TAGS = {messages.DEBUG: "secondary", messages.ERROR: "danger"}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
-    'npm.finders.NpmFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+    "npm.finders.NpmFinder",
 ]
 
 # Compress
 
 COMPRESS_OFFLINE = not DEBUG
-COMPRESS_PRECOMPILERS = [
-    ('text/x-scss', 'sassc {infile} {outfile}'),
-]
+COMPRESS_PRECOMPILERS = [("text/x-scss", "sassc {infile} {outfile}")]
 
 # NPM
 
 NPM_ROOT_PATH = BASE_DIR
-NPM_STATIC_FILES_PREFIX = 'lib'
+NPM_STATIC_FILES_PREFIX = "lib"
 NPM_FILE_PATTERNS = {
-    '@fortawesome': ['fontawesome-free/webfonts/fa-solid-900.*'],
-    'bootstrap': ['dist/js/bootstrap.min.*'],
-    'bootstrap-datepicker': [
-        'dist/css/bootstrap-datepicker3.standalone.min.css',
-        'dist/js/bootstrap-datepicker.min.js',
-        'dist/locales/bootstrap-datepicker.fr.min.js',
+    "@fortawesome": ["fontawesome-free/webfonts/fa-solid-900.*"],
+    "bootstrap": ["dist/js/bootstrap.min.*"],
+    "bootstrap-datepicker": [
+        "dist/css/bootstrap-datepicker3.standalone.min.css",
+        "dist/js/bootstrap-datepicker.min.js",
+        "dist/locales/bootstrap-datepicker.fr.min.js",
     ],
-    'jquery': ['dist/jquery.slim.min.*'],
-    'popper.js': ['dist/umd/popper.min.*'],
-    'typeface-roboto': ['files/roboto-latin-400.*'],
+    "jquery": ["dist/jquery.slim.min.*"],
+    "popper.js": ["dist/umd/popper.min.*"],
+    "typeface-roboto": ["files/roboto-latin-400.*"],
 }
 
 # Media
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 FILE_UPLOAD_PERMISSIONS = 0o640
 
 # Authentication
 
-LOGOUT_REDIRECT_URL = 'home'
-LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "home"
 
 # Fixtures
 
-FIXTURE_DIRS = [
-    os.path.join(BASE_DIR, 'dips', 'tests', 'fixtures'),
-]
+FIXTURE_DIRS = [os.path.join(BASE_DIR, "dips", "tests", "fixtures")]
 
 # Elasticsearch
 
 # RFC-1738 formatted URLs can be used. E.g.:'https://user:secret@host:443/'
-ES_HOSTS = env('ES_HOSTS', cast=list, subcast=str)
-ES_TIMEOUT = env.int('ES_TIMEOUT', default=10)
-ES_POOL_SIZE = env.int('ES_POOL_SIZE', default=10)
+ES_HOSTS = env("ES_HOSTS", cast=list, subcast=str)
+ES_TIMEOUT = env.int("ES_TIMEOUT", default=10)
+ES_POOL_SIZE = env.int("ES_POOL_SIZE", default=10)
 ES_INDEXES_SETTINGS = {
-    'number_of_shards': env.int('ES_INDEXES_SHARDS', default=1),
-    'number_of_replicas': env.int('ES_INDEXES_REPLICAS', default=0),
+    "number_of_shards": env.int("ES_INDEXES_SHARDS", default=1),
+    "number_of_replicas": env.int("ES_INDEXES_REPLICAS", default=0),
 }
 
 # Celery
 
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE

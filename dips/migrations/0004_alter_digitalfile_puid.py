@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('dips', '0003_alter_digitalfile_datemodified'),
-    ]
+    dependencies = [("dips", "0003_alter_digitalfile_datemodified")]
 
     operations = [
         migrations.AlterField(
-            model_name='digitalfile',
-            name='puid',
+            model_name="digitalfile",
+            name="puid",
             field=models.CharField(blank=True, max_length=200),
-        ),
+        )
     ]

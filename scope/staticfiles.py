@@ -8,4 +8,5 @@ class Config(StaticFilesConfig):
     they are not needed by `collectstatic`, where the compressed bundles should
     be already created by `django-compress` in the static root folder.
     """
-    ignore_patterns = ['*.js', '*.scss', '*.css', '*.map']
+
+    ignore_patterns = ["*.js", "*.scss", "*.css", "*.map"]

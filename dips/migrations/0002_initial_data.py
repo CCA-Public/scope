@@ -23,44 +23,45 @@ def migrate_permissions(apps, schema_editor):
 
 def add_user_groups(apps, schema_editor):
     """Create user groups with permissions."""
-    Group = apps.get_model('auth', 'Group')
-    Permission = apps.get_model('auth', 'Permission')
-    editor_group, created = Group.objects.get_or_create(name='Editors')
+    Group = apps.get_model("auth", "Group")
+    Permission = apps.get_model("auth", "Permission")
+    editor_group, created = Group.objects.get_or_create(name="Editors")
     if created:
-        permissions = Permission.objects.filter(codename__in=(
-            'add_collection', 'change_collection',
-            'add_dip', 'change_dip',
-        ))
+        permissions = Permission.objects.filter(
+            codename__in=(
+                "add_collection",
+                "change_collection",
+                "add_dip",
+                "change_dip",
+            )
+        )
         for permision in permissions:
             editor_group.permissions.add(permision)
         editor_group.save()
-    managers_group, created = Group.objects.get_or_create(name='Managers')
+    managers_group, created = Group.objects.get_or_create(name="Managers")
     if created:
-        permissions = Permission.objects.filter(codename__in=(
-            'add_user', 'change_user', 'delete_user',
-        ))
+        permissions = Permission.objects.filter(
+            codename__in=("add_user", "change_user", "delete_user")
+        )
         for permission in permissions:
             managers_group.permissions.add(permission)
         managers_group.save()
     # Viewers group is only for display purposes
     # and has no special permissions.
-    Group.objects.create(name='Viewers')
+    Group.objects.create(name="Viewers")
 
 
 def add_initial_settings(apps, schema_editor):
     """Create initial settings to manage DC fields."""
     Setting.objects.create(
-        name='enabled_optional_dc_fields',
+        name="enabled_optional_dc_fields",
         value=list(DublinCore.get_optional_fields().keys()),
     )
-    Setting.objects.create(
-        name='hide_empty_dc_fields',
-        value=True,
-    )
+    Setting.objects.create(name="hide_empty_dc_fields", value=True)
 
 
 def remove_user_groups(apps, schema_editor):
-    Group = apps.get_model('auth', 'Group')
+    Group = apps.get_model("auth", "Group")
     Group.objects.all().delete()
 
 
@@ -70,9 +71,7 @@ def remove_initial_settings(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('dips', '0001_initial'),
-    ]
+    dependencies = [("dips", "0001_initial")]
 
     operations = [
         migrations.RunPython(migrate_permissions, migrations.RunPython.noop),

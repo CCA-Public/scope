@@ -20,8 +20,8 @@ def convert_size(size):
     p = math.pow(1024, i)
     s = round(size / p)
     s = str(s)
-    s = s.replace('.0', '')
-    return '{} {}'.format(s, size_name[i])
+    s = s.replace(".0", "")
+    return "{} {}".format(s, size_name[i])
 
 
 def update_instance_from_dict(instance, dict):
@@ -45,13 +45,13 @@ def get_sort_params(params, options, default):
     available choices and use default if no option is passed on the params
     or if the option is not valid. Defaults to asc. sort direction.
     """
-    option = params.get('sort', default)
+    option = params.get("sort", default)
     if option not in list(options.keys()):
         option = default
 
-    direction = params.get('sort_dir', 'asc')
-    if direction not in ['asc', 'desc']:
-        direction = 'asc'
+    direction = params.get("sort_dir", "asc")
+    if direction not in ["asc", "desc"]:
+        direction = "asc"
 
     return (option, direction)
 
@@ -64,14 +64,14 @@ def get_page_from_search(search, params):
     search or a Django model QuerySet.
     """
     try:
-        limit = int(params.get('limit', 10))
+        limit = int(params.get("limit", 10))
         if limit <= 0 or limit > 100:
             raise ValueError
     except ValueError:
         limit = 10
 
     paginator = Paginator(search, limit)
-    page_no = params.get('page')
+    page_no = params.get("page")
     try:
         page = paginator.page(page_no)
     except PageNotAnInteger:

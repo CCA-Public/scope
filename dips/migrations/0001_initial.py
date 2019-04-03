@@ -14,143 +14,354 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('django_celery_results', '0001_initial'),
-        ('auth', '0009_alter_user_last_name_max_length'),
+        ("django_celery_results", "0001_initial"),
+        ("auth", "0009_alter_user_last_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('first_name', models.CharField(blank=True, max_length=30, verbose_name='first name')),
-                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        error_messages={
+                            "unique": "A user with that username already exists."
+                        },
+                        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        max_length=150,
+                        unique=True,
+                        validators=[
+                            django.contrib.auth.validators.UnicodeUsernameValidator()
+                        ],
+                        verbose_name="username",
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(
+                        blank=True, max_length=30, verbose_name="first name"
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        blank=True, max_length=150, verbose_name="last name"
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        blank=True, max_length=254, verbose_name="email address"
+                    ),
+                ),
+                (
+                    "is_staff",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates whether the user can log into this admin site.",
+                        verbose_name="staff status",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                        verbose_name="active",
+                    ),
+                ),
+                (
+                    "date_joined",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date joined"
+                    ),
+                ),
+                (
+                    "groups",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.Group",
+                        verbose_name="groups",
+                    ),
+                ),
+                (
+                    "user_permissions",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Specific permissions for this user.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.Permission",
+                        verbose_name="user permissions",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
             },
-            managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+            managers=[("objects", django.contrib.auth.models.UserManager())],
+        ),
+        migrations.CreateModel(
+            name="Collection",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("link", models.URLField(blank=True, verbose_name="finding aid")),
+            ],
+            options={"abstract": False},
+        ),
+        migrations.CreateModel(
+            name="DigitalFile",
+            fields=[
+                (
+                    "uuid",
+                    models.CharField(max_length=36, primary_key=True, serialize=False),
+                ),
+                ("filepath", models.TextField()),
+                ("fileformat", models.CharField(max_length=200)),
+                (
+                    "formatversion",
+                    models.CharField(blank=True, max_length=200, null=True),
+                ),
+                ("size_bytes", models.BigIntegerField()),
+                ("size_human", models.CharField(blank=True, max_length=10)),
+                ("datemodified", models.CharField(blank=True, max_length=30)),
+                ("puid", models.CharField(blank=True, max_length=11)),
+                ("amdsec", models.CharField(max_length=12)),
+                ("hashtype", models.CharField(max_length=7)),
+                ("hashvalue", models.CharField(max_length=128)),
+            ],
+            options={"abstract": False},
+        ),
+        migrations.CreateModel(
+            name="DIP",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "objectszip",
+                    models.FileField(upload_to="", verbose_name="objects zip file"),
+                ),
+                ("uploaded", models.DateTimeField(auto_now_add=True)),
+                (
+                    "import_task_id",
+                    models.CharField(max_length=255, null=True, unique=True),
+                ),
+                ("import_status", models.CharField(max_length=7, null=True)),
+                (
+                    "collection",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="dips",
+                        to="dips.Collection",
+                        verbose_name="collection",
+                    ),
+                ),
+            ],
+            options={"abstract": False},
+        ),
+        migrations.CreateModel(
+            name="DublinCore",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "identifier",
+                    models.CharField(max_length=50, verbose_name="identifier"),
+                ),
+                (
+                    "title",
+                    models.CharField(blank=True, max_length=200, verbose_name="title"),
+                ),
+                (
+                    "creator",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="creator"
+                    ),
+                ),
+                (
+                    "subject",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="subject"
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="description"),
+                ),
+                (
+                    "publisher",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="publisher"
+                    ),
+                ),
+                (
+                    "contributor",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="contributor"
+                    ),
+                ),
+                (
+                    "date",
+                    models.CharField(blank=True, max_length=21, verbose_name="date"),
+                ),
+                (
+                    "type",
+                    models.CharField(blank=True, max_length=200, verbose_name="type"),
+                ),
+                ("format", models.TextField(blank=True, verbose_name="format")),
+                (
+                    "source",
+                    models.CharField(blank=True, max_length=200, verbose_name="source"),
+                ),
+                (
+                    "language",
+                    models.CharField(
+                        blank=True, max_length=20, verbose_name="language"
+                    ),
+                ),
+                (
+                    "coverage",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="coverage"
+                    ),
+                ),
+                (
+                    "rights",
+                    models.CharField(blank=True, max_length=200, verbose_name="rights"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Collection',
+            name="PREMISEvent",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('link', models.URLField(blank=True, verbose_name='finding aid')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='DigitalFile',
-            fields=[
-                ('uuid', models.CharField(max_length=36, primary_key=True, serialize=False)),
-                ('filepath', models.TextField()),
-                ('fileformat', models.CharField(max_length=200)),
-                ('formatversion', models.CharField(blank=True, max_length=200, null=True)),
-                ('size_bytes', models.BigIntegerField()),
-                ('size_human', models.CharField(blank=True, max_length=10)),
-                ('datemodified', models.CharField(blank=True, max_length=30)),
-                ('puid', models.CharField(blank=True, max_length=11)),
-                ('amdsec', models.CharField(max_length=12)),
-                ('hashtype', models.CharField(max_length=7)),
-                ('hashvalue', models.CharField(max_length=128)),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='DIP',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('objectszip', models.FileField(upload_to='', verbose_name='objects zip file')),
-                ('uploaded', models.DateTimeField(auto_now_add=True)),
-                ('import_task_id', models.CharField(max_length=255, null=True, unique=True)),
-                ('import_status', models.CharField(max_length=7, null=True)),
-                ('collection', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='dips', to='dips.Collection', verbose_name='collection')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='DublinCore',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('identifier', models.CharField(max_length=50, verbose_name='identifier')),
-                ('title', models.CharField(blank=True, max_length=200, verbose_name='title')),
-                ('creator', models.CharField(blank=True, max_length=200, verbose_name='creator')),
-                ('subject', models.CharField(blank=True, max_length=200, verbose_name='subject')),
-                ('description', models.TextField(blank=True, verbose_name='description')),
-                ('publisher', models.CharField(blank=True, max_length=200, verbose_name='publisher')),
-                ('contributor', models.CharField(blank=True, max_length=200, verbose_name='contributor')),
-                ('date', models.CharField(blank=True, max_length=21, verbose_name='date')),
-                ('type', models.CharField(blank=True, max_length=200, verbose_name='type')),
-                ('format', models.TextField(blank=True, verbose_name='format')),
-                ('source', models.CharField(blank=True, max_length=200, verbose_name='source')),
-                ('language', models.CharField(blank=True, max_length=20, verbose_name='language')),
-                ('coverage', models.CharField(blank=True, max_length=200, verbose_name='coverage')),
-                ('rights', models.CharField(blank=True, max_length=200, verbose_name='rights')),
+                (
+                    "uuid",
+                    models.CharField(max_length=36, primary_key=True, serialize=False),
+                ),
+                ("eventtype", models.CharField(blank=True, max_length=200)),
+                ("datetime", models.CharField(blank=True, max_length=50)),
+                ("detail", models.TextField(blank=True, null=True)),
+                ("outcome", models.TextField(blank=True, null=True)),
+                ("detailnote", models.TextField(blank=True, null=True)),
+                (
+                    "digitalfile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="premis_events",
+                        to="dips.DigitalFile",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='PREMISEvent',
+            name="Setting",
             fields=[
-                ('uuid', models.CharField(max_length=36, primary_key=True, serialize=False)),
-                ('eventtype', models.CharField(blank=True, max_length=200)),
-                ('datetime', models.CharField(blank=True, max_length=50)),
-                ('detail', models.TextField(blank=True, null=True)),
-                ('outcome', models.TextField(blank=True, null=True)),
-                ('detailnote', models.TextField(blank=True, null=True)),
-                ('digitalfile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='premis_events', to='dips.DigitalFile')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                (
+                    "value",
+                    jsonfield.fields.JSONField(
+                        dump_kwargs={
+                            "cls": jsonfield.encoder.JSONEncoder,
+                            "separators": (",", ":"),
+                        },
+                        load_kwargs={},
+                        max_length=500,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Setting',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('value', jsonfield.fields.JSONField(dump_kwargs={'cls': jsonfield.encoder.JSONEncoder, 'separators': (',', ':')}, load_kwargs={}, max_length=500)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='TaskResult',
-            fields=[
-            ],
-            options={
-                'proxy': True,
-                'indexes': [],
-            },
-            bases=('django_celery_results.taskresult',),
+            name="TaskResult",
+            fields=[],
+            options={"proxy": True, "indexes": []},
+            bases=("django_celery_results.taskresult",),
         ),
         migrations.AddField(
-            model_name='dip',
-            name='dc',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='dips.DublinCore'),
+            model_name="dip",
+            name="dc",
+            field=models.OneToOneField(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="dips.DublinCore",
+            ),
         ),
         migrations.AddField(
-            model_name='digitalfile',
-            name='dip',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='digital_files', to='dips.DIP'),
+            model_name="digitalfile",
+            name="dip",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="digital_files",
+                to="dips.DIP",
+            ),
         ),
         migrations.AddField(
-            model_name='collection',
-            name='dc',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='dips.DublinCore'),
+            model_name="collection",
+            name="dc",
+            field=models.OneToOneField(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="dips.DublinCore",
+            ),
         ),
     ]

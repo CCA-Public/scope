@@ -5,6 +5,7 @@ from dips.models import AbstractEsModel
 
 class AemNoMethod(AbstractEsModel):
     """Model missing one or more abstract methods."""
+
     # Set to abstract to avoid 'no such table error'
     class Meta:
         abstract = True
@@ -17,6 +18,7 @@ class AemNoMethod(AbstractEsModel):
 
 class AemNoProperty(AbstractEsModel):
     """Model missing one or more abstract properties."""
+
     # Set to abstract to avoid 'no such table error'
     class Meta:
         abstract = True
@@ -33,6 +35,7 @@ class AemNoProperty(AbstractEsModel):
 
 class AemOkay(AbstractEsModel):
     """Model with all the abstract models and properties."""
+
     # Set to abstract to avoid 'no such table error'
     class Meta:
         abstract = True

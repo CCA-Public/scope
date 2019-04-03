@@ -15,11 +15,10 @@ import zipfile
 # Use a normal logger to avoid redirecting both `stdout` and `stderr` to the
 # logger and back when using Celery's `get_task_logger`, and to avoid changing
 # the default `CELERY_REDIRECT_STDOUTS_LEVEL` when using `print`.
-logger = logging.getLogger('dips.tasks')
+logger = logging.getLogger("dips.tasks")
 
 
 class MetsTask(Task):
-
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         """
         Update DIP `import_status` when the task ends. Make sure it's one
@@ -29,7 +28,7 @@ class MetsTask(Task):
         if status not in states.READY_STATES:
             return
         dip = DIP.objects.get(pk=args[0])
-        logger.info('Updating DIP import status [Identifier: %s]' % dip.dc.identifier)
+        logger.info("Updating DIP import status [Identifier: %s]" % dip.dc.identifier)
         if status == states.SUCCESS:
             dip.import_status = DIP.IMPORT_SUCCESS
         else:
@@ -40,8 +39,10 @@ class MetsTask(Task):
 
 
 @shared_task(
-    base=MetsTask, autoretry_for=(TransportError, DatabaseError,),
-    max_retries=10, default_retry_delay=30,
+    base=MetsTask,
+    autoretry_for=(TransportError, DatabaseError),
+    max_retries=10,
+    default_retry_delay=30,
 )
 def extract_and_parse_mets(dip_id, zip_path):
     """
@@ -51,44 +52,46 @@ def extract_and_parse_mets(dip_id, zip_path):
     file during its parsing. This function is meant to be called with
     `.delay()` to be executed asynchronously by the Celery worker.
     """
-    logger.info('Extracting METS file from ZIP [Path: %s]' % zip_path)
+    logger.info("Extracting METS file from ZIP [Path: %s]" % zip_path)
     with tempfile.TemporaryDirectory() as dir_:
         with zipfile.ZipFile(zip_path) as zip_:
             # Extract METS file
             metsfile = None
-            mets_re = re.compile(r'.*METS.[0-9a-f\-]{36}.*$')
+            mets_re = re.compile(r".*METS.[0-9a-f\-]{36}.*$")
             for info in zip_.infolist():
                 if mets_re.match(info.filename):
                     metsfile = zip_.extract(info, dir_)
             if not metsfile:
-                raise Exception('METS file not found in ZIP file.')
+                raise Exception("METS file not found in ZIP file.")
             # Parse METS file
             path = os.path.abspath(metsfile)
-            logger.info('METS file extracted [Path: %s]' % path)
+            logger.info("METS file extracted [Path: %s]" % path)
             mets = METS(path, dip_id)
             mets.parse_mets()
 
 
 @shared_task(
-    autoretry_for=(TransportError, DatabaseError,),
-    max_retries=10, default_retry_delay=30, ignore_result=True
+    autoretry_for=(TransportError, DatabaseError),
+    max_retries=10,
+    default_retry_delay=30,
+    ignore_result=True,
 )
 def update_es_descendants(class_name, pk):
     """
     Updates the related DigitalFiles documents in ES with the partial data from
     the ancestor Collection or DIP.
     """
-    if class_name not in ['Collection', 'DIP']:
-        raise Exception('Can not update descendants of %s.' % class_name)
-    logger.info('Updating DigitalFiles of %s [id: %s] ' % (class_name, pk))
-    if class_name == 'Collection':
+    if class_name not in ["Collection", "DIP"]:
+        raise Exception("Can not update descendants of %s." % class_name)
+    logger.info("Updating DigitalFiles of %s [id: %s] " % (class_name, pk))
+    if class_name == "Collection":
         ancestor = Collection.objects.get(pk=pk)
         # Partial update with `doc` doesn't remove the fields missing in data,
         # they have to be removed via script to clear the existing value,
         # `script` and `doc` can't be combined in update actions, therefore
         # it's required to generate a Painless script to perform the update.
         script = {
-            'source': """
+            "source": """
                 if (params.containsKey('identifier')) {
                   ctx._source.collection.identifier = params.identifier;
                 } else {
@@ -100,14 +103,14 @@ def update_es_descendants(class_name, pk):
                   ctx._source.collection.remove('title');
                 }
             """,
-            'lang': 'painless',
-            'params': ancestor.get_es_data_for_files(),
+            "lang": "painless",
+            "params": ancestor.get_es_data_for_files(),
         }
         files = DigitalFile.objects.filter(dip__collection__pk=pk).all()
     else:
         ancestor = DIP.objects.get(pk=pk)
         script = {
-            'source': """
+            "source": """
                 if (params.containsKey('identifier')) {
                   ctx._source.dip.identifier = params.identifier;
                 } else {
@@ -124,50 +127,56 @@ def update_es_descendants(class_name, pk):
                   ctx._source.dip.remove('import_status');
                 }
             """,
-            'lang': 'painless',
-            'params': ancestor.get_es_data_for_files(),
+            "lang": "painless",
+            "params": ancestor.get_es_data_for_files(),
         }
         files = DigitalFile.objects.filter(dip__pk=pk).all()
     # Get connection to ES
     es = connections.get_connection()
     # Bulk update with partial data
-    success_count, errors = bulk(es, ({
-        '_op_type': 'update',
-        '_index': DigitalFile.es_doc._index._name,
-        '_type': DigitalFile.es_doc._doc_type.name,
-        '_id': file.pk,
-        'script': script,
-    } for file in files.iterator()))
-    logger.info('%d/%d DigitalFiles updated.' % (success_count, files.count()))
+    success_count, errors = bulk(
+        es,
+        (
+            {
+                "_op_type": "update",
+                "_index": DigitalFile.es_doc._index._name,
+                "_type": DigitalFile.es_doc._doc_type.name,
+                "_id": file.pk,
+                "script": script,
+            }
+            for file in files.iterator()
+        ),
+    )
+    logger.info("%d/%d DigitalFiles updated." % (success_count, files.count()))
     if len(errors) > 0:
-        logger.info('The following errors were encountered:')
+        logger.info("The following errors were encountered:")
         for error in errors:
-            logger.info('- %s' % error)
+            logger.info("- %s" % error)
 
 
 @shared_task(
     autoretry_for=(TransportError,),
-    max_retries=10, default_retry_delay=30, ignore_result=True
+    max_retries=10,
+    default_retry_delay=30,
+    ignore_result=True,
 )
 def delete_es_descendants(class_name, pk):
     """Deletes the related documents in ES based on the ancestor id."""
-    if class_name not in ['Collection', 'DIP']:
-        raise Exception('Can not delete descendants of %s.' % class_name)
-    logger.info('Deleting descendants of %s [id: %s] ' % (class_name, pk))
-    if class_name == 'Collection':
+    if class_name not in ["Collection", "DIP"]:
+        raise Exception("Can not delete descendants of %s." % class_name)
+    logger.info("Deleting descendants of %s [id: %s] " % (class_name, pk))
+    if class_name == "Collection":
         # DIPs and DigitalFiles use the same field to store the Collection id
         # so we can perform a single delete_by_query request over both indexes.
-        indexes = '%s,%s' % (
-            DIP.es_doc._index._name, DigitalFile.es_doc._index._name)
-        body = {'query': {'match': {'collection.id': pk}}}
+        indexes = "%s,%s" % (DIP.es_doc._index._name, DigitalFile.es_doc._index._name)
+        body = {"query": {"match": {"collection.id": pk}}}
     else:
         indexes = DigitalFile.es_doc._index._name
-        body = {'query': {'match': {'dip.id': pk}}}
+        body = {"query": {"match": {"dip.id": pk}}}
     es = connections.get_connection()
     response = es.delete_by_query(index=indexes, body=body)
-    logger.info('%d/%d descendants deleted.' % (
-        response['deleted'], response['total']))
-    if response['failures'] and len(response['failures']) > 0:
-        logger.info('The following errors were encountered:')
-        for error in response['failures']:
-            logger.info('- %s' % error)
+    logger.info("%d/%d descendants deleted." % (response["deleted"], response["total"]))
+    if response["failures"] and len(response["failures"]) > 0:
+        logger.info("The following errors were encountered:")
+        for error in response["failures"]:
+            logger.info("- %s" % error)

@@ -4,8 +4,8 @@ from django.dispatch import receiver
 from .models import Collection, DIP
 
 
-@receiver(pre_delete, sender=Collection, dispatch_uid='collection_pre_delete')
-@receiver(pre_delete, sender=DIP, dispatch_uid='dip_pre_delete')
+@receiver(pre_delete, sender=Collection, dispatch_uid="collection_pre_delete")
+@receiver(pre_delete, sender=DIP, dispatch_uid="dip_pre_delete")
 def delete_related_dc(instance, **kwargs):
     # When cascade deleting related models the custom delete method from
     # the model classes is not called. The DublinCore models are not deleted

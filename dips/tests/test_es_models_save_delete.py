@@ -6,24 +6,20 @@ from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 
 
 class EsModelsSaveDeleteTests(TestCase):
-    @patch('elasticsearch_dsl.DocType.save')
+    @patch("elasticsearch_dsl.DocType.save")
     def setUp(self, patch):
-        dc = DublinCore.objects.create(identifier='1')
+        dc = DublinCore.objects.create(identifier="1")
         self.collection = Collection.objects.create(dc=dc)
-        dc = DublinCore.objects.create(identifier='A')
+        dc = DublinCore.objects.create(identifier="A")
         self.dip = DIP.objects.create(
-            dc=dc,
-            collection=self.collection,
-            objectszip='/path/to/fake.zip',
+            dc=dc, collection=self.collection, objectszip="/path/to/fake.zip"
         )
         self.digital_file = DigitalFile.objects.create(
-            uuid='fake-uuid',
-            dip=self.dip,
-            size_bytes=1
+            uuid="fake-uuid", dip=self.dip, size_bytes=1
         )
 
-    @patch('dips.models.celery_app.send_task')
-    @patch.object(CollectionDoc, 'save')
+    @patch("dips.models.celery_app.send_task")
+    @patch.object(CollectionDoc, "save")
     def test_collection_save(self, mock, mock_2):
         self.collection.save(update_es=False)
         mock.assert_not_called()
@@ -31,23 +27,21 @@ class EsModelsSaveDeleteTests(TestCase):
         self.collection.save()
         mock.assert_called()
         mock_2.assert_called_with(
-            'dips.tasks.update_es_descendants',
-            args=('Collection', 1))
+            "dips.tasks.update_es_descendants", args=("Collection", 1)
+        )
 
-    @patch('dips.models.celery_app.send_task')
-    @patch.object(DIPDoc, 'save')
+    @patch("dips.models.celery_app.send_task")
+    @patch.object(DIPDoc, "save")
     def test_dip_save(self, mock, mock_2):
         self.dip.save(update_es=False)
         mock.assert_not_called()
         mock_2.assert_not_called()
         self.dip.save()
         mock.assert_called()
-        mock_2.assert_called_with(
-            'dips.tasks.update_es_descendants',
-            args=('DIP', 1))
+        mock_2.assert_called_with("dips.tasks.update_es_descendants", args=("DIP", 1))
 
-    @patch('dips.models.celery_app.send_task')
-    @patch.object(DigitalFileDoc, 'save')
+    @patch("dips.models.celery_app.send_task")
+    @patch.object(DigitalFileDoc, "save")
     def test_digital_file_save(self, mock, mock_2):
         self.digital_file.save(update_es=False)
         mock.assert_not_called()
@@ -56,8 +50,8 @@ class EsModelsSaveDeleteTests(TestCase):
         mock.assert_called()
         mock_2.assert_not_called()
 
-    @patch('dips.models.celery_app.send_task')
-    @patch('dips.models.delete_document')
+    @patch("dips.models.celery_app.send_task")
+    @patch("dips.models.delete_document")
     def test_digital_file_delete(self, mock, mock_2):
         uuid = self.digital_file.uuid
         self.digital_file.delete()
@@ -68,22 +62,18 @@ class EsModelsSaveDeleteTests(TestCase):
         )
         mock_2.assert_not_called()
 
-    @patch('dips.models.celery_app.send_task')
-    @patch('dips.models.delete_document')
+    @patch("dips.models.celery_app.send_task")
+    @patch("dips.models.delete_document")
     def test_dip_delete(self, mock, mock_2):
         pk = self.dip.pk
         self.dip.delete()
         mock.assert_called_with(
-            index=DIP.es_doc._index._name,
-            doc_type=DIP.es_doc._doc_type.name,
-            id=pk,
+            index=DIP.es_doc._index._name, doc_type=DIP.es_doc._doc_type.name, id=pk
         )
-        mock_2.assert_called_with(
-            'dips.tasks.delete_es_descendants',
-            args=('DIP', 1))
+        mock_2.assert_called_with("dips.tasks.delete_es_descendants", args=("DIP", 1))
 
-    @patch('dips.models.celery_app.send_task')
-    @patch('dips.models.delete_document')
+    @patch("dips.models.celery_app.send_task")
+    @patch("dips.models.delete_document")
     def test_collection_delete(self, mock, mock_2):
         pk = self.collection.pk
         self.collection.delete()
@@ -93,5 +83,5 @@ class EsModelsSaveDeleteTests(TestCase):
             id=pk,
         )
         mock_2.assert_called_with(
-            'dips.tasks.delete_es_descendants',
-            args=('Collection', 1))
+            "dips.tasks.delete_es_descendants", args=("Collection", 1)
+        )

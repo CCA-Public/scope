@@ -8,7 +8,7 @@ import os
 from .helpers import convert_size, update_instance_from_dict
 from .models import DIP, DigitalFile, PREMISEvent
 
-logger = logging.getLogger('dips.parsemets')
+logger = logging.getLogger("dips.parsemets")
 
 
 class METSError(Exception):
@@ -19,26 +19,51 @@ class METS(object):
     """
     Class for METS file parsing methods.
     """
+
     # Fields and xpaths for DigitalFile
     FILE_ELEMENTS = [
-        ('filepath', './techMD/mdWrap/xmlData/object/originalName'),
-        ('uuid', './techMD/mdWrap/xmlData/object/objectIdentifier/objectIdentifierValue'),
-        ('hashtype', './techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigestAlgorithm'),
-        ('hashvalue', './techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigest'),
-        ('size_bytes', './techMD/mdWrap/xmlData/object/objectCharacteristics/size'),
-        ('fileformat', './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatName'),
-        ('formatversion', './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatVersion'),
-        ('puid', './techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatRegistry/formatRegistryKey'),
-        ('datemodified', './techMD/mdWrap/xmlData/object/objectCharacteristics/objectCharacteristicsExtension/fits/fileinfo/fslastmodified[@toolname="OIS File Information"]'),
+        ("filepath", "./techMD/mdWrap/xmlData/object/originalName"),
+        (
+            "uuid",
+            "./techMD/mdWrap/xmlData/object/objectIdentifier/objectIdentifierValue",
+        ),
+        (
+            "hashtype",
+            "./techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigestAlgorithm",
+        ),
+        (
+            "hashvalue",
+            "./techMD/mdWrap/xmlData/object/objectCharacteristics/fixity/messageDigest",
+        ),
+        ("size_bytes", "./techMD/mdWrap/xmlData/object/objectCharacteristics/size"),
+        (
+            "fileformat",
+            "./techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatName",
+        ),
+        (
+            "formatversion",
+            "./techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatDesignation/formatVersion",
+        ),
+        (
+            "puid",
+            "./techMD/mdWrap/xmlData/object/objectCharacteristics/format/formatRegistry/formatRegistryKey",
+        ),
+        (
+            "datemodified",
+            './techMD/mdWrap/xmlData/object/objectCharacteristics/objectCharacteristicsExtension/fits/fileinfo/fslastmodified[@toolname="OIS File Information"]',
+        ),
     ]
     # Fields and xpaths for PREMISEvent
     PREMIS_ELEMENTS = [
-        ('uuid', './xmlData/event/eventIdentifier/eventIdentifierValue'),
-        ('eventtype', '.xmlData/event/eventType'),
-        ('datetime', './xmlData/event/eventDateTime'),
-        ('detail', './xmlData/event/eventDetail'),
-        ('outcome', './xmlData/event/eventOutcomeInformation/eventOutcome'),
-        ('detailnote', './xmlData/event/eventOutcomeInformation/eventOutcomeDetail/eventOutcomeDetailNote'),
+        ("uuid", "./xmlData/event/eventIdentifier/eventIdentifierValue"),
+        ("eventtype", ".xmlData/event/eventType"),
+        ("datetime", "./xmlData/event/eventDateTime"),
+        ("detail", "./xmlData/event/eventDetail"),
+        ("outcome", "./xmlData/event/eventOutcomeInformation/eventOutcome"),
+        (
+            "detailnote",
+            "./xmlData/event/eventOutcomeInformation/eventOutcomeDetail/eventOutcomeDetailNote",
+        ),
     ]
 
     def __init__(self, path, dip_id):
@@ -56,11 +81,11 @@ class METS(object):
         tree = etree.parse(self.path)
         root = tree.getroot()
         for elem in root.getiterator():
-            if not hasattr(elem.tag, 'find'):
+            if not hasattr(elem.tag, "find"):
                 continue
-            i = elem.tag.find('}')
+            i = elem.tag.find("}")
             if i >= 0:
-                elem.tag = elem.tag[i + 1:]
+                elem.tag = elem.tag[i + 1 :]
         objectify.deannotate(root, cleanup_namespaces=True)
         return root
 
@@ -70,20 +95,25 @@ class METS(object):
         """
         # Get DIP object
         dip = DIP.objects.get(pk=self.dip_id)
-        logger.info('Starting METS parsing process for DIP [Identifier: %s]' % dip.dc.identifier)
+        logger.info(
+            "Starting METS parsing process for DIP [Identifier: %s]" % dip.dc.identifier
+        )
 
         # Gather info for each file in filegroup "original"
         for file_ in self.mets_root.findall(".//fileGrp[@USE='original']/file"):
-            amdsec_id = file_.attrib['ADMID']
-            logger.info('Parsing original file metadata from AMD section [ADMID: %s]' % amdsec_id)
+            amdsec_id = file_.attrib["ADMID"]
+            logger.info(
+                "Parsing original file metadata from AMD section [ADMID: %s]"
+                % amdsec_id
+            )
             file_data, premis_events = self._parse_file_metadata(amdsec_id)
             file_data = self._transform_file_metadata(file_data)
 
             # Check mandatory UUID field
-            uuid = file_data.pop('uuid', None)
+            uuid = file_data.pop("uuid", None)
             if not uuid:
                 raise METSError(
-                    'An original file in this METS file is missing its UUID.'
+                    "An original file in this METS file is missing its UUID."
                 )
             # Get existing DigitalFile by UUID
             try:
@@ -91,15 +121,15 @@ class METS(object):
                 # Don't update DigitalFile from other DIP
                 if digitalfile.dip.pk != dip.pk:
                     raise METSError(
-                        'An original file in this METS file has the same UUID '
-                        'as an existing one from another DIP '
-                        '(%s).' % uuid
+                        "An original file in this METS file has the same UUID "
+                        "as an existing one from another DIP "
+                        "(%s)." % uuid
                     )
-                logger.info('Updating DigitalFile [UUID: %s]' % uuid)
+                logger.info("Updating DigitalFile [UUID: %s]" % uuid)
             except DigitalFile.DoesNotExist:
                 # Create DigitalFIle if it doesn't exist
                 digitalfile = DigitalFile(uuid=uuid)
-                logger.info('Creating DigitalFile [UUID: %s]' % uuid)
+                logger.info("Creating DigitalFile [UUID: %s]" % uuid)
             # Add/update instance fields with file_data values
             digitalfile = update_instance_from_dict(digitalfile, file_data)
             digitalfile.dip = dip
@@ -107,19 +137,19 @@ class METS(object):
             try:
                 digitalfile.full_clean()
             except ValidationError as e:
-                message = 'A DigitalFile could not be created:'
+                message = "A DigitalFile could not be created:"
                 for field, errors in e.message_dict.items():
-                    message += '\n- %s: %s' % (field, ' '.join(errors))
+                    message += "\n- %s: %s" % (field, " ".join(errors))
                 raise METSError(message)
             digitalfile.save()
 
             # Add premis events data to PREMISEvent model
             for event in premis_events:
                 # Check mandatory UUID field
-                uuid = event.pop('uuid', None)
+                uuid = event.pop("uuid", None)
                 if not uuid:
                     raise METSError(
-                        'A PREMISEvent in this METS file is missing its UUID.'
+                        "A PREMISEvent in this METS file is missing its UUID."
                     )
                 # Get existing PREMISEvent by UUID
                 try:
@@ -127,15 +157,15 @@ class METS(object):
                     # Don't update PREMISEvent from other DigitalFile
                     if premisevent.digitalfile.uuid != digitalfile.uuid:
                         raise METSError(
-                            'A PREMISEvent in this METS file has the same '
-                            'UUID as an existing one from another DIP '
-                            '(%s).' % uuid
+                            "A PREMISEvent in this METS file has the same "
+                            "UUID as an existing one from another DIP "
+                            "(%s)." % uuid
                         )
-                        logger.info('Updating PREMISEvent [UUID: %s]' % uuid)
+                        logger.info("Updating PREMISEvent [UUID: %s]" % uuid)
                 except PREMISEvent.DoesNotExist:
                     # Create PREMISEvent if it doesn't exist
                     premisevent = PREMISEvent(uuid=uuid)
-                    logger.info('Creating PREMISEvent [UUID: %s]' % uuid)
+                    logger.info("Creating PREMISEvent [UUID: %s]" % uuid)
                 # Add/update instance fields with event values
                 premisevent = update_instance_from_dict(premisevent, event)
                 premisevent.digitalfile = digitalfile
@@ -143,9 +173,9 @@ class METS(object):
                 try:
                     premisevent.full_clean()
                 except ValidationError as e:
-                    message = 'A PREMISEvent could not be created:'
+                    message = "A PREMISEvent could not be created:"
                     for field, errors in e.message_dict.items():
-                        message += '\n- %s: %s' % (field, ' '.join(errors))
+                        message += "\n- %s: %s" % (field, " ".join(errors))
                     raise METSError(message)
                 premisevent.save()
 
@@ -153,13 +183,13 @@ class METS(object):
         # dmdSec and update DIP DublinCore object.
         dc_data = self._parse_dc()
         if dc_data:
-            logger.info('Updating DIP Dublin Core metadata')
+            logger.info("Updating DIP Dublin Core metadata")
             # No validation is needed as all the fields are non
             # required string fields initiated with empty strings.
             dip.dc = update_instance_from_dict(dip.dc, dc_data)
             dip.dc.save()
         else:
-            logger.info('No DIP Dublin Core metadata found')
+            logger.info("No DIP Dublin Core metadata found")
 
     def _parse_file_metadata(self, amdsec_id):
         """
@@ -167,7 +197,7 @@ class METS(object):
         """
         # Create new dictionary for this item's info, including
         # the amdSec id, and new list of dicts for premis events.
-        data = {'amdsec': amdsec_id}
+        data = {"amdsec": amdsec_id}
         events = list()
 
         # Parse amdSec
@@ -179,7 +209,7 @@ class METS(object):
                 try:
                     data[key] = amdsec.find(xpath).text
                 except AttributeError:
-                    data[key] = ''
+                    data[key] = ""
 
             # Parse premis events related to file
             premis_event_xpath = ".//digiprovMD/mdWrap[@MDTYPE='PREMIS:EVENT']"
@@ -191,7 +221,7 @@ class METS(object):
                     try:
                         event[key] = premis_event.find(xpath).text
                     except AttributeError:
-                        event[key] = ''
+                        event[key] = ""
                 events.append(event)
 
         return (data, events)
@@ -201,23 +231,22 @@ class METS(object):
         Transform file metadata to be saved in DigitalFile fields.
         """
         # Format filepath
-        data['filepath'] = data['filepath'].replace('%transferDirectory%', '')
+        data["filepath"] = data["filepath"].replace("%transferDirectory%", "")
 
         # Create human-readable size
-        data['size_bytes'] = int(data['size_bytes'])
-        data['size_human'] = '0 bytes'
-        if data['size_bytes'] != 0:
-            data['size_human'] = convert_size(data['size_bytes'])
+        data["size_bytes"] = int(data["size_bytes"])
+        data["size_human"] = "0 bytes"
+        if data["size_bytes"] != 0:
+            data["size_human"] = convert_size(data["size_bytes"])
 
         # Transfrom timestamp. This timestamp comes from the FITS output,
         # `fits/fileinfo/fslastmodified[@toolname="OIS File Information"]`
         # element, and it seems to be an UTC timestamp.
         try:
-            unixtime = int(data['datemodified']) / 1000
-            data['datemodified'] = datetime.fromtimestamp(
-                unixtime, tz=timezone.utc)
+            unixtime = int(data["datemodified"]) / 1000
+            data["datemodified"] = datetime.fromtimestamp(unixtime, tz=timezone.utc)
         except (ValueError, OverflowError, OSError):
-            data['datemodified'] = None
+            data["datemodified"] = None
 
         return data
 
@@ -236,26 +265,35 @@ class METS(object):
         # Find SIP DMD ids, not file, and return if none is found
         xpath = 'structMap/div/div[@TYPE="Directory"][@LABEL="objects"]'
         divs = self.mets_root.find(xpath)
-        dmdids = divs.get('DMDID')
+        dmdids = divs.get("DMDID")
         if dmdids is None:
             return
 
         # Sort by date and loop over reversed DMD sections, check SIP
         # DMD ids to get the last updated SIP's Dublin Core metadata.
         dmdids = dmdids.split()
-        dmds = sorted(dmds, key=lambda e: e.get('CREATED'))
+        dmds = sorted(dmds, key=lambda e: e.get("CREATED"))
         for dmd in dmds[::-1]:
-            if dmd.get('ID') in dmdids:
-                dc_xml = dmd.find('mdWrap/xmlData/dublincore')
+            if dmd.get("ID") in dmdids:
+                dc_xml = dmd.find("mdWrap/xmlData/dublincore")
                 break
 
         # Parse all DC elements to a dictionary. Ignore identifier and
         # initiate all fields with empty strings as no one can be null.
         dc_model = {
-            'title': '', 'creator': '', 'subject': '', 'description': '',
-            'publisher': '', 'contributor': '', 'date': '', 'type': '',
-            'format': '', 'source': '', 'language': '', 'coverage': '',
-            'rights': '',
+            "title": "",
+            "creator": "",
+            "subject": "",
+            "description": "",
+            "publisher": "",
+            "contributor": "",
+            "date": "",
+            "type": "",
+            "format": "",
+            "source": "",
+            "language": "",
+            "coverage": "",
+            "rights": "",
         }
         for elem in dc_xml:
             key = str(elem.tag)

@@ -9,14 +9,13 @@ class Migration(migrations.Migration):
     ISO 8601 format (e.g.: 2003-09-10T21:22:30) works forwards and backwards
     with the default Django serialization but no other formats have been tested.
     """
-    dependencies = [
-        ('dips', '0002_initial_data'),
-    ]
+
+    dependencies = [("dips", "0002_initial_data")]
 
     operations = [
         migrations.AlterField(
-            model_name='digitalfile',
-            name='datemodified',
+            model_name="digitalfile",
+            name="datemodified",
             field=models.DateTimeField(blank=True, null=True),
-        ),
+        )
     ]
