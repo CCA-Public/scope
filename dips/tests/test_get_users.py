@@ -3,42 +3,42 @@ from django.test import TestCase
 
 from dips.models import User
 
-USERS = [
-    {
-        "username": "JohnDoe",
-        "first_name": "John",
-        "last_name": "Doe",
-        "email": "john@example.com",
-        "groups": ["Viewers"],
-    },
-    {
-        "username": "JaneDoe",
-        "first_name": "Jane",
-        "last_name": "Doe",
-        "email": "jane@example.com",
-        "groups": ["Editors", "Managers"],
-    },
-    {
-        "username": "JuanPerez",
-        "first_name": "Juan",
-        "last_name": "Perez",
-        "email": "juan@test.com",
-        "groups": ["Editors"],
-    },
-    {
-        "username": "MariaPerez",
-        "first_name": "Maria",
-        "last_name": "Perez",
-        "email": "maria@test.com",
-        "groups": ["Managers", "Editors", "Viewers"],
-    },
-]
-
 
 class GetUsersTests(TestCase):
+    USERS = [
+        {
+            "username": "JohnDoe",
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john@example.com",
+            "groups": ["Viewers"],
+        },
+        {
+            "username": "JaneDoe",
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "email": "jane@example.com",
+            "groups": ["Editors", "Managers"],
+        },
+        {
+            "username": "JuanPerez",
+            "first_name": "Juan",
+            "last_name": "Perez",
+            "email": "juan@test.com",
+            "groups": ["Editors"],
+        },
+        {
+            "username": "MariaPerez",
+            "first_name": "Maria",
+            "last_name": "Perez",
+            "email": "maria@test.com",
+            "groups": ["Managers", "Editors", "Viewers"],
+        },
+    ]
+
     @classmethod
     def setUpTestData(cls):
-        for user in USERS:
+        for user in cls.USERS:
             groups = user.pop("groups", None)
             user = User.objects.create(**user)
             if groups:

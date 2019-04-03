@@ -6,22 +6,23 @@ from dips.models import DigitalFile
 
 
 class HelpersTests(TestCase):
+    SORT_OPTIONS = {
+        "path": "filepath.raw",
+        "format": "fileformat.raw",
+        "size": "size_bytes",
+        "date": "datemodified",
+    }
+    SORT_DEFAULT = "path"
+    WRONG_LIMITS = [
+        "0",  # can't be zero
+        "-1",  # can't be negative
+        "101",  # can't be higher than 100
+        "text",  # has to be an integer
+    ]
+
     def setUp(self):
         self.es_search = DigitalFile.es_doc.search()
         self.orm_query_set = DigitalFile.objects.all().order_by("pk")
-        self.sort_options = {
-            "path": "filepath.raw",
-            "format": "fileformat.raw",
-            "size": "size_bytes",
-            "date": "datemodified",
-        }
-        self.sort_default = "path"
-        self.wrong_limits = [
-            "0",  # can't be zero
-            "-1",  # can't be negative
-            "101",  # can't be higher than 100
-            "text",  # has to be an integer
-        ]
 
     def test_add_if_not_empty(self):
         data = {}
@@ -71,7 +72,7 @@ class HelpersTests(TestCase):
 
     def test_get_sort_params_default_values(self):
         sort_option, sort_dir = helpers.get_sort_params(
-            {}, self.sort_options, self.sort_default
+            {}, self.SORT_OPTIONS, self.SORT_DEFAULT
         )
         self.assertEqual(sort_option, "path")
         self.assertEqual(sort_dir, "asc")
@@ -79,15 +80,15 @@ class HelpersTests(TestCase):
     def test_get_sort_params_wrong_values(self):
         sort_option, sort_dir = helpers.get_sort_params(
             {"sort": "unknown", "sort_dir": "unknown"},
-            self.sort_options,
-            self.sort_default,
+            self.SORT_OPTIONS,
+            self.SORT_DEFAULT,
         )
         self.assertEqual(sort_option, "path")
         self.assertEqual(sort_dir, "asc")
 
     def test_get_sort_params_good_values(self):
         sort_option, sort_dir = helpers.get_sort_params(
-            {"sort": "format", "sort_dir": "desc"}, self.sort_options, self.sort_default
+            {"sort": "format", "sort_dir": "desc"}, self.SORT_OPTIONS, self.SORT_DEFAULT
         )
         self.assertEqual(sort_option, "format")
         self.assertEqual(sort_dir, "desc")
@@ -163,7 +164,7 @@ class HelpersTests(TestCase):
 
     @patch("elasticsearch_dsl.Search.count", return_value=100)
     def test_get_page_from_search_es_wrong_limit(self, mock_es_count):
-        for limit in self.wrong_limits:
+        for limit in self.WRONG_LIMITS:
             page = helpers.get_page_from_search(self.es_search, {"limit": limit})
             self.assertEqual(page.paginator.num_pages, 10)
             self.assertEqual(page.number, 1)
@@ -171,7 +172,7 @@ class HelpersTests(TestCase):
 
     @patch("django.db.models.query.QuerySet.count", return_value=100)
     def test_get_page_from_search_orm_wrong_limit(self, mock_orm_count):
-        for limit in self.wrong_limits:
+        for limit in self.WRONG_LIMITS:
             page = helpers.get_page_from_search(self.orm_query_set, {"limit": limit})
             self.assertEqual(page.paginator.num_pages, 10)
             self.assertEqual(page.number, 1)
