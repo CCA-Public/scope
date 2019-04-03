@@ -15,7 +15,7 @@ class TasksTests(TestCase):
 
     @patch("dips.tasks.zipfile.ZipFile.infolist", return_value=[])
     @patch("dips.tasks.zipfile.ZipFile.__init__", return_value=None)
-    def test_extract_and_parse_mets_not_found(self, patch_1, patch_2):
+    def test_extract_and_parse_mets_not_found(self, mock_zip_init, mock_zip_info):
         with self.assertRaises(Exception):
             extract_and_parse_mets(1, "/DIP.zip")
 
@@ -28,15 +28,20 @@ class TasksTests(TestCase):
     )
     @patch("dips.tasks.zipfile.ZipFile.__init__", return_value=None)
     def test_extract_and_parse_mets_found(
-        self, patch_1, patch_2, patch_3, mock_1, mock_2
+        self,
+        mock_zip_init,
+        mock_zip_info,
+        mock_zip_extract,
+        mock_mets_init,
+        mock_mets_parse,
     ):
         extract_and_parse_mets(1, "/DIP.zip")
-        mock_1.assert_called_with("/mets.xml", 1)
-        mock_2.assert_called()
+        mock_mets_init.assert_called_with("/mets.xml", 1)
+        mock_mets_parse.assert_called()
 
     @patch("dips.models.celery_app.send_task")
     @patch("elasticsearch_dsl.DocType.save")
-    def test_mets_task_after_return(self, patch, mock):
+    def test_mets_task_after_return(self, mock_es_save, mock_send_task):
         task = MetsTask()
         task.after_return(
             status="SUCCESS",
@@ -70,7 +75,7 @@ class TasksTests(TestCase):
         self.assertEqual(dip_1.import_status, DIP.IMPORT_SUCCESS)
         self.assertEqual(dip_2.import_status, DIP.IMPORT_FAILURE)
         # All DigitalFile descendants should be saved
-        self.assertEqual(mock.call_count, 2)
+        self.assertEqual(mock_send_task.call_count, 2)
 
     def test_update_es_descendants_wrong_class(self):
         with self.assertRaises(Exception):
@@ -79,60 +84,64 @@ class TasksTests(TestCase):
     @patch("dips.tasks.bulk", return_value=(1, []))
     @patch("dips.models.Collection.get_es_data_for_files")
     @patch("dips.models.DigitalFile.objects.filter")
-    def test_update_es_descendants_collection(self, mock, mock_2, mock_3):
+    def test_update_es_descendants_collection(
+        self, mock_orm_filter, mock_get_es_data, mock_task_bulk
+    ):
         update_es_descendants("Collection", 1)
         # The DigitalFiles should be filtered
-        mock.assert_called_with(dip__collection__pk=1)
+        mock_orm_filter.assert_called_with(dip__collection__pk=1)
         # The Collection data should be obtained (actual
         # data is tested in `test_models_to_docs`)
-        mock_2.assert_called()
+        mock_get_es_data.assert_called()
         # It's hard to assert the bulk call parameters as the second
         # one is a generator so we'll only check that it has been called.
-        mock_3.assert_called()
+        mock_task_bulk.assert_called()
 
     @patch("dips.tasks.bulk", return_value=(1, []))
     @patch("dips.models.DIP.get_es_data_for_files")
     @patch("dips.models.DigitalFile.objects.filter")
-    def test_update_es_descendants_dip(self, mock, mock_2, mock_3):
+    def test_update_es_descendants_dip(
+        self, mock_orm_filter, mock_get_es_data, mock_task_bulk
+    ):
         update_es_descendants("DIP", 1)
         # The DigitalFiles should be filtered
-        mock.assert_called_with(dip__pk=1)
+        mock_orm_filter.assert_called_with(dip__pk=1)
         # The DIP data should be obtained (actual
         # data is tested in `test_models_to_docs`)
-        mock_2.assert_called()
+        mock_get_es_data.assert_called()
         # It's hard to assert the bulk call parameters as the second
         # one is a generator so we'll only check that it has been called.
-        mock_3.assert_called()
+        mock_task_bulk.assert_called()
 
     @patch("dips.tasks.logger.info")
     @patch("dips.tasks.bulk", return_value=(1, ["error_1", "error_2"]))
-    def test_update_es_descendants_errors_logged(self, patch, mock):
+    def test_update_es_descendants_errors_logged(self, mock_task_bulk, mock_log_info):
         update_es_descendants("DIP", 1)
-        self.assertEqual(mock.call_count, 5)
+        self.assertEqual(mock_log_info.call_count, 5)
 
     def test_delete_es_descendants_wrong_class(self):
         with self.assertRaises(Exception):
             delete_es_descendants("DigitalFile", 1)
 
     @patch("elasticsearch.Elasticsearch.delete_by_query")
-    def test_delete_es_descendants_collection(self, mock):
+    def test_delete_es_descendants_collection(self, mock_es_delete):
         indexes = "%s,%s" % (DIP.es_doc._index._name, DigitalFile.es_doc._index._name)
         body = {"query": {"match": {"collection.id": 1}}}
         delete_es_descendants("Collection", 1)
-        mock.assert_called_with(index=indexes, body=body)
+        mock_es_delete.assert_called_with(index=indexes, body=body)
 
     @patch("elasticsearch.Elasticsearch.delete_by_query")
-    def test_delete_es_descendants_dip(self, mock):
+    def test_delete_es_descendants_dip(self, mock_es_delete):
         indexes = DigitalFile.es_doc._index._name
         body = {"query": {"match": {"dip.id": 1}}}
         delete_es_descendants("DIP", 1)
-        mock.assert_called_with(index=indexes, body=body)
+        mock_es_delete.assert_called_with(index=indexes, body=body)
 
     @patch("dips.tasks.logger.info")
     @patch(
         "elasticsearch.Elasticsearch.delete_by_query",
         return_value={"total": 1, "deleted": 1, "failures": ["error"]},
     )
-    def test_delete_es_descendants_errors_logged(self, patch, mock):
+    def test_delete_es_descendants_errors_logged(self, mock_es_delete, mock_log_info):
         delete_es_descendants("DIP", 1)
-        self.assertEqual(mock.call_count, 4)
+        self.assertEqual(mock_log_info.call_count, 4)

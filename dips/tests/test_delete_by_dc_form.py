@@ -8,7 +8,7 @@ from dips.models import Collection, DIP, DublinCore
 
 class DcByDcFormTests(TestCase):
     @patch("elasticsearch_dsl.DocType.save")
-    def setUp(self, patch):
+    def setUp(self, mock_es_save):
         User = get_user_model()
         User.objects.create_superuser("admin", "admin@example.com", "admin")
         self.client.login(username="admin", password="admin")
@@ -30,7 +30,7 @@ class DcByDcFormTests(TestCase):
 
     @patch("elasticsearch.client.Elasticsearch.delete")
     @patch("dips.models.celery_app.send_task")
-    def test_dip_deletion_success(self, patch, patch_2):
+    def test_dip_deletion_success(self, mock_send_task, mock_es_delete):
         url = reverse("delete_dip", kwargs={"pk": self.dip.pk})
         self.assertTrue(DIP.objects.filter(dc__identifier="A").exists())
         self.client.post(url, {"identifier": "A"})
@@ -47,7 +47,7 @@ class DcByDcFormTests(TestCase):
 
     @patch("elasticsearch.client.Elasticsearch.delete")
     @patch("dips.models.celery_app.send_task")
-    def test_collection_deletion_success(self, patch, patch_2):
+    def test_collection_deletion_success(self, mock_send_task, mock_es_delete):
         url = reverse("delete_collection", kwargs={"pk": self.collection.pk})
         self.assertTrue(Collection.objects.filter(dc__identifier="1").exists())
         self.client.post(url, {"identifier": "1"})

@@ -156,7 +156,7 @@ GET_PAGES = {
 
 class UserAccessTests(TestCase):
     @patch("elasticsearch_dsl.DocType.save")
-    def setUp(self, patch):
+    def setUp(self, mock_es_save):
         # Create test users
         User.objects.create_superuser("admin", "admin@example.com", "admin")
         User.objects.create_user("basic", "basic@example.com", "basic")
@@ -188,7 +188,7 @@ class UserAccessTests(TestCase):
 
     @patch("elasticsearch_dsl.Search.execute")
     @patch("elasticsearch_dsl.Search.count", return_value=0)
-    def test_get_pages(self, patch, patch_2):
+    def test_get_pages(self, mock_es_count, mock_es_exec):
         """
         Makes get requests to pages with different user types logged in
         and verifies if the user can see the page or gets redirected.
@@ -310,7 +310,7 @@ class UserAccessTests(TestCase):
 
     @patch("elasticsearch_dsl.DocType.save")
     @patch("dips.models.celery_app.send_task")
-    def test_post_collection(self, patch, patch_2):
+    def test_post_collection(self, mock_send_task, mock_es_save):
         """
         Makes post requests to create and edit collection pages with different
         user types logged in and verifies the results.
@@ -410,7 +410,7 @@ class UserAccessTests(TestCase):
 
     @patch("elasticsearch_dsl.DocType.save")
     @patch("dips.models.celery_app.send_task")
-    def test_post_dip(self, patch, patch_2):
+    def test_post_dip(self, mock_send_task, mock_es_save):
         """
         Makes post requests to create and edit DIP pages with different
         user types logged in and verifies the results.
@@ -499,7 +499,7 @@ class UserAccessTests(TestCase):
 
     @patch("dips.models.delete_document")
     @patch("dips.models.celery_app.send_task")
-    def test_delete_dip(self, patch, patch_2):
+    def test_delete_dip(self, mock_send_task, mock_es_delete):
         """
         Makes post request to delete a DIP with different
         user types logged in and verifies the results.
@@ -558,7 +558,7 @@ class UserAccessTests(TestCase):
 
     @patch("dips.models.delete_document")
     @patch("dips.models.celery_app.send_task")
-    def test_delete_collection(self, patch, patch_2):
+    def test_delete_collection(self, mock_send_task, mock_es_delete):
         """
         Makes post request to delete a collection with different
         user types logged in and verifies the results.

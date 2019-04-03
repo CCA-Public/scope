@@ -18,7 +18,7 @@ class NewCollectionTests(TestCase):
         self.assertContains(response, "csrfmiddlewaretoken")
 
     @patch("elasticsearch_dsl.DocType.save")
-    def test_new_topic_valid_post_data(self, patch):
+    def test_new_topic_valid_post_data(self, mock_es_save):
         # Make collection
         url = reverse("new_collection")
         data = {

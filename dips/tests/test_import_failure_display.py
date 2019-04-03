@@ -28,7 +28,7 @@ class ImportFailureDisplayTests(TestCase):
 
     @patch("elasticsearch_dsl.Search.execute")
     @patch("elasticsearch_dsl.Search.count", return_value=0)
-    def test_dip_view_error_message_with_trace(self, patch, patch_2):
+    def test_dip_view_error_message_with_trace(self, mock_es_count, mock_es_exec):
         url = reverse("dip", kwargs={"pk": 1})
         response = self.client.get(url)
         self.assertContains(response, '<div class="alert alert-danger')
@@ -36,7 +36,7 @@ class ImportFailureDisplayTests(TestCase):
 
     @patch("elasticsearch_dsl.Search.execute")
     @patch("elasticsearch_dsl.Search.count", return_value=0)
-    def test_dip_view_error_message_without_trace(self, patch, patch_2):
+    def test_dip_view_error_message_without_trace(self, mock_es_count, mock_es_exec):
         url = reverse("dip", kwargs={"pk": 2})
         response = self.client.get(url)
         self.assertContains(response, '<div class="alert alert-danger')

@@ -12,7 +12,7 @@ class ViewsTests(TestCase):
     @patch("elasticsearch_dsl.Search.execute")
     @patch("elasticsearch_dsl.Search.count", return_value=0)
     @patch("dips.views.messages.error")
-    def test_search_wrong_dates(self, mock, patch, patch_2):
+    def test_search_wrong_dates(self, mock_msg_error, mock_es_count, mock_es_exec):
         response = self.client.get(
             "/search/", {"start_date": "2018/01/01", "end_date": "Nov. 6, 2018"}
         )
@@ -25,4 +25,4 @@ class ViewsTests(TestCase):
         # Wrong formats should be maintained in filters
         self.assertEqual(response.context["filters"], expected_filters)
         # But the errors should be added to the messages
-        self.assertEqual(mock.call_count, 2)
+        self.assertEqual(mock_msg_error.call_count, 2)

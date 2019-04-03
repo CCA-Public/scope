@@ -23,18 +23,18 @@ class IndexDataTests(TestCase):
     @patch("elasticsearch_dsl.Index.delete")
     def test_index_recreation(
         self,
-        mock_delete,
-        mock_create,
-        mock_dig,
-        mock_dip,
-        mock_col,
-        patch_a,
-        patch_b,
-        patch_c,
+        mock_es_index_delete,
+        mock_es_index_create,
+        mock_df_es_data,
+        mock_dip_es_data,
+        mock_col_es_data,
+        mock_es_bulk,
+        mock_cmd_tqdm,
+        mock_cmd_print,
     ):
         call_command("index_data")
-        self.assertEqual(mock_delete.call_count, 3)
-        self.assertEqual(mock_create.call_count, 3)
-        self.assertEqual(mock_dig.call_count, 12)
-        self.assertEqual(mock_dip.call_count, 2)
-        self.assertEqual(mock_col.call_count, 2)
+        self.assertEqual(mock_es_index_delete.call_count, 3)
+        self.assertEqual(mock_es_index_create.call_count, 3)
+        self.assertEqual(mock_df_es_data.call_count, 12)
+        self.assertEqual(mock_dip_es_data.call_count, 2)
+        self.assertEqual(mock_col_es_data.call_count, 2)

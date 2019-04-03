@@ -27,7 +27,7 @@ def _sized_tmp_file(path, size):
 
 class DipDownloadTests(TestCase):
     @patch("elasticsearch_dsl.DocType.save")
-    def setUp(self, patch):
+    def setUp(self, mock_es_save):
         User.objects.create_superuser("admin", "admin@example.com", "admin")
         self.client.login(username="admin", password="admin")
         self.collection = Collection.objects.create(
