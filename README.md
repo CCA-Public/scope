@@ -131,6 +131,8 @@ The following environment variables are used to run the application:
 * `ES_INDEXES_REPLICAS`: Number of replicas for Elasticsearch indexes. *Default:* `0`.
 * `CELERY_BROKER_URL` **[REQUIRED]**: Redis server URL. E.g.: `redis://hostname:port`.
 
+Make sure [the system locale environment variables](https://wiki.debian.org/Locale) are configured to use UTF-8 encoding.
+
 ### Setup
 
 As the root user, install pip, virtualenv and other needed libraries:
