@@ -42,7 +42,7 @@ class DIPStoredWebhookTest(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
         url = reverse("dip_stored_webhook", kwargs={"dip_uuid": dip_uuid})
-        response = self.client.get(url)
+        response = self.client.post(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn(str(dip_uuid), response.data["message"])

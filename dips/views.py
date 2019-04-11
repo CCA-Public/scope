@@ -675,5 +675,5 @@ class DIPStoredWebhook(APIView):
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAdminUser,)
 
-    def get(self, request, dip_uuid, format=None):
+    def post(self, request, dip_uuid, format=None):
         return Response({"message": f"DIP stored event: {dip_uuid}"})
