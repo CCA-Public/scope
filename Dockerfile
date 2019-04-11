@@ -20,7 +20,7 @@ RUN set -ex \
             | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 \
                 { next } { print "so:" $1 }' \
     )" \
-    && apk add --no-cache --virtual .runDeps $runDeps gettext nodejs \
+    && apk add --no-cache --virtual .runDeps $runDeps gettext nodejs-npm \
     && npm install \
     && apk del .buildDeps \
     && find /usr/local -depth \
