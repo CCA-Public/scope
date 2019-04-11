@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
 from dips import views
 
@@ -54,5 +55,10 @@ urlpatterns = [
     url(r"^new_user/", views.new_user, name="new_user"),
     url(r"^users/", views.users, name="users"),
     url(r"^settings/", views.settings, name="settings"),
+    path(
+        "api/v1/dip/<uuid:dip_uuid>/stored",
+        views.DIPStoredWebhook().as_view(),
+        name="dip_stored_webhook",
+    ),
     url(r"^i18n/", include("django.conf.urls.i18n")),
 ]

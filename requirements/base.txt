@@ -4,6 +4,7 @@ django_celery_results==1.0.1
 django-cleanup==2.1.0
 django_compressor==2.2
 django-npm==1.0.0
+djangorestframework==3.9.2
 django-widget-tweaks==1.4.2
 elasticsearch-dsl==6.2.1 # pyup: <7.0
 envparse==0.2.0
