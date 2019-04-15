@@ -667,10 +667,7 @@ def settings(request):
 
 
 class DIPStoredWebhook(APIView):
-    """
-    Webhook to be called by Archivematica Storage Service when a new
-    DIP is stored.
-    """
+    """Webhook called when a new DIP is stored."""
 
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAdminUser,)
