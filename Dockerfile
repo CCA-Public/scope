@@ -23,12 +23,6 @@ RUN set -ex \
     && apk add --no-cache --virtual .runDeps $runDeps gettext nodejs-npm \
     && npm install \
     && apk del .buildDeps \
-    && find /usr/local -depth \
-        \( \
-            \( -type d -a \( -name test -o -name tests \) \) \
-            -o \
-            \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-        \) -exec rm -rf '{}' + \
     && rm -rf /usr/src/python
 
 EXPOSE 8000

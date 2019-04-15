@@ -54,5 +54,6 @@ urlpatterns = [
     url(r"^new_user/", views.new_user, name="new_user"),
     url(r"^users/", views.users, name="users"),
     url(r"^settings/", views.settings, name="settings"),
+    url(r"^api/v1/", include("dips.api_urls")),
     url(r"^i18n/", include("django.conf.urls.i18n")),
 ]
