@@ -6,9 +6,6 @@ from django.forms import modelform_factory
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
-from rest_framework import authentication, permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from .helpers import get_sort_params, get_page_from_search
 from .models import User, Collection, DIP, DigitalFile, DublinCore
 from .forms import (
@@ -664,13 +661,3 @@ def settings(request):
         return redirect("settings")
 
     return render(request, "settings.html", {"form": form})
-
-
-class DIPStoredWebhook(APIView):
-    """Webhook called when a new DIP is stored."""
-
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAdminUser,)
-
-    def post(self, request, dip_uuid, format=None):
-        return Response({"message": f"DIP stored event: {dip_uuid}"})
