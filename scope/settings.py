@@ -14,6 +14,8 @@ from django.utils.translation import gettext_lazy as _
 from envparse import env
 import os
 
+from .helpers import ss_hosts_parser
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -200,3 +202,11 @@ REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": ("rest_framework.parsers.JSONParser",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
+
+# Storage Service
+
+# Allows a list of URLs separated by comma.
+# Requires RFC-1738 formatted URLs. E.g.:'https://user:secret@host:443/'.
+SS_HOSTS = env(
+    "SS_HOSTS", cast=list, subcast=str, postprocessor=ss_hosts_parser, default=[]
+)

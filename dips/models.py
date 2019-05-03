@@ -12,25 +12,12 @@ from collections import OrderedDict
 from django.contrib.auth.models import Group, AbstractUser
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
-from django_celery_results.models import TaskResult as CeleryTaskResult
 from jsonfield import JSONField
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
 from search.helpers import delete_document
 from scope.celery import app as celery_app
 from .helpers import add_if_not_empty
-
-
-class TaskResult(CeleryTaskResult):
-    """Proxy model to generate error message from Celery TaskResult"""
-
-    class Meta:
-        proxy = True
-
-    def get_error_message(self):
-        """Format traceback as HTML to display in alert"""
-        message = gettext("Error trace:") + "<p><pre>%s</pre></p>" % self.traceback
-        return message
 
 
 class User(AbstractUser):
@@ -96,7 +83,7 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
             # Launch async. task by name to avoid circular imports
             # or to import the task within this function.
             celery_app.send_task(
-                "dips.tasks.update_es_descendants",
+                "search.tasks.update_es_descendants",
                 args=(self.__class__.__name__, self.pk),
             )
 
@@ -108,7 +95,7 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
             # Launch async. task by name to avoid circular imports
             # or to import the task within this function.
             celery_app.send_task(
-                "dips.tasks.delete_es_descendants",
+                "search.tasks.delete_es_descendants",
                 args=(self.__class__.__name__, self.pk),
             )
         super(AbstractEsModel, self).delete(*args, **kwargs)
@@ -283,21 +270,17 @@ class DIP(AbstractEsModel):
         related_name="dips",
         verbose_name=_("collection"),
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
     )
     dc = models.OneToOneField(DublinCore, null=True, on_delete=models.SET_NULL)
-    # The TaskResult created by 'django_celery_results' are not added
-    # to the database when the import task is called. Therefore, a proper
-    # model relation can't be made at that point. This field is used to
-    # track the asynchronous result id from the task call, as that id
-    # will match the `task_id` unique field from the TaskResult.
-    import_task_id = models.CharField(max_length=255, null=True, unique=True)
-    # Because a related TaskResult may not exist for two reasons: not created
-    # yet or deleted (for example by a clean task), an extra field is needed
-    # to know if there is an import in progress for the DIP. This field is also
-    # used to track the import task status and it's set to `PENDING` when the
-    # task is called from the `new_dip` view and to `SUCCESS` or `FAILURE` when
-    # the task ends from within the task's `after_return` method.
     import_status = models.CharField(max_length=7, null=True)
+    import_error = models.TextField(blank=True, null=True)
+    # Storage Service
+    ss_uuid = models.CharField(max_length=36, blank=True, null=True, unique=True)
+    ss_dir_name = models.CharField(max_length=500, blank=True, null=True)
+    ss_host_url = models.CharField(max_length=500, blank=True, null=True)
+    ss_download_url = models.CharField(max_length=500, blank=True, null=True)
 
     # Import statuses
     IMPORT_PENDING = "PENDING"
@@ -321,7 +304,6 @@ class DIP(AbstractEsModel):
     def get_es_data(self):
         data = {"_id": self.pk}
         add_if_not_empty(data, "import_status", self.import_status)
-        add_if_not_empty(data, "import_task_id", self.import_task_id)
 
         if self.dc:
             data["dc"] = self.dc.get_es_inner_data()
@@ -346,12 +328,9 @@ class DIP(AbstractEsModel):
         return self.requires_es_descendants_update()
 
     def get_import_error_message(self):
-        # Try to get error info from TaskResult
-        try:
-            result = TaskResult.objects.get(task_id=self.import_task_id)
-            error = result.get_error_message()
-        except TaskResult.DoesNotExist:
-            error = gettext("A related task result could not be found.")
+        error = ""
+        if self.import_error:
+            error = "<p><pre>%s</pre></p>" % self.import_error
         return gettext(
             "An error occurred during the process executed to extract "
             "and parse the METS file. %(error_message)s Please, contact "
@@ -362,12 +341,15 @@ class DIP(AbstractEsModel):
         """Check if a user can see the instance.
 
         Retrun `False` if there is an import pending for the DIP or if
-        the import failed and the user is not an editor or an admin.
-        Otherwise, return `True`.
+        the user is not an editor or an admin and the import failed or
+        the DIP is not related to a Collection. Otherwise, return `True`.
         """
         return not (
             self.import_status == self.IMPORT_PENDING
-            or (self.import_status == self.IMPORT_FAILURE and not user.is_editor())
+            or (
+                not user.is_editor()
+                and (self.import_status == self.IMPORT_FAILURE or not self.collection)
+            )
         )
 
 

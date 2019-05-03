@@ -1,0 +1,126 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - ApiKey test:test
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.21.0
+    method: GET
+    uri: http://192.168.1.128:62081/api/v2/file/a2cddc10-6132-4690-8dd9-25ee7a01943f?format=json
+  response:
+    body:
+      string: ''
+    headers:
+      Connection:
+      - keep-alive
+      Content-Language:
+      - en-us
+      Content-Type:
+      - text/html; charset=utf-8
+      Date:
+      - Wed, 01 May 2019 07:21:00 GMT
+      Location:
+      - http://192.168.1.128:62081/api/v2/file/a2cddc10-6132-4690-8dd9-25ee7a01943f/?format=json
+      Server:
+      - nginx/1.14.0
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Language
+      X-Frame-Options:
+      - SAMEORIGIN
+    status:
+      code: 301
+      message: MOVED PERMANENTLY
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - ApiKey test:test
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.21.0
+    method: GET
+    uri: http://192.168.1.128:62081/api/v2/file/a2cddc10-6132-4690-8dd9-25ee7a01943f/?format=json
+  response:
+    body:
+      string: '{"current_full_path": "/var/archivematica/sharedDirectory/www/DIPsStore/a2cd/dc10/6132/4690/8dd9/25ee/7a01/943f/20190501050315-00a3eff7-de47-4e42-a7da-c322e2b518de",
+        "current_location": "/api/v2/location/a3a50aa7-0349-47b2-992e-9d05ada09f1b/",
+        "current_path": "a2cd/dc10/6132/4690/8dd9/25ee/7a01/943f/20190501050315-00a3eff7-de47-4e42-a7da-c322e2b518de",
+        "encrypted": false, "misc_attributes": {}, "origin_pipeline": "/api/v2/pipeline/3ea7ea54-909f-4586-97b6-21e01dfa561a/",
+        "package_type": "DIP", "related_packages": ["/api/v2/file/00a3eff7-de47-4e42-a7da-c322e2b518de/"],
+        "replicas": [], "replicated_package": null, "resource_uri": "/api/v2/file/a2cddc10-6132-4690-8dd9-25ee7a01943f/",
+        "size": 1604337, "status": "UPLOADED", "uuid": "a2cddc10-6132-4690-8dd9-25ee7a01943f"}'
+    headers:
+      Cache-Control:
+      - no-cache
+      Connection:
+      - keep-alive
+      Content-Language:
+      - en
+      Content-Type:
+      - application/json
+      Date:
+      - Wed, 01 May 2019 07:21:00 GMT
+      Server:
+      - nginx/1.14.0
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Accept-Language, Cookie
+      X-Frame-Options:
+      - SAMEORIGIN
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - ApiKey test:test
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.21.0
+    method: GET
+    uri: http://192.168.1.128:62081/api/v2/file/a2cddc10-6132-4690-8dd9-25ee7a01943f/extract_file/?relative_path_to_file=20190501050315-00a3eff7-de47-4e42-a7da-c322e2b518de/METS.00a3eff7-de47-4e42-a7da-c322e2b518de.xml
+  response:
+    body:
+      string: Resource with UUID fake_uuid does not exist
+    headers:
+      Connection:
+      - keep-alive
+      Content-Language:
+      - en
+      Content-Type:
+      - text/html; charset=utf-8
+      Date:
+      - Wed, 01 May 2019 07:21:00 GMT
+      Server:
+      - nginx/1.14.0
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Accept-Language, Cookie
+      X-Frame-Options:
+      - SAMEORIGIN
+    status:
+      code: 404
+      message: NOT FOUND
+version: 1

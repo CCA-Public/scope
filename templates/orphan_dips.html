@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load custom_tags %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Orphan Folders" %}
+{% endblock %}
+
+{% block content %}
+  <h2>{% trans "Orphan Folders" %}</h2>
+  <span class="d-inline-block mt-3 mb-2 mr-2">
+    {% blocktrans trimmed count counter=page.paginator.count %}
+      <strong>{{ counter }}</strong> folder
+    {% plural %}
+      <strong>{{ counter }}</strong> folders
+    {% endblocktrans %}
+  </span>
+  {% trans "Search" as placeholder %}
+  {% include 'includes/table_form.html' with placeholder=placeholder %}
+  <div class="table-responsive">
+    <table class="table table-striped table-condensed mb-0 border">
+      {% include 'includes/table_header.html' with headers=table_headers %}
+      {% if not dips %}
+        <tr>
+          <td colspan="5" class="text-center">{% trans "No matching records found" %}</td>
+        </tr>
+      {% endif %}
+      {% for dip in dips %}
+        <tr>
+          <td>{{ dip.dc.identifier }}</td>
+          <td>{{ dip.dc.title|default:'' }}</td>
+          <td>{{ dip.dc.date|default:'' }}</td>
+          <td>{{ dip.dc.description|default:''|safe }}</td>
+          <td class="text-nowrap">
+            {% if 'import_status' not in dip or dip.import_status == statuses.SUCCESS %}
+              <a href="{% url 'dip' dip.meta.id %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a>
+            {% elif dip.import_status == statuses.FAILURE %}
+              <a href="{% url 'dip' dip.meta.id %}" class="btn btn-sm btn-danger">{% trans "See error" %}</a>
+            {% else %}
+              <span aria-hidden="true"><i class="fas fa-circle-notch fa-spin" title="{% trans "Import in progress" %}"></i></span>
+              <span class="sr-only">{% trans "Import in progress" %}</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% include 'includes/table_pager.html' %}
+{% endblock %}

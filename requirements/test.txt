@@ -3,3 +3,4 @@
 coverage==4.5.1
 flake8==3.5.0
 tox==3.2.1
+vcrpy==2.0.1

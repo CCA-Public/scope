@@ -1,12 +1,13 @@
 from contextlib import contextmanager
+import os
+
 from django.conf import settings
 from django.urls import reverse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from unittest.mock import patch
+import vcr
 
-from dips.models import Collection, DIP, DublinCore, User
-
-import os
+from dips.models import DIP, DublinCore, User
 
 
 @contextmanager
@@ -31,33 +32,91 @@ class DipDownloadTests(TestCase):
     def setUp(self, mock_es_save):
         User.objects.create_superuser("admin", "admin@example.com", "admin")
         self.client.login(username="admin", password="admin")
-        self.collection = Collection.objects.create(
-            dc=DublinCore.objects.create(identifier="1")
+        self.local_dip = DIP.objects.create(
+            dc=DublinCore.objects.create(identifier="A"), objectszip="fake.zip"
         )
-        self.dip = DIP.objects.create(
-            dc=DublinCore.objects.create(identifier="A"),
-            collection=self.collection,
-            objectszip="fake.zip",
+        ss_uuid = "041576bb-befb-4206-a4fb-f62b547c71ef"
+        ss_host_url = "http://192.168.1.128:62081"
+        self.ss_dip = DIP.objects.create(
+            ss_uuid=ss_uuid,
+            ss_dir_name="20190501122906-ac51028e-9be6-4f99-af77-e1ca6f02d6c9",
+            ss_host_url="http://192.168.1.128:62081",
+            ss_download_url="%s/api/v2/file/%s/download/" % (ss_host_url, ss_uuid),
+            dc=DublinCore.objects.create(identifier=ss_uuid),
         )
 
-    def test_dip_download_zip_not_found(self):
-        url = reverse("download_dip", kwargs={"pk": self.dip.pk})
+    def test_dip_download_not_found(self):
+        url = reverse("download_dip", kwargs={"pk": 999})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_dip_download_headers(self):
+    def test_local_dip_download_zip_not_found(self):
+        url = reverse("download_dip", kwargs={"pk": self.local_dip.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_local_dip_download_headers(self):
         # Make sure the MEDIA_ROOT directory exists
         os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
         # Create temporay sized ZIP file for request
         path = os.path.join(settings.MEDIA_ROOT, "fake.zip")
         size = 1048575
         with _sized_tmp_file(path, size):
-            url = reverse("download_dip", kwargs={"pk": self.dip.pk})
+            url = reverse("download_dip", kwargs={"pk": self.local_dip.pk})
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response["Content-Length"], str(size))
             self.assertEqual(response["Content-Type"], "application/zip")
             self.assertEqual(
-                response["Content-Disposition"], "attachment; filename=fake.zip"
+                response["Content-Disposition"], 'attachment; filename="fake.zip"'
             )
             self.assertEqual(response["X-Accel-Redirect"], "/media/fake.zip")
+
+    def test_ss_dip_download_no_host(self):
+        self.ss_dip.ss_host_url = "http://unknown.host"
+        self.ss_dip.save(update_es=False)
+        with self.assertRaises(RuntimeError):
+            url = reverse("download_dip", kwargs={"pk": self.ss_dip.pk})
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 500)
+
+    @override_settings(
+        SS_HOSTS={"http://192.168.1.128:62081": {"user": "foo", "secret": "bar"}}
+    )
+    @vcr.use_cassette(
+        "dips/tests/fixtures/vcr_cassettes/ss_dip_download_unauthorized.yaml"
+    )
+    def test_ss_dip_download_unauthorized(self):
+        url = reverse("download_dip", kwargs={"pk": self.ss_dip.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    @override_settings(
+        SS_HOSTS={"http://192.168.1.128:62081": {"user": "test", "secret": "test"}}
+    )
+    @vcr.use_cassette(
+        "dips/tests/fixtures/vcr_cassettes/ss_dip_download_not_found.yaml"
+    )
+    def test_ss_dip_download_not_found(self):
+        self.ss_dip.ss_download_url = (
+            "%s/api/v2/file/fake_uuid/download/" % self.ss_dip.ss_host_url
+        )
+        self.ss_dip.save(update_es=False)
+        url = reverse("download_dip", kwargs={"pk": self.ss_dip.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    @override_settings(
+        SS_HOSTS={"http://192.168.1.128:62081": {"user": "test", "secret": "test"}}
+    )
+    @vcr.use_cassette("dips/tests/fixtures/vcr_cassettes/ss_dip_download_success.yaml")
+    def test_ss_dip_download_success(self):
+        url = reverse("download_dip", kwargs={"pk": self.ss_dip.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response["Content-Length"])
+        self.assertEqual(response["Content-Type"], "application/x-tar")
+        self.assertEqual(
+            response["Content-Disposition"],
+            'attachment; filename="%s.tar"' % self.ss_dip.ss_dir_name,
+        )

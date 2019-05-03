@@ -1,182 +1,121 @@
-from celery import shared_task, states, Task
-from django.db.utils import DatabaseError
-from elasticsearch.exceptions import TransportError
-from elasticsearch.helpers import bulk
-from elasticsearch_dsl.connections import connections
-from .parsemets import METS
-from .models import Collection, DIP, DigitalFile
-
-import logging
 import os
 import re
-import tempfile
+import shutil
 import zipfile
 
-# Use a normal logger to avoid redirecting both `stdout` and `stderr` to the
-# logger and back when using Celery's `get_task_logger`, and to avoid changing
-# the default `CELERY_REDIRECT_STDOUTS_LEVEL` when using `print`.
-logger = logging.getLogger("dips.tasks")
+from celery import shared_task
+from django.conf import settings
+from django.db.utils import DatabaseError
+from elasticsearch.exceptions import TransportError
+import requests
+
+from .parsemets import METS
+from .models import DIP
+
+METS_RE = re.compile(r".*METS.[0-9a-f\-]{36}.*$")
 
 
-class MetsTask(Task):
-    def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        """Update DIP `import_status` when the task ends.
+@shared_task(autoretry_for=(TransportError,), max_retries=10, default_retry_delay=30)
+def download_mets(dip_id):
+    """Downloads the DIP's METS file from the SS.
 
-        Make sure it's one of Celery's READY_STATES and set it to 'FAILURE' for
-        all possible non 'SUCCESS' states.
-        """
-        if status not in states.READY_STATES:
-            return
-        dip = DIP.objects.get(pk=args[0])
-        logger.info("Updating DIP import status [Identifier: %s]" % dip.dc.identifier)
-        if status == states.SUCCESS:
-            dip.import_status = DIP.IMPORT_SUCCESS
-        else:
-            dip.import_status = DIP.IMPORT_FAILURE
-        # This save is triggering another Celery task (update_es_descendants),
-        # TODO: consider the use of task chains.
-        dip.save()
-
-
-@shared_task(
-    base=MetsTask,
-    autoretry_for=(TransportError, DatabaseError),
-    max_retries=10,
-    default_retry_delay=30,
-)
-def extract_and_parse_mets(dip_id, zip_path):
-    """Extract and parse a METS file from a given DIP zip file.
-
-    Uses the METS class to parse its content, create the related DigitalFiles
-    and update the DIP DC metadata. Creates and deletes a temporary directory
-    to hold the METS file during its parsing. This function is meant to be called
-    with `.delay()` to be executed asynchronously by the Celery worker.
+    TODO: Check both DIP types integration and add fallback method if needed.
     """
-    logger.info("Extracting METS file from ZIP [Path: %s]" % zip_path)
-    with tempfile.TemporaryDirectory() as dir_:
-        with zipfile.ZipFile(zip_path) as zip_:
-            # Extract METS file
-            metsfile = None
-            mets_re = re.compile(r".*METS.[0-9a-f\-]{36}.*$")
-            for info in zip_.infolist():
-                if mets_re.match(info.filename):
-                    metsfile = zip_.extract(info, dir_)
-            if not metsfile:
-                raise Exception("METS file not found in ZIP file.")
-            # Parse METS file
-            path = os.path.abspath(metsfile)
-            logger.info("METS file extracted [Path: %s]" % path)
-            mets = METS(path, dip_id)
-            mets.parse_mets()
-
-
-@shared_task(
-    autoretry_for=(TransportError, DatabaseError),
-    max_retries=10,
-    default_retry_delay=30,
-    ignore_result=True,
-)
-def update_es_descendants(class_name, pk):
-    """Update the related DigitalFiles documents in ES.
-
-    With the partial data from the ancestor Collection or DIP.
-    """
-    if class_name not in ["Collection", "DIP"]:
-        raise Exception("Can not update descendants of %s." % class_name)
-    logger.info("Updating DigitalFiles of %s [id: %s] " % (class_name, pk))
-    if class_name == "Collection":
-        ancestor = Collection.objects.get(pk=pk)
-        # Partial update with `doc` doesn't remove the fields missing in data,
-        # they have to be removed via script to clear the existing value,
-        # `script` and `doc` can't be combined in update actions, therefore
-        # it's required to generate a Painless script to perform the update.
-        script = {
-            "source": """
-                if (params.containsKey('identifier')) {
-                  ctx._source.collection.identifier = params.identifier;
-                } else {
-                  ctx._source.collection.remove('identifier');
-                }
-                if (params.containsKey('title')) {
-                  ctx._source.collection.title = params.title;
-                } else {
-                  ctx._source.collection.remove('title');
-                }
-            """,
-            "lang": "painless",
-            "params": ancestor.get_es_data_for_files(),
-        }
-        files = DigitalFile.objects.filter(dip__collection__pk=pk).all()
-    else:
-        ancestor = DIP.objects.get(pk=pk)
-        script = {
-            "source": """
-                if (params.containsKey('identifier')) {
-                  ctx._source.dip.identifier = params.identifier;
-                } else {
-                  ctx._source.dip.remove('identifier');
-                }
-                if (params.containsKey('title')) {
-                  ctx._source.dip.title = params.title;
-                } else {
-                  ctx._source.dip.remove('title');
-                }
-                if (params.containsKey('import_status')) {
-                  ctx._source.dip.import_status = params.import_status;
-                } else {
-                  ctx._source.dip.remove('import_status');
-                }
-            """,
-            "lang": "painless",
-            "params": ancestor.get_es_data_for_files(),
-        }
-        files = DigitalFile.objects.filter(dip__pk=pk).all()
-    # Get connection to ES
-    es = connections.get_connection()
-    # Bulk update with partial data
-    success_count, errors = bulk(
-        es,
-        (
-            {
-                "_op_type": "update",
-                "_index": DigitalFile.es_doc._index._name,
-                "_type": DigitalFile.es_doc._doc_type.name,
-                "_id": file.pk,
-                "script": script,
-            }
-            for file in files.iterator()
-        ),
+    # Check the SS host is still configured in the settings
+    dip = DIP.objects.get(pk=dip_id)
+    if dip.ss_host_url not in settings.SS_HOSTS.keys():
+        raise RuntimeError("Configuration not found for SS host: %s" % dip.ss_host_url)
+    # We should have the full DIP download URL, but we'll try to download
+    # only the METS file before. Build package info URL:
+    info_url = "%s/api/v2/file/%s?format=json" % (dip.ss_host_url, dip.ss_uuid)
+    headers = {
+        "Authorization": "ApiKey %s:%s"
+        % (
+            settings.SS_HOSTS[dip.ss_host_url]["user"],
+            settings.SS_HOSTS[dip.ss_host_url]["secret"],
+        )
+    }
+    response = requests.get(info_url, headers=headers, timeout=5)
+    # TODO: Do not raise if a fallback method is implemented
+    response.raise_for_status()
+    data = response.json()
+    # At this point the `related_packages` may be empty in the
+    # DIP information because the AIP has not been stored yet.
+    # Nevertheless, we need the AIP UUID to download the METS
+    # file only. This UUID can be obtained from the DIP current
+    # path, but that may not always be true in the future.
+    current_path = data["current_path"]
+    dip_dir = os.path.basename(current_path)
+    aip_uuid = dip_dir[-36:]
+    # Save DIP directory name to form the filename for downloads
+    dip.ss_dir_name = dip_dir
+    dip.save(update_es=False)
+    # Stream METS file to media folder
+    mets_url = (
+        "%s/api/v2/file/%s/extract_file/?relative_path_to_file=%s/METS.%s.xml"
+        % (dip.ss_host_url, dip.ss_uuid, dip_dir, aip_uuid)
     )
-    logger.info("%d/%d DigitalFiles updated." % (success_count, files.count()))
-    if len(errors) > 0:
-        logger.info("The following errors were encountered:")
-        for error in errors:
-            logger.info("- %s" % error)
+    mets_path = os.path.abspath(
+        os.path.join(settings.MEDIA_ROOT, "METS.%s.xml" % dip.ss_uuid)
+    )
+    with requests.get(mets_url, headers=headers, stream=True) as response:
+        # TODO: Do not raise if a fallback method is implemented
+        response.raise_for_status()
+        with open(mets_path, "wb") as mets_file:
+            shutil.copyfileobj(response.raw, mets_file)
+    return mets_path
+
+
+@shared_task()
+def extract_mets(zip_path, delete_zip=False):
+    """Extracts a METS file from a given zip file to the media folder.
+
+    Deletes the ZIP file if the METS file is not found or based on the
+    `delete_zip` parameter. Raises `Exception` if the METS file is not
+    found or returns the absolute path to the extracted file.
+    """
+    metsfile = None
+    with zipfile.ZipFile(zip_path) as zip_:
+        for info in zip_.infolist():
+            if METS_RE.match(info.filename):
+                info.filename = os.path.basename(info.filename)
+                metsfile = zip_.extract(info, settings.MEDIA_ROOT)
+
+    if not metsfile or delete_zip:
+        os.remove(zip_path)
+
+    if not metsfile:
+        raise FileNotFoundError("METS file not found in ZIP file.")
+
+    path = os.path.abspath(metsfile)
+    return path
 
 
 @shared_task(
-    autoretry_for=(TransportError,),
+    autoretry_for=(TransportError, DatabaseError),
     max_retries=10,
     default_retry_delay=30,
-    ignore_result=True,
 )
-def delete_es_descendants(class_name, pk):
-    """Deletes the related documents in ES based on the ancestor id."""
-    if class_name not in ["Collection", "DIP"]:
-        raise Exception("Can not delete descendants of %s." % class_name)
-    logger.info("Deleting descendants of %s [id: %s] " % (class_name, pk))
-    if class_name == "Collection":
-        # DIPs and DigitalFiles use the same field to store the Collection id
-        # so we can perform a single delete_by_query request over both indexes.
-        indexes = "%s,%s" % (DIP.es_doc._index._name, DigitalFile.es_doc._index._name)
-        body = {"query": {"match": {"collection.id": pk}}}
-    else:
-        indexes = DigitalFile.es_doc._index._name
-        body = {"query": {"match": {"dip.id": pk}}}
-    es = connections.get_connection()
-    response = es.delete_by_query(index=indexes, body=body)
-    logger.info("%d/%d descendants deleted." % (response["deleted"], response["total"]))
-    if response["failures"] and len(response["failures"]) > 0:
-        logger.info("The following errors were encountered:")
-        for error in response["failures"]:
-            logger.info("- %s" % error)
+def parse_mets(mets_path, dip_id):
+    """Parses a METS file updating a DIP and creating the children DigitalFiles.
+
+    Deletes the METS file and marks the import as finished as it's the last task
+    in both imports processes.
+    """
+    try:
+        mets = METS(mets_path, dip_id)
+        dip = mets.parse_mets()
+        dip.import_status = DIP.IMPORT_SUCCESS
+        dip.save()
+    finally:
+        # Remove METS file on error too
+        os.remove(mets_path)
+
+
+@shared_task()
+def save_import_error(request, exc, traceback, dip_id):
+    """Update DIP when any of the import tasks fail."""
+    dip = DIP.objects.get(pk=dip_id)
+    dip.import_status = DIP.IMPORT_FAILURE
+    dip.import_error = str(exc)
+    dip.save()

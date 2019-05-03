@@ -128,6 +128,14 @@ class UserAccessTests(TestCase):
             ("basic", 302),
             ("viewer", 302),
         ],
+        "orphan_dips": [
+            ("unauth", 302),
+            ("admin", 200),
+            ("manager", 302),
+            ("editor", 200),
+            ("basic", 302),
+            ("viewer", 302),
+        ],
         "download_dip": [
             ("unauth", 302),
             ("admin", 404),

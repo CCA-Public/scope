@@ -8,14 +8,19 @@
 {% block content %}
   <ol class="breadcrumb">
     {% trans "Untitled" as untitled %}
-    <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection.dc.title|default:untitled }}</a></li>
+    {% if dip.collection %}
+      <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection.dc.title|default:untitled }}</a></li>
+    {% else %}
+      <li class="breadcrumb-item"><a href="{% url 'orphan_dips' %}">{% trans "Orphan Folders" %}</a></li>
+    {% endif %}
     <li class="breadcrumb-item"><a href="{% url 'dip' dip.pk %}">{{ dip.dc.title|default:untitled }}</a></li>
     <li class="breadcrumb-item active">{% trans "Edit" %}</li>
   </ol>
   <form method="post" novalidate>
     {% csrf_token %}
-    {% include 'includes/form.html' %}
+    {% include 'includes/form.html' with form=dip_form %}
+    {% include 'includes/form.html' with form=dc_form %}
     <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
   </form>
 {% endblock %}

@@ -1,147 +1,98 @@
-from django.test import TestCase
+import os
+
+from django.conf import settings
+from django.test import TestCase, override_settings
+import requests
 from unittest.mock import patch, Mock
+import vcr
 
 from dips.models import DIP, DigitalFile
-from dips.tasks import (
-    extract_and_parse_mets,
-    MetsTask,
-    update_es_descendants,
-    delete_es_descendants,
-)
+from dips.tasks import download_mets, extract_mets, parse_mets, save_import_error
 
 
 class TasksTests(TestCase):
-    fixtures = ["index_data"]
+    @patch("elasticsearch_dsl.DocType.save")
+    def setUp(self, mock_es_save):
+        self.ss_uuid = "a2cddc10-6132-4690-8dd9-25ee7a01943f"
+        self.mets_path = os.path.join(settings.MEDIA_ROOT, "METS.%s.xml" % self.ss_uuid)
+        self.dip = DIP.objects.create(
+            ss_uuid=self.ss_uuid, ss_host_url="http://192.168.1.128:62081"
+        )
+        DigitalFile.objects.create(uuid="fake-uuid", dip=self.dip, size_bytes=1)
 
+    def test_download_mets_no_host(self):
+        self.dip.ss_host_url = "http://unknown.host"
+        self.dip.save(update_es=False)
+        with self.assertRaises(RuntimeError):
+            download_mets(self.dip.pk)
+
+    @override_settings(
+        SS_HOSTS={"http://192.168.1.128:62081": {"user": "foo", "secret": "bar"}}
+    )
+    @vcr.use_cassette(
+        "dips/tests/fixtures/vcr_cassettes/download_mets_unauthorized.yaml"
+    )
+    def test_download_mets_unauthorized(self):
+        with self.assertRaises(requests.exceptions.HTTPError):
+            download_mets(self.dip.pk)
+
+    @override_settings(
+        SS_HOSTS={"http://192.168.1.128:62081": {"user": "test", "secret": "test"}}
+    )
+    @vcr.use_cassette("dips/tests/fixtures/vcr_cassettes/download_mets_not_found.yaml")
+    def test_download_mets_not_found(self):
+        with self.assertRaises(requests.exceptions.HTTPError):
+            download_mets(self.dip.pk)
+
+    @override_settings(
+        SS_HOSTS={"http://192.168.1.128:62081": {"user": "test", "secret": "test"}}
+    )
+    @vcr.use_cassette("dips/tests/fixtures/vcr_cassettes/download_mets_success.yaml")
+    @patch("elasticsearch_dsl.DocType.save")
+    def test_download_mets_success(self, mock_es_save):
+        self.assertEqual(self.mets_path, download_mets(self.dip.pk))
+        self.assertTrue(os.path.isfile(self.mets_path))
+        os.remove(self.mets_path)
+
+    @patch("dips.tasks.os.remove")
     @patch("dips.tasks.zipfile.ZipFile.infolist", return_value=[])
     @patch("dips.tasks.zipfile.ZipFile.__init__", return_value=None)
-    def test_extract_and_parse_mets_not_found(self, mock_zip_init, mock_zip_info):
-        with self.assertRaises(Exception):
-            extract_and_parse_mets(1, "/DIP.zip")
+    def test_extract_mets_not_found(self, mock_zip_init, mock_zip_info, mock_os_remove):
+        with self.assertRaises(FileNotFoundError):
+            extract_mets("/DIP.zip")
+        mock_os_remove.assert_called_with("/DIP.zip")
 
-    @patch("dips.tasks.METS.parse_mets")
-    @patch("dips.tasks.METS.__init__", return_value=None)
+    @patch("dips.tasks.os.remove")
     @patch("dips.tasks.zipfile.ZipFile.extract", return_value="/mets.xml")
     @patch(
         "dips.tasks.zipfile.ZipFile.infolist",
         return_value=[Mock(filename="METS.ab028cb0-9942-4f26-a966-7197d7a2e15a.xml")],
     )
     @patch("dips.tasks.zipfile.ZipFile.__init__", return_value=None)
-    def test_extract_and_parse_mets_found(
-        self,
-        mock_zip_init,
-        mock_zip_info,
-        mock_zip_extract,
-        mock_mets_init,
-        mock_mets_parse,
+    def test_extract_mets_found(
+        self, mock_zip_init, mock_zip_info, mock_zip_extract, mock_os_remove
     ):
-        extract_and_parse_mets(1, "/DIP.zip")
-        mock_mets_init.assert_called_with("/mets.xml", 1)
-        mock_mets_parse.assert_called()
+        mets_path = extract_mets("/DIP.zip", delete_zip=True)
+        self.assertEqual("/mets.xml", mets_path)
+        mock_os_remove.assert_called_with("/DIP.zip")
+
+    @patch("dips.models.celery_app.send_task")
+    @patch("dips.tasks.os.remove")
+    @patch("elasticsearch_dsl.DocType.save")
+    @patch("dips.tasks.METS")
+    def test_parse_mets(self, mock_mets, mock_es_save, mock_os_remove, mock_send_task):
+        mock_mets().return_value = None
+        mock_mets().parse_mets.return_value = self.dip
+        parse_mets("/mets.xml", self.dip.pk)
+        self.assertEqual(self.dip.import_status, DIP.IMPORT_SUCCESS)
+        mock_send_task.assert_called()
+        mock_os_remove.assert_called_with("/mets.xml")
 
     @patch("dips.models.celery_app.send_task")
     @patch("elasticsearch_dsl.DocType.save")
-    def test_mets_task_after_return(self, mock_es_save, mock_send_task):
-        task = MetsTask()
-        task.after_return(
-            status="SUCCESS",
-            retval=None,
-            task_id=None,
-            args=(1, "/mets.xml"),
-            kwargs=None,
-            einfo=None,
-        )
-        task.after_return(
-            status="REVOKED",
-            retval=None,
-            task_id=None,
-            args=(2, "/mets.xml"),
-            kwargs=None,
-            einfo=None,
-        )
-        # Rare case where the status is not a READY state,
-        # it should not update the related resources.
-        task.after_return(
-            status="RETRY",
-            retval=None,
-            task_id=None,
-            args=(1, "/mets.xml"),
-            kwargs=None,
-            einfo=None,
-        )
-        # DIP import_status should be updated
-        dip_1 = DIP.objects.get(pk=1)
-        dip_2 = DIP.objects.get(pk=2)
-        self.assertEqual(dip_1.import_status, DIP.IMPORT_SUCCESS)
-        self.assertEqual(dip_2.import_status, DIP.IMPORT_FAILURE)
-        # All DigitalFile descendants should be saved
-        self.assertEqual(mock_send_task.call_count, 2)
-
-    def test_update_es_descendants_wrong_class(self):
-        with self.assertRaises(Exception):
-            update_es_descendants("DigitalFile", 1)
-
-    @patch("dips.tasks.bulk", return_value=(1, []))
-    @patch("dips.models.Collection.get_es_data_for_files")
-    @patch("dips.models.DigitalFile.objects.filter")
-    def test_update_es_descendants_collection(
-        self, mock_orm_filter, mock_get_es_data, mock_task_bulk
-    ):
-        update_es_descendants("Collection", 1)
-        # The DigitalFiles should be filtered
-        mock_orm_filter.assert_called_with(dip__collection__pk=1)
-        # The Collection data should be obtained (actual
-        # data is tested in `test_models_to_docs`)
-        mock_get_es_data.assert_called()
-        # It's hard to assert the bulk call parameters as the second
-        # one is a generator so we'll only check that it has been called.
-        mock_task_bulk.assert_called()
-
-    @patch("dips.tasks.bulk", return_value=(1, []))
-    @patch("dips.models.DIP.get_es_data_for_files")
-    @patch("dips.models.DigitalFile.objects.filter")
-    def test_update_es_descendants_dip(
-        self, mock_orm_filter, mock_get_es_data, mock_task_bulk
-    ):
-        update_es_descendants("DIP", 1)
-        # The DigitalFiles should be filtered
-        mock_orm_filter.assert_called_with(dip__pk=1)
-        # The DIP data should be obtained (actual
-        # data is tested in `test_models_to_docs`)
-        mock_get_es_data.assert_called()
-        # It's hard to assert the bulk call parameters as the second
-        # one is a generator so we'll only check that it has been called.
-        mock_task_bulk.assert_called()
-
-    @patch("dips.tasks.logger.info")
-    @patch("dips.tasks.bulk", return_value=(1, ["error_1", "error_2"]))
-    def test_update_es_descendants_errors_logged(self, mock_task_bulk, mock_log_info):
-        update_es_descendants("DIP", 1)
-        self.assertEqual(mock_log_info.call_count, 5)
-
-    def test_delete_es_descendants_wrong_class(self):
-        with self.assertRaises(Exception):
-            delete_es_descendants("DigitalFile", 1)
-
-    @patch("elasticsearch.Elasticsearch.delete_by_query")
-    def test_delete_es_descendants_collection(self, mock_es_delete):
-        indexes = "%s,%s" % (DIP.es_doc._index._name, DigitalFile.es_doc._index._name)
-        body = {"query": {"match": {"collection.id": 1}}}
-        delete_es_descendants("Collection", 1)
-        mock_es_delete.assert_called_with(index=indexes, body=body)
-
-    @patch("elasticsearch.Elasticsearch.delete_by_query")
-    def test_delete_es_descendants_dip(self, mock_es_delete):
-        indexes = DigitalFile.es_doc._index._name
-        body = {"query": {"match": {"dip.id": 1}}}
-        delete_es_descendants("DIP", 1)
-        mock_es_delete.assert_called_with(index=indexes, body=body)
-
-    @patch("dips.tasks.logger.info")
-    @patch(
-        "elasticsearch.Elasticsearch.delete_by_query",
-        return_value={"total": 1, "deleted": 1, "failures": ["error"]},
-    )
-    def test_delete_es_descendants_errors_logged(self, mock_es_delete, mock_log_info):
-        delete_es_descendants("DIP", 1)
-        self.assertEqual(mock_log_info.call_count, 4)
+    def test_save_import_error(self, mock_es_save, mock_send_task):
+        save_import_error({}, "Error message", "Error trace", self.dip.pk)
+        self.dip.refresh_from_db()
+        self.assertEqual(self.dip.import_status, DIP.IMPORT_FAILURE)
+        self.assertEqual(self.dip.import_error, "Error message")
+        mock_send_task.assert_called()

@@ -48,6 +48,7 @@ urlpatterns = [
     url(r"^folder/(?P<pk>\d+)/download$", views.download_dip, name="download_dip"),
     url(r"^object/(?P<pk>[-\w-]+)$", views.digital_file, name="digital_file"),
     url(r"^new_folder/", views.new_dip, name="new_dip"),
+    url(r"^orphan_folders/", views.orphan_dips, name="orphan_dips"),
     url(r"^faq/", views.faq, name="faq"),
     url(r"^search/", views.search, name="search"),
     url(r"^user/(?P<pk>\d+)/edit$", views.edit_user, name="edit_user"),

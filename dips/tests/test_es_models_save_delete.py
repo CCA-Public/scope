@@ -27,7 +27,7 @@ class EsModelsSaveDeleteTests(TestCase):
         self.collection.save()
         mock_es_save.assert_called()
         mock_send_task.assert_called_with(
-            "dips.tasks.update_es_descendants", args=("Collection", 1)
+            "search.tasks.update_es_descendants", args=("Collection", 1)
         )
 
     @patch("dips.models.celery_app.send_task")
@@ -39,7 +39,7 @@ class EsModelsSaveDeleteTests(TestCase):
         self.dip.save()
         mock_es_save.assert_called()
         mock_send_task.assert_called_with(
-            "dips.tasks.update_es_descendants", args=("DIP", 1)
+            "search.tasks.update_es_descendants", args=("DIP", 1)
         )
 
     @patch("dips.models.celery_app.send_task")
@@ -73,7 +73,7 @@ class EsModelsSaveDeleteTests(TestCase):
             index=DIP.es_doc._index._name, doc_type=DIP.es_doc._doc_type.name, id=pk
         )
         mock_send_task.assert_called_with(
-            "dips.tasks.delete_es_descendants", args=("DIP", 1)
+            "search.tasks.delete_es_descendants", args=("DIP", 1)
         )
 
     @patch("dips.models.celery_app.send_task")
@@ -87,5 +87,5 @@ class EsModelsSaveDeleteTests(TestCase):
             id=pk,
         )
         mock_send_task.assert_called_with(
-            "dips.tasks.delete_es_descendants", args=("Collection", 1)
+            "search.tasks.delete_es_descendants", args=("Collection", 1)
         )

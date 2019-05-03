@@ -6,7 +6,7 @@ import logging
 import os
 
 from .helpers import convert_size, update_instance_from_dict
-from .models import DIP, DigitalFile, PREMISEvent
+from .models import Collection, DIP, DigitalFile, PREMISEvent
 
 logger = logging.getLogger("dips.parsemets")
 
@@ -178,12 +178,39 @@ class METS(object):
         dc_data = self._parse_dc()
         if dc_data:
             logger.info("Updating DIP Dublin Core metadata")
+            # The `isPartOf` value is only used to find a related Collection,
+            # until slugs are implemented the relation is made using the DC
+            # identifier from the collections, which is not an unique field.
+            collection_id = dc_data.pop("isPartOf", None)
+            if collection_id:
+                try:
+                    # Remove AIC identifier if present
+                    collection_id = collection_id.replace("AIC#", "")
+                    dip.collection = Collection.objects.get(
+                        dc__identifier=collection_id
+                    )
+                    dip.save(update_es=False)
+                except Collection.DoesNotExist:
+                    logger.warning(
+                        "A Collection could not be found with identifier: %s"
+                        % collection_id
+                    )
+                except Collection.MultipleObjectsReturned:
+                    logger.warning(
+                        "More than one Collection were found with identifier: %s"
+                        % collection_id
+                    )
             # No validation is needed as all the fields are non
-            # required string fields initiated with empty strings.
+            # required string fields initiated with empty strings,
+            # but do not update identifier with an empty value.
+            if "identifier" in dc_data and not dc_data["identifier"]:
+                dc_data.pop("identifier")
             dip.dc = update_instance_from_dict(dip.dc, dc_data)
             dip.dc.save()
         else:
             logger.info("No DIP Dublin Core metadata found")
+
+        return dip
 
     def _parse_file_metadata(self, amdsec_id):
         """Parse file metadata into a dict and an events list."""
@@ -268,9 +295,10 @@ class METS(object):
                 dc_xml = dmd.find("mdWrap/xmlData/dublincore")
                 break
 
-        # Parse all DC elements to a dictionary. Ignore identifier and
-        # initiate all fields with empty strings as no one can be null.
+        # Parse all DC elements to a dictionary. Initiate all fields with
+        # empty strings as no one can be null.
         dc_model = {
+            "identifier": "",
             "title": "",
             "creator": "",
             "subject": "",
@@ -284,6 +312,7 @@ class METS(object):
             "language": "",
             "coverage": "",
             "rights": "",
+            "isPartOf": "",
         }
         for elem in dc_xml:
             key = str(elem.tag)

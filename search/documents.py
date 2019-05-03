@@ -35,7 +35,6 @@ class CollectionDoc(BaseDoc):
 class DIPDoc(BaseDoc):
     dc = Object(DublinCoreDoc)
     collection = Object(properties={"id": Integer()})
-    import_task_id = Keyword()
     import_status = Keyword()
 
     class Index:

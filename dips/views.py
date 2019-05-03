@@ -1,11 +1,17 @@
 from datetime import datetime
+import requests
+
+from celery import chain
+from django.conf import settings as django_settings
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.forms import modelform_factory
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, StreamingHttpResponse
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
+
 from .helpers import get_sort_params, get_page_from_search
 from .models import User, Collection, DIP, DigitalFile, DublinCore
 from .forms import (
@@ -14,7 +20,7 @@ from .forms import (
     UserChangeForm,
     DublinCoreSettingsForm,
 )
-from .tasks import extract_and_parse_mets
+from .tasks import extract_mets, parse_mets, save_import_error
 from search.helpers import (
     add_query_to_search,
     add_digital_file_aggs,
@@ -117,7 +123,6 @@ def faq(request):
 
 @login_required(login_url="/login/")
 def users(request):
-    # Only admins or managers can see users
     if not request.user.is_manager():
         return redirect("home")
 
@@ -170,7 +175,6 @@ def users(request):
 
 @login_required(login_url="/login/")
 def new_user(request):
-    # Only admins or managers can make new users
     if not request.user.is_manager():
         return redirect("home")
 
@@ -201,7 +205,6 @@ def new_user(request):
 
 @login_required(login_url="/login/")
 def edit_user(request, pk):
-    # Only admins or managers can make new users
     if not request.user.is_manager():
         return redirect("home")
 
@@ -265,10 +268,10 @@ def search(request):
 
     # Search
     search = DigitalFile.es_doc.search()
-    # Exclude DigitalFiles in DIPs with 'PENDING' or 'FAILURE' import
-    # status when the user is not an editor or an administrator.
+    # Exclude DigitalFiles from orphan DIPS and from DIPs with 'PENDING' or 'FAILURE'
+    # import status when the user is not an editor or an administrator.
     if not request.user.is_editor():
-        search = search.exclude(
+        search = search.query("exists", field="collection.id").exclude(
             "terms", **{"dip.import_status": [DIP.IMPORT_PENDING, DIP.IMPORT_FAILURE]}
         )
     fields = ["filepath", "fileformat", "collection.title"]
@@ -360,9 +363,12 @@ def collection(request, pk):
 def dip(request, pk):
     dip = get_object_or_404(DIP, pk=pk)
 
-    # Redirect to the collection page if the DIP is not visible
+    # Redirect to the collection or home page if the DIP is not visible
     if not dip.is_visible_by_user(request.user):
-        return redirect("collection", pk=dip.collection.pk)
+        if dip.collection:
+            return redirect("collection", pk=dip.collection.pk)
+        else:
+            return redirect("home")
 
     # Show notification to user about import error
     if dip.import_status == DIP.IMPORT_FAILURE:
@@ -422,9 +428,12 @@ def dip(request, pk):
 def digital_file(request, pk):
     digitalfile = get_object_or_404(DigitalFile, pk=pk)
 
-    # Redirect to the collection page if the related DIP is not visible
+    # Redirect to the collection or home page if the related DIP is not visible
     if not digitalfile.dip.is_visible_by_user(request.user):
-        return redirect("collection", pk=digitalfile.dip.collection.pk)
+        if digitalfile.dip.collection:
+            return redirect("collection", pk=digitalfile.dip.collection.pk)
+        else:
+            return redirect("home")
 
     # Show notification to user about import error
     if digitalfile.dip.import_status == DIP.IMPORT_FAILURE:
@@ -435,8 +444,6 @@ def digital_file(request, pk):
 
 @login_required(login_url="/login/")
 def new_collection(request):
-    # Only admins and users in group "Editors"
-    # can add collections
     if not request.user.is_editor():
         return redirect("home")
 
@@ -461,8 +468,6 @@ def new_collection(request):
 
 @login_required(login_url="/login/")
 def new_dip(request):
-    # Only admins and users in group "Editors"
-    # can add DIPs
     if not request.user.is_editor():
         return redirect("home")
 
@@ -474,24 +479,13 @@ def new_dip(request):
     if request.method == "POST" and dip_form.is_valid() and dc_form.is_valid():
         dip = dip_form.save(commit=False)
         dip.dc = dc_form.save()
-        # Avoid this save from updating the related ES documents,
-        # as it will be made when the async_result id is added bellow.
-        dip.save(update_es=False)
-
-        # Extract and parse METS file asynchronously
-        async_result = extract_and_parse_mets.delay(dip.pk, dip.objectszip.path)
-        # Save the async_result id to relate later with the TaskResult
-        # related object, which is not created on task call. Celery docs
-        # recommend to call get() or forget() on AsyncResult to free the
-        # backend resources used to store and transmit results, but the
-        # former waits for the task completion and the later may remove
-        # the result in the backend and the database. The only solution
-        # I could find is to rely on the `__del__` method, which cancels
-        # pending operations over the AsyncResult but doesn't delete the
-        # related TaskResult from the database.
-        dip.import_task_id = async_result.id
         dip.import_status = DIP.IMPORT_PENDING
         dip.save()
+
+        # Extract and parse METS file asynchronously
+        chain(extract_mets.s(dip.objectszip.path), parse_mets.s(dip.pk)).on_error(
+            save_import_error.s(dip_id=dip.pk)
+        ).delay()
 
         # Show notification to user about import in progress
         messages.info(
@@ -504,15 +498,16 @@ def new_dip(request):
             ),
         )
 
-        return redirect("collection", pk=dip.collection.pk)
+        if dip.collection:
+            return redirect("collection", pk=dip.collection.pk)
+        else:
+            return redirect("home")
 
     return render(request, "new_dip.html", {"dip_form": dip_form, "dc_form": dc_form})
 
 
 @login_required(login_url="/login/")
 def edit_collection(request, pk):
-    # Only admins and users in group "Editors"
-    # can edit collections
     if not request.user.is_editor():
         return redirect("collection", pk=pk)
 
@@ -549,36 +544,36 @@ def edit_collection(request, pk):
 
 @login_required(login_url="/login/")
 def edit_dip(request, pk):
-    # Only admins and users in group "Editors"
-    # can edit DIPs
     if not request.user.is_editor():
         return redirect("dip", pk=pk)
 
     dip = get_object_or_404(DIP, pk=pk)
+    DIPForm = modelform_factory(DIP, fields=("collection",))
+    dip_form = DIPForm(request.POST or None, instance=dip)
     DublinCoreForm = modelform_factory(DublinCore, fields=DublinCore.enabled_fields())
     dc_form = DublinCoreForm(request.POST or None, instance=dip.dc)
 
-    if request.method == "POST" and dc_form.is_valid():
+    if request.method == "POST" and dip_form.is_valid() and dc_form.is_valid():
         dc_form.save()
-        # Trigger ES update
-        dip.save()
+        dip_form.save()
         if dip.requires_es_descendants_update():
             messages.info(
                 request,
                 _(
                     "A background process has been launched to update the "
-                    "Folder metadata in the Elasticsearch index for the "
+                    "ancestors metadata in the Elasticsearch index for the "
                     "related Digital Files."
                 ),
             )
         return redirect("dip", pk=pk)
 
-    return render(request, "edit_dip.html", {"form": dc_form, "dip": dip})
+    return render(
+        request, "edit_dip.html", {"dip_form": dip_form, "dc_form": dc_form, "dip": dip}
+    )
 
 
 @login_required(login_url="/login/")
 def delete_collection(request, pk):
-    # Only admins can delete collections
     if not request.user.is_superuser:
         return redirect("collection", pk=pk)
 
@@ -607,7 +602,6 @@ def delete_collection(request, pk):
 
 @login_required(login_url="/login/")
 def delete_dip(request, pk):
-    # Only admins can delete DIPs
     if not request.user.is_superuser:
         return redirect("dip", pk=pk)
 
@@ -617,7 +611,10 @@ def delete_dip(request, pk):
         request.POST or None, instance=dc, initial={"identifier": ""}
     )
     if form.is_valid():
-        collection_pk = dip.collection.pk
+        # Get redirect URL before deletion
+        redirection = redirect("home")
+        if dip.collection:
+            redirection = redirect("collection", pk=dip.collection.pk)
         if dip.requires_es_descendants_delete():
             messages.info(
                 request,
@@ -627,30 +624,95 @@ def delete_dip(request, pk):
                 ),
             )
         dip.delete()
-        return redirect("collection", pk=collection_pk)
+        return redirection
 
     return render(request, "delete_dip.html", {"form": form, "dip": dip})
 
 
 @login_required(login_url="/login/")
+def orphan_dips(request):
+    if not request.user.is_editor():
+        return redirect("home")
+
+    # Sort options
+    sort_options = {"identifier": "dc.identifier.raw", "title": "dc.title.raw"}
+    sort_option, sort_dir = get_sort_params(request.GET, sort_options, "identifier")
+    sort_field = sort_options.get(sort_option)
+
+    # Search
+    search = DIP.es_doc.search().exclude("exists", field="collection.id")
+    search = add_query_to_search(search, request.GET.get("query", ""), ["dc.*"])
+    search = search.sort({sort_field: {"order": sort_dir}})
+
+    # Pagination
+    page = get_page_from_search(search, request.GET)
+    dips = page.object_list.execute()
+
+    table_headers = [
+        {"label": _("Identifier"), "sort_param": "identifier"},
+        {"label": _("Title"), "sort_param": "title", "width": "25%"},
+        {"label": _("Date"), "width": "10%"},
+        {"label": _("Description")},
+        {"label": _("Details")},
+    ]
+
+    return render(
+        request,
+        "orphan_dips.html",
+        {
+            "dips": dips,
+            "table_headers": table_headers,
+            "sort_option": sort_option,
+            "sort_dir": sort_dir,
+            "page": page,
+            "statuses": DIP.import_statuses(),
+        },
+    )
+
+
+@login_required(login_url="/login/")
 def download_dip(request, pk):
     dip = get_object_or_404(DIP, pk=pk)
-    try:
-        response = HttpResponse()
-        response["Content-Length"] = dip.objectszip.size
-        response["Content-Type"] = "application/zip"
-        response["Content-Disposition"] = (
-            "attachment; filename=%s" % dip.objectszip.name
+    # Prioritize local copy
+    if dip.objectszip:
+        try:
+            response = HttpResponse()
+            response["Content-Length"] = dip.objectszip.size
+            response["Content-Type"] = "application/zip"
+            response["Content-Disposition"] = (
+                'attachment; filename="%s"' % dip.objectszip.name
+            )
+            response["X-Accel-Redirect"] = "/media/%s" % dip.objectszip.name
+            return response
+        except FileNotFoundError:
+            raise Http404("DIP file not found.")
+    # Proxy stream from the SS
+    if dip.ss_host_url not in django_settings.SS_HOSTS.keys():
+        raise RuntimeError("Configuration not found for SS host: %s" % dip.ss_host_url)
+    headers = {
+        "Authorization": "ApiKey %s:%s"
+        % (
+            django_settings.SS_HOSTS[dip.ss_host_url]["user"],
+            django_settings.SS_HOSTS[dip.ss_host_url]["secret"],
         )
-        response["X-Accel-Redirect"] = "/media/%s" % dip.objectszip.name
-        return response
-    except FileNotFoundError:
-        raise Http404("ZIP file not found.")
+    }
+    stream = requests.get(dip.ss_download_url, headers=headers, stream=True)
+    if stream.status_code != requests.codes.ok:
+        raise Http404("DIP file not found.")
+    # So far, the SS only downloads DIPs as tar files
+    response = StreamingHttpResponse(stream)
+    response["Content-Type"] = stream.headers.get("Content-Type", "application/x-tar")
+    response["Content-Disposition"] = stream.headers.get(
+        "Content-Disposition", 'attachment; filename="%s.tar"' % dip.ss_dir_name
+    )
+    content_length = stream.headers.get("Content-Length")
+    if content_length:
+        response["Content-Length"] = content_length
+    return response
 
 
 @login_required(login_url="/login/")
 def settings(request):
-    # Only admins can manage settings
     if not request.user.is_superuser:
         return redirect("home")
 

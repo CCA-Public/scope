@@ -15,6 +15,7 @@ services:
       - DJANGO_DEBUG=True
       - ES_HOSTS=elasticsearch:9200
       - CELERY_BROKER_URL=redis://redis:6379
+      - SS_HOSTS=http://test:test@192.168.1.128:62081
     volumes:
       - node_modules:/src/node_modules
       - .:/src
@@ -27,16 +28,18 @@ services:
       - DJANGO_DEBUG=True
       - ES_HOSTS=elasticsearch:9200
       - CELERY_BROKER_URL=redis://redis:6379
+      - SS_HOSTS=http://test:test@192.168.1.128:62081
     volumes:
       - node_modules:/src/node_modules
       - .:/src
-    command: 'watchmedo auto-restart -p *.py -R -- celery -A scope worker -l info'
+    command: 'watchmedo auto-restart -p *.py -i ./.tox/* -R -- celery -A scope worker -l info'
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
     environment:
       - bootstrap.memory_lock=true
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - cluster.routing.allocation.disk.threshold_enabled=false
     ulimits:
       memlock:
         soft: -1

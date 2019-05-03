@@ -10,8 +10,12 @@
 {% block content %}
   <ol class="breadcrumb">
     {% trans "Untitled" as untitled %}
-    <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection.dc.title|default:untitled }}</a></li>
+    {% if dip.collection %}
+      <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection.dc.title|default:untitled }}</a></li>
+    {% else %}
+      <li class="breadcrumb-item"><a href="{% url 'orphan_dips' %}">{% trans "Orphan Folders" %}</a></li>
+    {% endif %}
     <li class="breadcrumb-item active">{{ dip.dc.title|default:untitled }}</li>
   </ol>
   <div class="row">
@@ -29,9 +33,16 @@
       <h2 class="mb-3">{% trans "Attachments" %}</h2>
       <div class="card">
         <div class="card-body p-3">
-          <p><strong>{% trans "Digital files" %}:</strong> {{ dip.objectszip.name }}</p>
+          <p>
+            <strong>{% trans "Digital files" %}: </strong>
+            {% if dip.objectszip %}
+              {{ dip.objectszip.name }}
+            {% else %}
+              {{ dip.ss_dir_name }}.tar
+            {% endif %}
+          </p>
           <p>{% trans "By clicking on the button below you'll download all the digital files included in this folder." %}</p>
-          <a href="{% url 'download_dip' dip.pk %}" class="btn btn-primary">{% trans "Download zip file" %}</a>
+          <a href="{% url 'download_dip' dip.pk %}" class="btn btn-primary">{% trans "Download DIP" %}</a>
         </div>
       </div>
     </div>
