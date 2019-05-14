@@ -3,7 +3,7 @@ import os
 from django.conf import settings
 from django.test import TestCase, override_settings
 import requests
-from unittest.mock import patch, Mock
+from unittest.mock import ANY, MagicMock, Mock, patch
 import vcr
 
 from dips.models import DIP, DigitalFile
@@ -54,27 +54,73 @@ class TasksTests(TestCase):
         self.assertTrue(os.path.isfile(self.mets_path))
         os.remove(self.mets_path)
 
-    @patch("dips.tasks.os.remove")
+    @patch("dips.tasks.zipfile.is_zipfile", return_value=False)
+    @patch("dips.tasks.tarfile.is_tarfile", return_value=False)
+    def test_extract_mets_wrong_dip_format(self, mock_is_tarfile, mock_is_zipfile):
+        with self.assertRaises(ValueError) as exc:
+            extract_mets("/DIP.7z")
+            self.assertEqual(str(exc), "DIP is not a tar or a zip file: DIP.7z")
+
+    @patch("dips.tasks.tarfile.open", return_value=MagicMock())
+    @patch("dips.tasks.tarfile.is_tarfile", return_value=True)
+    def test_extract_mets_not_found_in_tar(self, mock_is_tarfile, mock_tarfile_open):
+        mock_tarfile_open.__enter__.return_value = None
+        with self.assertRaises(FileNotFoundError) as exc:
+            extract_mets("/DIP.tar")
+            self.assertEqual(str(exc), "METS file not found in DIP file.")
+
     @patch("dips.tasks.zipfile.ZipFile.infolist", return_value=[])
     @patch("dips.tasks.zipfile.ZipFile.__init__", return_value=None)
-    def test_extract_mets_not_found(self, mock_zip_init, mock_zip_info, mock_os_remove):
-        with self.assertRaises(FileNotFoundError):
+    @patch("dips.tasks.zipfile.is_zipfile", return_value=True)
+    def test_extract_mets_not_found_in_zip(
+        self, mock_is_zipfile, mock_zip_init, mock_zip_info
+    ):
+        with self.assertRaises(FileNotFoundError) as exc:
             extract_mets("/DIP.zip")
-        mock_os_remove.assert_called_with("/DIP.zip")
+            self.assertEqual(str(exc), "METS file not found in DIP file.")
 
-    @patch("dips.tasks.os.remove")
+    @patch("dips.tasks.tarfile.open", return_value=MagicMock())
+    @patch("dips.tasks.tarfile.is_tarfile", return_value=True)
+    def test_extract_mets_found_in_tar(self, mock_is_tarfile, mock_tarfile_open):
+        mock_member = Mock()
+        mock_member.name = "relative/path/METS.ab028cb0-9942-4f26-a966-7197d7a2e15a.xml"
+        mock_tarfile = Mock()
+        mock_tarfile.getmembers.return_value = [mock_member]
+        mock_tarfile_open().__enter__.return_value = mock_tarfile
+        mets_path = extract_mets("/DIP.tar")
+        self.assertEqual(
+            os.path.join(
+                settings.MEDIA_ROOT, "METS.ab028cb0-9942-4f26-a966-7197d7a2e15a.xml"
+            ),
+            mets_path,
+        )
+
+    @patch("dips.tasks.os.path.basename")
     @patch("dips.tasks.zipfile.ZipFile.extract", return_value="/mets.xml")
     @patch(
         "dips.tasks.zipfile.ZipFile.infolist",
-        return_value=[Mock(filename="METS.ab028cb0-9942-4f26-a966-7197d7a2e15a.xml")],
+        return_value=[
+            Mock(filename="relative/path/METS.ab028cb0-9942-4f26-a966-7197d7a2e15a.xml")
+        ],
     )
     @patch("dips.tasks.zipfile.ZipFile.__init__", return_value=None)
-    def test_extract_mets_found(
-        self, mock_zip_init, mock_zip_info, mock_zip_extract, mock_os_remove
+    @patch("dips.tasks.zipfile.is_zipfile", return_value=True)
+    @patch("dips.tasks.tarfile.is_tarfile", return_value=False)
+    def test_extract_mets_found_in_zip(
+        self,
+        mock_is_tarfile,
+        mock_is_zipfile,
+        mock_zip_init,
+        mock_zip_info,
+        mock_zip_extract,
+        mock_os_basename,
     ):
-        mets_path = extract_mets("/DIP.zip", delete_zip=True)
+        mets_path = extract_mets("/DIP.zip")
+        mock_os_basename.assert_called_with(
+            "relative/path/METS.ab028cb0-9942-4f26-a966-7197d7a2e15a.xml"
+        )
+        mock_zip_extract.assert_called_with(ANY, settings.MEDIA_ROOT)
         self.assertEqual("/mets.xml", mets_path)
-        mock_os_remove.assert_called_with("/DIP.zip")
 
     @patch("dips.models.celery_app.send_task")
     @patch("dips.tasks.os.remove")

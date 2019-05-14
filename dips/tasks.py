@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import tarfile
 import zipfile
 
 from celery import shared_task
@@ -17,10 +18,7 @@ METS_RE = re.compile(r".*METS.[0-9a-f\-]{36}.*$")
 
 @shared_task(autoretry_for=(TransportError,), max_retries=10, default_retry_delay=30)
 def download_mets(dip_id):
-    """Downloads the DIP's METS file from the SS.
-
-    TODO: Check both DIP types integration and add fallback method if needed.
-    """
+    """Downloads a DIP's METS file from the SS."""
     # Check the SS host is still configured in the settings
     dip = DIP.objects.get(pk=dip_id)
     if dip.ss_host_url not in settings.SS_HOSTS.keys():
@@ -35,8 +33,7 @@ def download_mets(dip_id):
             settings.SS_HOSTS[dip.ss_host_url]["secret"],
         )
     }
-    response = requests.get(info_url, headers=headers, timeout=5)
-    # TODO: Do not raise if a fallback method is implemented
+    response = requests.get(info_url, headers=headers, timeout=10)
     response.raise_for_status()
     data = response.json()
     # At this point the `related_packages` may be empty in the
@@ -59,7 +56,6 @@ def download_mets(dip_id):
         os.path.join(settings.MEDIA_ROOT, "METS.%s.xml" % dip.ss_uuid)
     )
     with requests.get(mets_url, headers=headers, stream=True) as response:
-        # TODO: Do not raise if a fallback method is implemented
         response.raise_for_status()
         with open(mets_path, "wb") as mets_file:
             shutil.copyfileobj(response.raw, mets_file)
@@ -67,28 +63,37 @@ def download_mets(dip_id):
 
 
 @shared_task()
-def extract_mets(zip_path, delete_zip=False):
-    """Extracts a METS file from a given zip file to the media folder.
+def extract_mets(dip_path):
+    """Extracts a METS file from a given DIP to the media folder.
 
-    Deletes the ZIP file if the METS file is not found or based on the
-    `delete_zip` parameter. Raises `Exception` if the METS file is not
-    found or returns the absolute path to the extracted file.
+    Raises `ValueError` if the DIP is not a tar or a zip file or `FileNotFoundError`
+    if the METS file is not found in the DIP. Returns the absolute path to the
+    extracted METS file on success.
     """
     metsfile = None
-    with zipfile.ZipFile(zip_path) as zip_:
-        for info in zip_.infolist():
-            if METS_RE.match(info.filename):
-                info.filename = os.path.basename(info.filename)
-                metsfile = zip_.extract(info, settings.MEDIA_ROOT)
-
-    if not metsfile or delete_zip:
-        os.remove(zip_path)
+    if tarfile.is_tarfile(dip_path):
+        with tarfile.open(dip_path) as dip:
+            for member in dip.getmembers():
+                if METS_RE.match(member.name):
+                    member.name = os.path.basename(member.name)
+                    # The extract() method doesn't take care of extraction issues
+                    dip.extractall(settings.MEDIA_ROOT, members=[member])
+                    metsfile = os.path.join(settings.MEDIA_ROOT, member.name)
+    elif zipfile.is_zipfile(dip_path):
+        with zipfile.ZipFile(dip_path) as dip:
+            for info in dip.infolist():
+                if METS_RE.match(info.filename):
+                    info.filename = os.path.basename(info.filename)
+                    metsfile = dip.extract(info, settings.MEDIA_ROOT)
+    else:
+        raise ValueError(
+            "DIP is not a tar or a zip file: %s" % os.path.basename(dip_path)
+        )
 
     if not metsfile:
-        raise FileNotFoundError("METS file not found in ZIP file.")
+        raise FileNotFoundError("METS file not found in DIP file.")
 
-    path = os.path.abspath(metsfile)
-    return path
+    return metsfile
 
 
 @shared_task(

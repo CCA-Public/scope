@@ -1,5 +1,6 @@
 from datetime import datetime
 import requests
+import zipfile
 
 from celery import chain
 from django.conf import settings as django_settings
@@ -494,14 +495,14 @@ def new_dip(request):
                 "A background process has been launched to extract and parse "
                 "the METS file. After the process finishes and the interface "
                 "is reloaded, a link to the Folder will show up in the "
-                "Folders table at the related Collection page."
+                "Folders table bellow."
             ),
         )
 
         if dip.collection:
             return redirect("collection", pk=dip.collection.pk)
         else:
-            return redirect("home")
+            return redirect("orphan_dips")
 
     return render(request, "new_dip.html", {"dip_form": dip_form, "dc_form": dc_form})
 
@@ -678,7 +679,10 @@ def download_dip(request, pk):
         try:
             response = HttpResponse()
             response["Content-Length"] = dip.objectszip.size
-            response["Content-Type"] = "application/zip"
+            if zipfile.is_zipfile(dip.objectszip):
+                response["Content-Type"] = "application/zip"
+            else:
+                response["Content-Type"] = "application/x-tar"
             response["Content-Disposition"] = (
                 'attachment; filename="%s"' % dip.objectszip.name
             )

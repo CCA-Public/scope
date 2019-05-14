@@ -95,7 +95,11 @@ class METS(object):
 
         # Gather info for each file in filegroup "original"
         for file_ in self.mets_root.findall(".//fileGrp[@USE='original']/file"):
-            amdsec_id = file_.attrib["ADMID"]
+            amdsec_id = file_.get("ADMID")
+            if not amdsec_id:
+                logger.warning("An original file is missing the ADMID attribute.")
+                continue
+
             logger.info(
                 "Parsing original file metadata from AMD section [ADMID: %s]"
                 % amdsec_id

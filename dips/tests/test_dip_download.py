@@ -55,7 +55,8 @@ class DipDownloadTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_local_dip_download_headers(self):
+    @patch("dips.views.zipfile.is_zipfile", return_value=True)
+    def test_local_dip_download_zip_headers(self, mock_is_zipfile):
         # Make sure the MEDIA_ROOT directory exists
         os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
         # Create temporay sized ZIP file for request
@@ -71,6 +72,27 @@ class DipDownloadTests(TestCase):
                 response["Content-Disposition"], 'attachment; filename="fake.zip"'
             )
             self.assertEqual(response["X-Accel-Redirect"], "/media/fake.zip")
+
+    @patch("elasticsearch_dsl.DocType.save")
+    @patch("dips.views.zipfile.is_zipfile", return_value=False)
+    def test_local_dip_download_tar_headers(self, mock_is_zipfile, mock_es_save):
+        self.local_dip.objectszip = "fake.tar"
+        self.local_dip.save()
+        # Make sure the MEDIA_ROOT directory exists
+        os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+        # Create temporay sized ZIP file for request
+        path = os.path.join(settings.MEDIA_ROOT, "fake.tar")
+        size = 1048575
+        with _sized_tmp_file(path, size):
+            url = reverse("download_dip", kwargs={"pk": self.local_dip.pk})
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response["Content-Length"], str(size))
+            self.assertEqual(response["Content-Type"], "application/x-tar")
+            self.assertEqual(
+                response["Content-Disposition"], 'attachment; filename="fake.tar"'
+            )
+            self.assertEqual(response["X-Accel-Redirect"], "/media/fake.tar")
 
     def test_ss_dip_download_no_host(self):
         self.ss_dip.ss_host_url = "http://unknown.host"

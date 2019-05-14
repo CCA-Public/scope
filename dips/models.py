@@ -9,9 +9,11 @@ the ES document.
 """
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
+
 from django.contrib.auth.models import Group, AbstractUser
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
+
 from jsonfield import JSONField
 
 from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
@@ -263,7 +265,9 @@ class Collection(AbstractEsModel):
 
 
 class DIP(AbstractEsModel):
-    objectszip = models.FileField(_("objects zip file"))
+    objectszip = models.FileField(
+        _("DIP file"), help_text=_("Related DIP (only tar and zip files allowed).")
+    )
     uploaded = models.DateTimeField(auto_now_add=True)
     collection = models.ForeignKey(
         Collection,
