@@ -20,6 +20,7 @@
   * [Setup](#setup)
   * [Configure worker](#configure-worker)
   * [Serve](#serve)
+  * [Storage Service integration](#storage-service-integration)
 * [Development](#development)
 * [Credits](#credits)
 
@@ -130,6 +131,7 @@ The following environment variables are used to run the application:
 * `ES_INDEXES_SHARDS`: Number of shards for Elasticsearch indexes. *Default:* `1`.
 * `ES_INDEXES_REPLICAS`: Number of replicas for Elasticsearch indexes. *Default:* `0`.
 * `CELERY_BROKER_URL` **[REQUIRED]**: Redis server URL. E.g.: `redis://hostname:port`.
+* `SS_HOSTS`: List of Storage Service hosts separated by comma. RFC-1738 formatted URLs must be used to set the credentials for each host. See the [the Storage Service integration notes](#storage-service-integration) bellow for more information.
 
 Make sure [the system locale environment variables](https://wiki.debian.org/Locale) are configured to use UTF-8 encoding.
 
@@ -413,6 +415,54 @@ usermod -a -G scope www-data
 ```
 
 Reboot to reflect user changes.
+
+### Storage Service integration
+
+**Storage Service 0.15.0 or higher required.**
+
+SCOPE can be related with one or more Storage Service instances to automatically import the DIPs stored in them. In this case, the DIPs will only be stored in the Storage Service, SCOPE will fetch the DIP's METS file to perform the import process and it will act as a proxy when a download is requested.
+
+For this integration to be secure, it requires HTTPS in the Storage Service and SCOPE instances, as credentials will be sent from both instances to the other.
+
+#### Create user and token in SCOPE
+
+To authenticate the notification request that will be sent from the Storage Service instance when a DIP is stored, it's recommended to create an user in SCOPE that is only used for token access:
+
+```
+./manage.py createsuperuser
+./manage.py drf_create_token <username>
+```
+
+Save the generated token as it will be needed to configure the Storage Service callback.
+
+#### Configure Storage Service instance(s) in SCOPE
+
+To authenticate the requests sent from SCOPE to fetch the DIP's METS file and download the DIP from the Storage Service instance(s), those instances must be declared in an environment variable called `SS_HOSTS`, which accepts a list of RFC-1738 URLs separated by comma. For example, to integrate SCOPE with an Storage Service instance with `https://ss.com` as URL, `user` as username and `secret` as API key, add the following to the environment file:
+
+```
+SS_HOSTS=https://user:secret@ss.com
+```
+
+Make sure to restart SCOPE's worker and Gunicorn services after that change:
+
+```
+systemctl restart scope-worker
+systemctl restart scope-gunicorn
+```
+
+#### Add post store DIP callback in Storage Service
+
+To notify SCOPE when a DIP has been stored in the Storage Service a post store DIP callback must be configured. Following the same example and considering that SCOPE's URL is `https://scope.com`, go to the Storage Service interface, to the "Service callbacks" section in the "Administration" tab and create a new callback with the following parameters:
+
+* **Event:** Post-store DIP
+* **URI:** https://scope.com/api/v1/dip/<package_uuid>/stored
+* **Method:** POST
+* **Headers:**
+  * Authorization -> Token <token>
+  * Origin -> https://ss.com
+* **Expected Status:** 202
+
+Replace the `<token>` placeholder with the token generated before but keep `<package_uuid>` like that, as that placeholder is used by the Storage Service to place the DIP UUID. The body field can be left empty for this integration and the callback can be enabled/disable using the check-box at the bottom.
 
 ## Development
 
