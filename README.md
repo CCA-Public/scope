@@ -1,7 +1,7 @@
-[![Travis CI](https://travis-ci.org/CCA-Public/dip-access-interface.svg?branch=master)](https://travis-ci.org/CCA-Public/dip-access-interface)
-[![Codecov](https://codecov.io/gh/CCA-Public/dip-access-interface/branch/master/graph/badge.svg)](https://codecov.io/gh/CCA-Public/dip-access-interface)
-[![pyup](https://pyup.io/repos/github/CCA-Public/dip-access-interface/shield.svg)](https://pyup.io/repos/github/CCA-Public/dip-access-interface)
-[![Python 3](https://pyup.io/repos/github/CCA-Public/dip-access-interface/python-3-shield.svg)](https://pyup.io/repos/github/CCA-Public/dip-access-interface)
+[![Travis CI](https://travis-ci.org/CCA-Public/scope.svg?branch=master)](https://travis-ci.org/CCA-Public/scope)
+[![Codecov](https://codecov.io/gh/CCA-Public/scope/branch/master/graph/badge.svg)](https://codecov.io/gh/CCA-Public/scope)
+[![pyup](https://pyup.io/repos/github/CCA-Public/scope/shield.svg)](https://pyup.io/repos/github/CCA-Public/scope)
+[![Python 3](https://pyup.io/repos/github/CCA-Public/scope/python-3-shield.svg)](https://pyup.io/repos/github/CCA-Public/scope)
 
 # SCOPE: A Digital Archives Access Interface
 
@@ -29,7 +29,7 @@ SCOPE is a Django project designed to provide access to Dissemination Informatio
 
 The primary application, "dips", allows users to add, organize, and interact with these DIPs and the digital files they contain, depending on user permissions.  
 
-See the [user stories](https://github.com/CCA-Public/dip-access-interface/wiki/User-Stories) for background on current and future features.
+See the [user stories](https://github.com/CCA-Public/scope/wiki/User-Stories) for background on current and future features.
 
 See the [user manual](https://docs.google.com/document/d/1pjmQSLCZGvmc05DfIs0XQn_60_DLwxGH-aF7-4R_zmQ/edit?usp=sharing) for instructions on how to use SCOPE.
 
@@ -202,8 +202,8 @@ CELERY_BROKER_URL=redis://localhost:6379
 Clone the repository and go to its directory:
 
 ```
-git clone https://github.com/CCA-Public/dip-access-interface
-cd dip-access-interface
+git clone https://github.com/CCA-Public/scope
+cd scope
 ```
 
 Create a Python virtual environment and install the application dependencies:
@@ -284,18 +284,18 @@ Group=scope
 EnvironmentFile=/home/scope/scope-env
 Environment=CELERYD_PID_FILE=/home/scope/scope-worker.pid
 Environment=CELERYD_LOG_FILE=/home/scope/scope-worker.log
-WorkingDirectory=/home/scope/dip-access-interface
-ExecStart=/home/scope/dip-access-interface/venv/bin/celery \
+WorkingDirectory=/home/scope/scope
+ExecStart=/home/scope/scope/venv/bin/celery \
             multi start scope-worker -A scope \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
-ExecReload=/home/scope/dip-access-interface/venv/bin/celery \
+ExecReload=/home/scope/scope/venv/bin/celery \
             multi restart scope-worker -A scope \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
-ExecStop=/home/scope/dip-access-interface/venv/bin/celery \
+ExecStop=/home/scope/scope/venv/bin/celery \
             multi stopwait scope-worker \
             --pidfile=${CELERYD_PID_FILE}
 
@@ -331,8 +331,8 @@ Group=scope
 PrivateTmp=true
 PIDFile=/home/scope/scope-gunicorn.pid
 EnvironmentFile=/home/scope/scope-env
-WorkingDirectory=/home/scope/dip-access-interface
-ExecStart=/home/scope/dip-access-interface/venv/bin/gunicorn \
+WorkingDirectory=/home/scope/scope
+ExecStart=/home/scope/scope/venv/bin/gunicorn \
             --access-logfile /dev/null \
             --worker-class gevent \
             --bind unix:/home/scope/scope-gunicorn.sock \
@@ -378,7 +378,7 @@ server {
 
   location /media/ {
     internal;
-    alias /home/scope/dip-access-interface/media/;
+    alias /home/scope/scope/media/;
   }
 
   location / {
@@ -421,8 +421,8 @@ Requires [Docker CE](https://www.docker.com/community-edition) and [Docker Compo
 Clone the repository and go to its directory:
 
 ```
-git clone https://github.com/CCA-Public/dip-access-interface
-cd dip-access-interface
+git clone https://github.com/CCA-Public/scope
+cd scope
 ```
 
 Build images, initialize services, etc.:

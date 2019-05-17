@@ -31,7 +31,7 @@ Following these guidelines helps us assess your changes faster and makes it easi
 ## Submitting bugs
 
 Issues can be filed using GitHub Issues in the
-[Issues repo](https://github.com/CCA-Public/dip-access-interface/issues). It is
+[Issues repo](https://github.com/CCA-Public/scope/issues). It is
 recommended to file issues there rather than in any of the Archivematica-related
 code repositories. CCA and Artefactual staff also use GitHub issues for any work they do
 on this project.
@@ -52,7 +52,7 @@ Useful questions to answer if you're having problems include:
 
 Similar to submitting bugs, you are welcome to submit ideas for enhancements or
 new features in the
-[Issues repo](https://github.com/CCA-Public/dip-access-interface/issues). This is
+[Issues repo](https://github.com/CCA-Public/scope/issues). This is
 also where Artefactual and CCA staff record upcoming enhancements when they have been
 sponsored for inclusion.
 
@@ -64,7 +64,7 @@ This applies both to developers at CCA and to outside contributors.
 Here's an outline of the contribution process:
 
 1. File an issue in the
-   [Issues repo](https://github.com/CCA-Public/dip-access-interface/issues).
+   [Issues repo](https://github.com/CCA-Public/scope/issues).
 2. Fork the project on GitHub, and commit your changes to a branch
    in your fork.
 3. Open a pull request.
@@ -78,7 +78,7 @@ Here's an outline of the contribution process:
 
 So you have something to contribute to SCOPE. Great!
 
-To install SCOPE, see our [development installation](https://github.com/CCA-Public/dip-access-interface#installation) instructions.
+To install SCOPE, see our [development installation](https://github.com/CCA-Public/scope#installation) instructions.
 
 CCA uses [GitHub](https://github.com/)'s pull request feature for code review.
 Every change being submitted to an SCOPE should be submitted as a pull request to the appropriate repository.
