@@ -454,13 +454,13 @@ systemctl restart scope-gunicorn
 
 To notify SCOPE when a DIP has been stored in the Storage Service a post store DIP callback must be configured. Following the same example and considering that SCOPE's URL is `https://scope.com`, go to the Storage Service interface, to the "Service callbacks" section in the "Administration" tab and create a new callback with the following parameters:
 
-* **Event:** Post-store DIP
-* **URI:** https://scope.com/api/v1/dip/<package_uuid>/stored
-* **Method:** POST
+* **Event:** `Post-store DIP`
+* **URI:** `https://scope.com/api/v1/dip/<package_uuid>/stored`
+* **Method:** `POST`
 * **Headers:**
-  * Authorization -> Token <token>
-  * Origin -> https://ss.com
-* **Expected Status:** 202
+  * Authorization -> `Token <token>`
+  * Origin -> `https://ss.com`
+* **Expected Status:** `202`
 
 Replace the `<token>` placeholder with the token generated before but keep `<package_uuid>` like that, as that placeholder is used by the Storage Service to place the DIP UUID. The body field can be left empty for this integration and the callback can be enabled/disable using the check-box at the bottom.
 
