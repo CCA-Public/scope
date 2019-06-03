@@ -19,3 +19,6 @@
     <i class="fas fa-times ml-1"></i>
   </a>
 {% endfor %}
+{% if filters.formats or filters.start_date or filters.end_date or filters.collections %}
+  <a href=".">{% trans "Reset filters" %}</a>
+{% endif %}

@@ -42,9 +42,6 @@
     {% endif %}
     <input type="text" name="query" class="form-control" placeholder="{% trans "Type any text" %}" value="{{ request.GET.query }}" aria-label="{% trans "Search input with drop-down filters" %}">
     <div class="input-group-append">
-      <a class="btn btn-outline-cca" href="."><i class="fas fa-times"></i></a>
-    </div>
-    <div class="input-group-append">
       <button class="btn btn-primary" type="submit">{% trans "Apply filters" %}</button>
     </div>
   </div>
