@@ -1,0 +1,22 @@
+select#id_enabled_optional_dc_fields {
+  height: 275px;
+}
+
+.aggs-dropdown .aggs-buckets {
+  max-height: 200px;
+  overflow-y: auto;
+
+  .custom-control-label {
+    width: 100%;
+  }
+}
+
+.digital-file-filters {
+  max-width: 705px;
+}
+
+.faq-container {
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+}
