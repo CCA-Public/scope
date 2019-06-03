@@ -32,7 +32,9 @@ def add_digital_file_aggs(search, collections=True):
     - Add JSON endpoint to get subsequent pages and filter query.
     - Add Javascript/Typescript code to request new pages and query.
     """
-    search.aggs.bucket("formats", "terms", field="fileformat.raw", size=10000)
+    search.aggs.bucket(
+        "formats", "terms", field="fileformat.raw", size=10000, order={"_key": "asc"}
+    )
     # The collections agg. is made directly over the title to avoid hitting
     # the ORM to get the title with the id or to use a composite agg. with
     # multiple sources. The biggest downside is that the titles are used as
@@ -40,7 +42,11 @@ def add_digital_file_aggs(search, collections=True):
     # selection is allowed. This agg. is optional and not added in DIP pages.
     if collections:
         search.aggs.bucket(
-            "collections", "terms", field="collection.title.raw", size=10000
+            "collections",
+            "terms",
+            field="collection.title.raw",
+            size=10000,
+            order={"_key": "asc"},
         )
 
     return search

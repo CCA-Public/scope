@@ -39,9 +39,19 @@ class FunctionsTests(TestCase):
         modified_search = add_digital_file_aggs(self.search)
         expected_search = {
             "aggs": {
-                "formats": {"terms": {"field": "fileformat.raw", "size": 10000}},
+                "formats": {
+                    "terms": {
+                        "field": "fileformat.raw",
+                        "size": 10000,
+                        "order": {"_key": "asc"},
+                    }
+                },
                 "collections": {
-                    "terms": {"field": "collection.title.raw", "size": 10000}
+                    "terms": {
+                        "field": "collection.title.raw",
+                        "size": 10000,
+                        "order": {"_key": "asc"},
+                    }
                 },
             }
         }
@@ -50,7 +60,15 @@ class FunctionsTests(TestCase):
     def test_add_digital_file_aggs_without_collections(self):
         modified_search = add_digital_file_aggs(self.search, collections=False)
         expected_search = {
-            "aggs": {"formats": {"terms": {"field": "fileformat.raw", "size": 10000}}}
+            "aggs": {
+                "formats": {
+                    "terms": {
+                        "field": "fileformat.raw",
+                        "size": 10000,
+                        "order": {"_key": "asc"},
+                    }
+                }
+            }
         }
         self.assertEqual(modified_search.to_dict(), expected_search)
 
