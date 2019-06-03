@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-03 19:46+0000\n"
+"POT-Creation-Date: 2019-06-03 21:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -388,8 +388,8 @@ msgstr[1] "<strong>%(counter)s</strong> collections"
 msgid "Search collection titles"
 msgstr "Rechercher dans les titres de collections"
 
-#: templates/content.html:5
-msgid "Static Content"
+#: templates/content.html:5 templates/includes/header.html:65
+msgid "Content"
 msgstr ""
 
 #: templates/content.html:24 templates/edit_collection.html:19
@@ -659,10 +659,6 @@ msgstr "Sélectionner la langue"
 #: templates/includes/header.html:64 templates/settings.html:6
 msgid "Settings"
 msgstr "Règlages"
-
-#: templates/includes/header.html:65
-msgid "Content"
-msgstr ""
 
 #: templates/includes/header.html:67
 msgid "Edit Users"
