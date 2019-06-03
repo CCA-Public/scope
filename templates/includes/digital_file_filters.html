@@ -34,12 +34,6 @@
       {% trans "Collections" as collections %}
       {% include 'includes/input_prepend_agg.html' with label=collections param='col' agg=aggs.collections selected=filters.collections %}
     {% endif %}
-    <div class="input-group-prepend">
-      <button class="btn btn-outline-cca dropdown-toggle disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Objects types" %}</button>
-    </div>
-    <div class="input-group-prepend">
-      <button class="btn btn-outline-cca dropdown-toggle disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Tags" %}</button>
-    </div>
     <input type="text" name="query" class="form-control" placeholder="{% trans "Type any text" %}" value="{{ request.GET.query }}" aria-label="{% trans "Search input with drop-down filters" %}">
     <div class="input-group-append">
       <a class="btn btn-outline-cca" href="."><i class="fas fa-times"></i></a>
