@@ -1,4 +1,7 @@
 $(document).ready(function() {
+  /* Initialize Bootstrap components. */
+  $('[data-toggle="tooltip"]').tooltip();
+
   /* Trigger datepickers. */
   $('input.with-datepicker').datepicker({
     format: 'yyyy-mm-dd',

@@ -23,7 +23,16 @@
     <div class="col-md-7">
       <h2 class="mb-4">{% trans "Digital file description" %}</h2>
       <p class="mb-4"><strong>{{ digitalfile.filepath|basename }}</strong></p>
-      <p><strong>{% trans "Filepath" %}:</strong> {{ digitalfile.filepath }}</p>
+      <p>
+        <strong>{% trans "Filepath" %}:</strong> {{ digitalfile.filepath }}
+        <a href="#!" class="ml-1" data-toggle="tooltip" data-placement="right" data-offset="30" data-html="true" title="
+          <p class='mb-0 text-left'>{% trans 'Filepath' %}:</p>
+          <p class='mb-0 text-left'>{% trans 'The entire folder will be downloaded.' %}</p>
+          <p class='mb-0 text-left'>{% trans 'Use the filepath to navigate to your selected file.' %}</p>
+        ">
+          <i class="fas fa-question-circle" aria-hidden="true"></i>
+        </a>
+      </p>
       <p><strong>{% trans "File format" %}:</strong> {{ digitalfile.fileformat }}</p>
       <p><strong>{% trans "File format version" %}:</strong> {{ digitalfile.formatversion }}</p>
       <p><strong>{% trans "Size (bytes)" %}:</strong> {{ digitalfile.size_bytes }}</p>
