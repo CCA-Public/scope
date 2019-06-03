@@ -1,6 +1,9 @@
-from django import template
-
 import os
+
+from django import template
+import markdown
+
+from dips.models import Content
 
 register = template.Library()
 
@@ -43,3 +46,14 @@ def render_label_with_class(field, class_attr):
 def basename(path):
     """Returns the filename from a path."""
     return os.path.basename(path)
+
+
+@register.simple_tag
+def render_content(key):
+    try:
+        content = Content.objects.get(key=key)
+        return markdown.markdown(str(content))
+    # It's not clear what may be raised from Markdown,
+    # this will also catch other model exceptions.
+    except Exception:
+        return ""

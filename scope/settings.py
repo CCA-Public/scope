@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "widget_tweaks",
     "compressor",
+    "modeltranslation",
     "dips.apps.DipsConfig",
     "search.apps.SearchConfig",
     "django_cleanup",  # deletes FileFields when objects are deleted

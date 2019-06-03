@@ -437,3 +437,18 @@ class Setting(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Content(models.Model):
+    key = models.CharField(max_length=50, primary_key=True)
+    content = models.TextField(_("content"), blank=True)
+
+    # Key label relation for display in the form.
+    # They are prefixed with a number to maintain order.
+    LABELS = {"01_home": _("Home"), "02_login": _("Login"), "03_faq": _("FAQ")}
+
+    def __str__(self):
+        return self.content
+
+    def get_label(self):
+        return self.LABELS[self.key]

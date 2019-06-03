@@ -160,6 +160,14 @@ class UserAccessTests(TestCase):
             ("basic", 302),
             ("viewer", 302),
         ],
+        "content": [
+            ("unauth", 302),
+            ("admin", 200),
+            ("manager", 302),
+            ("editor", 302),
+            ("basic", 302),
+            ("viewer", 302),
+        ],
     }
 
     @patch("elasticsearch_dsl.DocType.save")

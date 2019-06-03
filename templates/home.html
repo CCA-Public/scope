@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
 {% load i18n %}
+{% load custom_tags %}
 
 {% block title %}{% trans "Home" %}{% endblock %}
 
 {% block content %}
   <div class="text-center mb-5">
-    <h2>{% trans "Digital Archives Access Interface" %}</h2>
-    <p class="mb-0">{% trans "You can search digital files by using the search bar below or you can browse our collections." %}</p>
-    <p>{% trans "If you need help, please use our FAQ page in the menu above." %}</p>
+    {% autoescape off %}
+      {% render_content "01_home" %}
+    {% endautoescape %}
     <h4 class="mt-5">{% trans "Search our digital files" %}</h4>
     <form method="get" action="{% url 'search' %}" class="row justify-content-md-center pb-1">
       <div class="input-group col-lg-6 col-md-8">

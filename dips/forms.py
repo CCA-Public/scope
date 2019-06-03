@@ -3,7 +3,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import UserChangeForm
 from django.utils.translation import gettext_lazy as _
 from django import forms
-from .models import User, DublinCore, Setting
+from modeltranslation.forms import TranslationModelForm
+
+from .models import Content, User, DublinCore, Setting
 
 
 class DeleteByDublinCoreForm(forms.ModelForm):
@@ -165,3 +167,9 @@ class DublinCoreSettingsForm(SettingsForm):
             "in the Collection and Folder view pages."
         ),
     )
+
+
+class ContentForm(TranslationModelForm):
+    class Meta:
+        model = Content
+        fields = ("content",)

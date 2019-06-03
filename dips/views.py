@@ -7,19 +7,20 @@ from django.conf import settings as django_settings
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.forms import modelform_factory
+from django.forms import modelform_factory, modelformset_factory
 from django.http import Http404, HttpResponse, StreamingHttpResponse
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
 
 from .helpers import get_sort_params, get_page_from_search
-from .models import User, Collection, DIP, DigitalFile, DublinCore
+from .models import User, Collection, DIP, DigitalFile, DublinCore, Content
 from .forms import (
     DeleteByDublinCoreForm,
     UserCreationForm,
     UserChangeForm,
     DublinCoreSettingsForm,
+    ContentForm,
 )
 from .tasks import extract_mets, parse_mets, save_import_error
 from search.helpers import (
@@ -727,3 +728,21 @@ def settings(request):
         return redirect("settings")
 
     return render(request, "settings.html", {"form": form})
+
+
+@login_required(login_url="/login/")
+def content(request):
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    ContentFormSet = modelformset_factory(Content, form=ContentForm, extra=0)
+    formset = ContentFormSet(
+        request.POST or None, queryset=Content.objects.all().order_by("key")
+    )
+
+    if request.method == "POST" and formset.is_valid():
+        formset.save()
+        # Redirect to not add validation classes
+        return redirect("content")
+
+    return render(request, "content.html", {"formset": formset})
