@@ -1,6 +1,7 @@
 {% load i18n %}
 
-<form method="get" class="mt-3 mb-2 digital-file-filters">
+<h6 class="mt-3">{% trans "FILTER BY" %}</h6>
+<form method="get" class="mt-1 mb-2 digital-file-filters">
   <div class="input-group">
     {% trans "Formats" as formats %}
     {% include 'includes/input_prepend_agg.html' with label=formats param='for' agg=aggs.formats selected=filters.formats %}
