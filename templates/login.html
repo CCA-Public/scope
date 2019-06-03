@@ -20,8 +20,10 @@
     </div>
   </div>
   <div class="row mt-5">
-    {% autoescape off %}
-      {% render_content "02_login" %}
-    {% endautoescape %}
+    <div class="col-lg-10 mx-auto text-center">
+      {% autoescape off %}
+        {% render_content "02_login" %}
+      {% endautoescape %}
+    </div>
   </div>
 {% endblock %}
