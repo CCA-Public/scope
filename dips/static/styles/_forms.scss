@@ -6,8 +6,8 @@ select#id_enabled_optional_dc_fields {
   max-width: 705px;
 }
 
-.aggs-dropdown {
-  max-height: 300px;
+.aggs-dropdown .aggs-buckets {
+  max-height: 200px;
   overflow-y: auto;
 
   .custom-control-label {

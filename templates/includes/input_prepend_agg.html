@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="input-group-prepend">
   <button class="btn btn-outline-cca dropdown-toggle{% if not agg.buckets %} disabled{% endif %}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     {% if selected|length > 0 %}
@@ -14,13 +16,19 @@
       </div>
     </h6>
     <div class="dropdown-divider"></div>
-    {% for bucket in agg.buckets %}
-      <li class="dropdown-item">
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" {% if bucket.key in selected %}checked {% endif %}class="custom-control-input" name="{{ param }}" value="{{ bucket.key }}" id="{{ param }}_{{ forloop.counter0 }}">
-          <label class="custom-control-label" for="{{ param }}_{{ forloop.counter0 }}">{{ bucket.key }}</label>
-        </div>
-      </li>
-    {% endfor %}
+    <div class="aggs-buckets">
+      {% for bucket in agg.buckets %}
+        <li class="dropdown-item">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" {% if bucket.key in selected %}checked {% endif %}class="custom-control-input" name="{{ param }}" value="{{ bucket.key }}" id="{{ param }}_{{ forloop.counter0 }}">
+            <label class="custom-control-label" for="{{ param }}_{{ forloop.counter0 }}">{{ bucket.key }}</label>
+          </div>
+        </li>
+      {% endfor %}
+    </div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-header">
+      <button class="btn btn-primary btn-block" type="submit">{% trans "Apply" %}</button>
+    </div>
   </div>
 </div>

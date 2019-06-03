@@ -13,20 +13,26 @@
           {{ years }}
         {% endif %}
       </button>
-      <div class="dropdown-menu aggs-dropdown px-4 pb-2 pt-3">
-        <div class="form-group">
-          <label for="start_date">{% trans "Start date" %}</label>
-          <div class="right-inner-icon-input-wrapper">
-            <input type="text" name="start_date" value="{{ filters.start_date }}" class="form-control form-control-sm with-datepicker" id="start_date" placeholder="yyyy-mm-dd">
-            <label for="start_date"><i class="fas fa-calendar-alt fa-sm text-dark"></i></label>
+      <div class="dropdown-menu aggs-dropdown">
+        <div class="px-4 pb-2 pt-3">
+          <div class="form-group">
+            <label for="start_date">{% trans "Start date" %}</label>
+            <div class="right-inner-icon-input-wrapper">
+              <input type="text" name="start_date" value="{{ filters.start_date }}" class="form-control form-control-sm with-datepicker" id="start_date" placeholder="yyyy-mm-dd">
+              <label for="start_date"><i class="fas fa-calendar-alt fa-sm text-dark"></i></label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="end_date">{% trans "End date" %}</label>
+            <div class="right-inner-icon-input-wrapper">
+              <input type="text" name="end_date" value="{{ filters.end_date }}" class="form-control form-control-sm with-datepicker" id="end_date" placeholder="yyyy-mm-dd">
+              <label for="end_date"><i class="fas fa-calendar-alt fa-sm text-dark"></i></label>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="end_date">{% trans "End date" %}</label>
-          <div class="right-inner-icon-input-wrapper">
-            <input type="text" name="end_date" value="{{ filters.end_date }}" class="form-control form-control-sm with-datepicker" id="end_date" placeholder="yyyy-mm-dd">
-            <label for="end_date"><i class="fas fa-calendar-alt fa-sm text-dark"></i></label>
-          </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-header">
+          <button class="btn btn-primary btn-block" type="submit">{% trans "Apply" %}</button>
         </div>
       </div>
     </div>
@@ -39,7 +45,7 @@
       <a class="btn btn-outline-cca" href="."><i class="fas fa-times"></i></a>
     </div>
     <div class="input-group-append">
-      <button class="btn btn-outline-cca" type="submit"><i class="fas fa-search"></i></button>
+      <button class="btn btn-primary" type="submit">{% trans "Apply filters" %}</button>
     </div>
   </div>
 </form>
