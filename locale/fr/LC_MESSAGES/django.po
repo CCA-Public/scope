@@ -246,15 +246,18 @@ msgstr "Détails du fichier"
 msgid ""
 "A background process has been launched to extract and parse the METS file. "
 "After the process finishes and the interface is reloaded, a link to the "
-"Folder will show up in the Folders table bellow."
+"Folder will show up in the Folders table below."
 msgstr ""
+"Un script a été lancé afin de décrypter le fichier METS. "
+"Suite au processus et au rafraîchissement de l'interface, un lien "
+"vers le dossier apparaîtra dans la liste de dossiers ci-dessous."
 
 #: dips/views.py:529
 msgid ""
 "A background process has been launched to update the Collection metadata in "
 "the Elasticsearch index for the related Digital Files."
 msgstr ""
-"Un processus d'arrière-plan est en cours afin de mettre à jour les "
+"Un script est en cours afin de mettre à jour les "
 "métadonnées de la Collection dans l'index Elasticsearch pour les fichiers "
 "concernés."
 
@@ -263,13 +266,15 @@ msgid ""
 "A background process has been launched to update the ancestors metadata in "
 "the Elasticsearch index for the related Digital Files."
 msgstr ""
+"Un script a été lancé afin d'actualiser les metadatas des niveaux supérieurs dans"
+"l'index Elasticsearch pour les Fichiers. "
 
 #: dips/views.py:592
 msgid ""
 "A background process has been launched to delete the descendant Folders and "
 "Digital Files from the Elasticsearch indexes."
 msgstr ""
-"Un processus en arrière-plan est en cours afin de retirer les Dossiers et "
+"Un script est en cours afin de retirer les Dossiers et "
 "Fichiers des niveaux inférieurs dans l'index Elasticsearch."
 
 #: dips/views.py:624
@@ -277,7 +282,7 @@ msgid ""
 "A background process has been launched to delete the descendant Digital "
 "Files from the Elasticsearch index."
 msgstr ""
-"Un processus en arrière-plan est en cours afin de retirer les Fichiers de "
+"Un script est en cours afin de retirer les Fichiers de "
 "niveaux inférieurs dans l'index Elasticsearch."
 
 #: scope/settings.py:112
