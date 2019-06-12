@@ -126,11 +126,11 @@ msgstr "instrument de recherche"
 
 #: dips/models.py:269
 msgid "DIP file"
-msgstr ""
+msgstr "fichier DIP"
 
 #: dips/models.py:269
 msgid "Related DIP (only tar and zip files allowed)."
-msgstr ""
+msgstr "DIP associé (fichiers tar et zip autorisés seulement)"
 
 #: dips/models.py:275
 msgid "collection"
@@ -147,7 +147,7 @@ msgstr ""
 
 #: dips/models.py:444
 msgid "content"
-msgstr ""
+msgstr "Contenu"
 
 #: dips/models.py:448 templates/collections.html:5 templates/home.html:6
 #: templates/includes/header.html:7 templates/includes/header.html:16
@@ -390,7 +390,7 @@ msgstr "Rechercher dans les titres de collections"
 
 #: templates/content.html:5 templates/includes/header.html:65
 msgid "Content"
-msgstr ""
+msgstr "Contenu"
 
 #: templates/content.html:24 templates/edit_collection.html:19
 #: templates/edit_dip.html:24 templates/edit_user.html:17
@@ -424,7 +424,7 @@ msgstr "Supprimer le Dossier"
 #: templates/includes/header.html:73 templates/orphan_dips.html:7
 #: templates/orphan_dips.html:11
 msgid "Orphan Folders"
-msgstr ""
+msgstr "Fichiers sans collection"
 
 #: templates/delete_dip.html:20
 msgid "Confirm deletion"
@@ -449,11 +449,11 @@ msgstr "Description du fichier"
 
 #: templates/digitalfile.html:30
 msgid "The entire folder will be downloaded."
-msgstr ""
+msgstr "Le contenu du dossier sera téléchargé."
 
 #: templates/digitalfile.html:31
 msgid "Use the filepath to navigate to your selected file."
-msgstr ""
+msgstr "Utilisez le chemin d'accès pour accéder au fichier sélectionné."
 
 #: templates/digitalfile.html:36
 msgid "File format"
@@ -493,7 +493,7 @@ msgstr ""
 
 #: templates/digitalfile.html:55 templates/dip.html:45
 msgid "Download DIP"
-msgstr ""
+msgstr "Télécharger DIP"
 
 #: templates/digitalfile.html:64
 msgid "Preservation metadata"
@@ -597,11 +597,11 @@ msgstr "Non défini"
 
 #: templates/includes/digital_file_filter_tags.html:23
 msgid "Reset filters"
-msgstr ""
+msgstr "Rafraîchir la recherche"
 
 #: templates/includes/digital_file_filters.html:3
 msgid "FILTER BY"
-msgstr ""
+msgstr "FILTRES"
 
 #: templates/includes/digital_file_filters.html:6
 msgid "Formats"
@@ -622,7 +622,7 @@ msgstr "Date de fin"
 #: templates/includes/digital_file_filters.html:36
 #: templates/includes/input_prepend_agg.html:31
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
 #: templates/includes/digital_file_filters.html:44
 msgid "Type any text"
@@ -634,7 +634,7 @@ msgstr "Raffiner la recherche à l'aide des menus déroulants"
 
 #: templates/includes/digital_file_filters.html:46
 msgid "Apply filters"
-msgstr ""
+msgstr "Appliquer filtres"
 
 #: templates/includes/form_field.html:16
 msgid "Choose file"
