@@ -63,8 +63,6 @@ By default, the application has five levels of permissions:
 * **Public**: Users with a username/password but no additional permissions have view-only access.
 * **Unauthenticated**: Not logged in users can only access the FAQ and login pages.
 
-For more information check the [user management and permissions feature file](features/user_management_and_permissions.feature).
-
 ## Technologies involved
 
 SCOPE is a Django application that uses Elasticsearch 6.x as search engine, Celery 4.2 to process asynchronous tasks, a SQLite database and Redis as message broker (probably in the future, as cache system too).
