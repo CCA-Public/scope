@@ -3,7 +3,7 @@ from django.db.migrations.executor import MigrationExecutor
 from django.db import connection
 from django.test import TransactionTestCase
 
-from scope.models import Content
+from scope.models import Content, Setting
 
 
 class TestMigrations(TransactionTestCase):
@@ -17,14 +17,13 @@ class TestMigrations(TransactionTestCase):
 
         Perform all rollbacks in order in the same test to maintain DB status.
         """
-        # Initial counts
+        # Initial data counts
         self.assertEqual(Group.objects.count(), 3)
+        self.assertEqual(Setting.objects.count(), 2)
         self.assertEqual(Content.objects.count(), 3)
 
-        # Content removal
-        self.executor.migrate([("scope", "0009_content")])
-        self.assertEqual(Content.objects.count(), 0)
-
-        # Groups removal
+        # Initial data removal
         self.executor.migrate([("scope", "0001_initial")])
         self.assertEqual(Group.objects.count(), 0)
+        self.assertEqual(Setting.objects.count(), 0)
+        self.assertEqual(Content.objects.count(), 0)
