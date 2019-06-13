@@ -496,7 +496,7 @@ def new_dip(request):
                 "A background process has been launched to extract and parse "
                 "the METS file. After the process finishes and the interface "
                 "is reloaded, a link to the Folder will show up in the "
-                "Folders table bellow."
+                "Folders table below."
             ),
         )
 
