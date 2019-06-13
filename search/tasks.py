@@ -3,7 +3,7 @@ from django.db.utils import DatabaseError
 from elasticsearch.exceptions import TransportError
 from elasticsearch.helpers import bulk
 from elasticsearch_dsl.connections import connections
-from dips.models import Collection, DIP, DigitalFile
+from scope.models import Collection, DIP, DigitalFile
 
 import logging
 

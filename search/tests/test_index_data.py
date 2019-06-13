@@ -2,11 +2,11 @@ from django.core.management import call_command
 from django.test import TestCase
 from unittest.mock import patch
 
-from dips.models import Collection, DIP, DigitalFile
+from scope.models import Collection, DIP, DigitalFile
 
 
 class IndexDataTests(TestCase):
-    # This fixture is located in the dips app to avoid duplication
+    # This fixture is located in the scope app to avoid duplication
     fixtures = ["index_data"]
 
     # Patch tqdm and print to disable output

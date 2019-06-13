@@ -1,7 +1,7 @@
 from django.test import TestCase
 from unittest.mock import patch
 
-from dips.models import DIP, DigitalFile
+from scope.models import DIP, DigitalFile
 from search.tasks import update_es_descendants, delete_es_descendants
 
 
@@ -13,8 +13,8 @@ class TasksTests(TestCase):
             update_es_descendants("DigitalFile", 1)
 
     @patch("search.tasks.bulk", return_value=(1, []))
-    @patch("dips.models.Collection.get_es_data_for_files")
-    @patch("dips.models.DigitalFile.objects.filter")
+    @patch("scope.models.Collection.get_es_data_for_files")
+    @patch("scope.models.DigitalFile.objects.filter")
     def test_update_es_descendants_collection(
         self, mock_orm_filter, mock_get_es_data, mock_task_bulk
     ):
@@ -29,8 +29,8 @@ class TasksTests(TestCase):
         mock_task_bulk.assert_called()
 
     @patch("search.tasks.bulk", return_value=(1, []))
-    @patch("dips.models.DIP.get_es_data_for_files")
-    @patch("dips.models.DigitalFile.objects.filter")
+    @patch("scope.models.DIP.get_es_data_for_files")
+    @patch("scope.models.DigitalFile.objects.filter")
     def test_update_es_descendants_dip(
         self, mock_orm_filter, mock_get_es_data, mock_task_bulk
     ):

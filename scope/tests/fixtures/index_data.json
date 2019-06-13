@@ -1,0 +1,160 @@
+[
+{
+  "model": "scope.dublincore",
+  "pk": 1,
+  "fields": {
+    "identifier": "123"
+  }
+},
+{
+  "model": "scope.dublincore",
+  "pk": 2,
+  "fields": {
+    "identifier": "456"
+  }
+},
+{
+  "model": "scope.dublincore",
+  "pk": 3,
+  "fields": {
+    "identifier": "ABC"
+  }
+},
+{
+  "model": "scope.dublincore",
+  "pk": 4,
+  "fields": {
+    "identifier": "DEF"
+  }
+},
+{
+  "model": "scope.collection",
+  "pk": 1,
+  "fields": {
+    "dc": 1
+  }
+},
+{
+  "model": "scope.collection",
+  "pk": 2,
+  "fields": {
+    "dc": 2
+  }
+},
+{
+  "model": "scope.dip",
+  "pk": 1,
+  "fields": {
+    "collection": 1,
+    "objectszip": "example.zip",
+    "uploaded": "2018-06-12T05:09:47.368Z",
+    "dc": 3
+  }
+},
+{
+  "model": "scope.dip",
+  "pk": 2,
+  "fields": {
+    "collection": 2,
+    "objectszip": "example_2.zip",
+    "uploaded": "2018-06-12T05:10:14.497Z",
+    "dc": 4
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "070b9cd9-a502-49c9-8b79-22abec1efd7e",
+  "fields": {
+    "size_bytes": 1361321,
+    "dip": 2
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "07263cdf-d11f-4d24-9e16-ef46f002d037",
+  "fields": {
+    "size_bytes": 1080282,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "35fa094d-dda9-432c-ab0c-329f798a620e",
+  "fields": {
+    "size_bytes": 1361321,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "4d6b532c-2c51-4aa3-91cd-9c4618e775a4",
+  "fields": {
+    "size_bytes": 125968,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "4fcd3a88-c994-4cc2-8f85-a28dd0b38dc6",
+  "fields": {
+    "size_bytes": 1041114,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "56864c46-fc69-4b6a-86cb-9cd78d832407",
+  "fields": {
+    "size_bytes": 4261301,
+    "dip": 2
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "57f074ea-e37f-4e52-afa0-6b8ca08d3137",
+  "fields": {
+    "size_bytes": 527345,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "61e8a632-2fc8-438b-8e77-e4ca2ec36fc0",
+  "fields": {
+    "size_bytes": 18324,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "92870e0b-8e38-4603-9b2c-3c93e4539ff1",
+  "fields": {
+    "size_bytes": 2050617,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "d3e6163e-4bc3-44a0-b0dd-ca43631ea71a",
+  "fields": {
+    "size_bytes": 113318,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "e019b788-267d-4c16-8254-cad01eeab3fb",
+  "fields": {
+    "size_bytes": 4261301,
+    "dip": 1
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "f78f0b06-7968-4e44-afc3-0a2883375ece",
+  "fields": {
+    "size_bytes": 1437654,
+    "dip": 1
+  }
+}
+]

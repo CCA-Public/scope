@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
 
-from dips import views
+from . import views
 
 urlpatterns = [
     url(r"^$", views.collections, {"template": "home.html"}, name="home"),
@@ -56,6 +56,6 @@ urlpatterns = [
     url(r"^users/", views.users, name="users"),
     url(r"^settings/", views.settings, name="settings"),
     url(r"^content/", views.content, name="content"),
-    url(r"^api/v1/", include("dips.api_urls")),
+    url(r"^api/v1/", include("scope.api_urls")),
     url(r"^i18n/", include("django.conf.urls.i18n")),
 ]

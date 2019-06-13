@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "compressor",
     "modeltranslation",
-    "dips.apps.DipsConfig",
+    "scope.apps.ScopeConfig",
     "search.apps.SearchConfig",
     "django_cleanup",  # deletes FileFields when objects are deleted
 ]
@@ -102,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-AUTH_USER_MODEL = "dips.User"
+AUTH_USER_MODEL = "scope.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -176,7 +176,7 @@ LOGIN_REDIRECT_URL = "home"
 
 # Fixtures
 
-FIXTURE_DIRS = [os.path.join(BASE_DIR, "dips", "tests", "fixtures")]
+FIXTURE_DIRS = [os.path.join(BASE_DIR, "scope", "tests", "fixtures")]
 
 # Elasticsearch
 

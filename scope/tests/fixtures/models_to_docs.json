@@ -1,0 +1,90 @@
+[
+{
+  "model": "scope.dublincore",
+  "pk": 1,
+  "fields": {
+    "identifier": "123",
+    "title": "Example collection",
+    "creator": "Example creator",
+    "subject": "Example subject",
+    "description": "Example description",
+    "publisher": "Example publisher",
+    "contributor": "Example contributor",
+    "date": "Example date",
+    "type": "Example type",
+    "format": "Example format",
+    "source": "Example source",
+    "language": "Example language",
+    "coverage": "Example coverage",
+    "rights": "Example rights"
+  }
+},
+{
+  "model": "scope.dublincore",
+  "pk": 2,
+  "fields": {
+    "identifier": "ABC",
+    "title": "Example DIP",
+    "creator": "Example creator",
+    "subject": "Example subject",
+    "description": "Example description",
+    "publisher": "Example publisher",
+    "contributor": "Example contributor",
+    "date": "Example date",
+    "type": "Example type",
+    "format": "Example format",
+    "source": "Example source",
+    "language": "Example language",
+    "coverage": "Example coverage",
+    "rights": "Example rights"
+  }
+},
+{
+  "model": "scope.collection",
+  "pk": 1,
+  "fields": {
+    "dc": 1,
+    "link": "http://example.com"
+  }
+},
+{
+  "model": "scope.dip",
+  "pk": 1,
+  "fields": {
+    "collection": 1,
+    "dc": 2,
+    "import_status": "SUCCESS",
+    "objectszip": "example.zip",
+    "uploaded": "2018-06-12T05:09:47.368Z"
+  }
+},
+{
+  "model": "scope.digitalfile",
+  "pk": "07263cdf-d11f-4d24-9e16-ef46f002d037",
+  "fields": {
+    "filepath": "objects/example.ai",
+    "fileformat": "Adobe Illustrator",
+    "formatversion": "14.0",
+    "size_bytes": 1080282,
+    "size_human": "1 MB",
+    "datemodified": "2018-02-08T20:00:57+00:00",
+    "puid": "fmt/563",
+    "amdsec": "amdSec_3",
+    "hashtype": "sha256",
+    "hashvalue": "c0fa53ae576cc4381890099a48d5dc3f40733a3415965fb477e79503d7653b5c",
+    "dip": 1
+  }
+},
+{
+  "model": "scope.premisevent",
+  "pk": "11b672df-d698-47c5-b2c6-ac85dcafcad8",
+  "fields": {
+    "eventtype": "format identification",
+    "datetime": "2018-02-08T20:15:08+00:00",
+    "detail": "program=\"Siegfried\"; version=\"1.7.6\"",
+    "outcome": "Positive",
+    "detailnote": "fmt/563",
+    "digitalfile": "07263cdf-d11f-4d24-9e16-ef46f002d037"
+  }
+}
+]

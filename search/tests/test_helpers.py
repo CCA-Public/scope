@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from dips.models import DigitalFile
+from scope.models import DigitalFile
 from search.helpers import (
     add_query_to_search,
     add_digital_file_aggs,
