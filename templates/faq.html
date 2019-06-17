@@ -6,9 +6,7 @@
 {% block title %}{% trans "Frequently Asked Questions" %}{% endblock %}
 
 {% block content %}
-  <div class="faq-container">
-    {% autoescape off %}
-      {% render_content "03_faq" %}
-    {% endautoescape %}
-  </div>
+  {% autoescape off %}
+    {% render_content "03_faq" %}
+  {% endautoescape %}
 {% endblock %}
