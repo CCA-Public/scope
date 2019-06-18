@@ -1,6 +1,5 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import UserChangeForm
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from modeltranslation.forms import TranslationModelForm
@@ -20,109 +19,75 @@ class DeleteByDublinCoreForm(forms.ModelForm):
         return self.cleaned_data["identifier"]
 
 
-class UserCreationForm(UserCreationForm):
+class UserForm(UserCreationForm):
+    """Form used for user creation and edit.
+
+    It uses UserCreationForm as base for both cases to allow editing the user
+    password on edit. The password fields are required on creation but not on
+    edit, when the password will only be updated if the fields are populated.
+    """
+
     is_superuser = forms.BooleanField(required=False, label=_("Administrator"))
 
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "is_active",
+            "is_superuser",
+            "groups",
+            "password1",
+            "password2",
+        )
+
     def __init__(self, *args, **kwargs):
-        super(UserCreationForm, self).__init__(*args, **kwargs)
+        # Get and add initial groups (must be done before super init)
+        self.initial_groups = []
+        if "instance" in kwargs:
+            self.initial_groups = list(
+                kwargs["instance"].groups.values_list("id", flat=True)
+            )
+            kwargs["initial"] = {"groups": self.initial_groups}
+        super().__init__(*args, **kwargs)
+        # Add group fields (must be done after super init)
         self.fields["groups"] = forms.MultipleChoiceField(
             choices=Group.objects.all().values_list("id", "name"),
             required=False,
             label=_("Groups"),
             help_text=_("Ctrl + Click to select multiple or unselect."),
         )
+        # Do not require password fields when editing
+        if "instance" in kwargs:
+            self.fields["password1"].required = False
+            self.fields["password2"].required = False
 
-    def clean_password1(self):
-        data = self.cleaned_data["password1"]
-        if data != "" and len(data) < 8:
-            raise forms.ValidationError(
-                _("Password should be at least 8 characters long")
-            )
-        return data
-
-    def save(self, commit=True):
+    def save(self):
+        # Call ModelForm save directly to avoid setting the
+        # user password allways in UserCreationForm save.
         user = super(UserCreationForm, self).save(commit=False)
-        if commit:
-            user.save()
-        return user
-
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "is_active",
-            "is_superuser",
-            "groups",
-        )
-
-
-class UserChangeForm(UserChangeForm):
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
-    password_confirmation = forms.CharField(widget=forms.PasswordInput, required=False)
-    is_superuser = forms.BooleanField(required=False, label=_("Administrator"))
-
-    def __init__(self, *args, **kwargs):
-        suppress_administrator_toggle = kwargs.get(
-            "suppress_administrator_toggle", False
-        )
-        if "suppress_administrator_toggle" in kwargs:
-            del kwargs["suppress_administrator_toggle"]
-
-        super(UserChangeForm, self).__init__(*args, **kwargs)
-        if suppress_administrator_toggle:
-            del self.fields["is_superuser"]
-
-        self.fields["groups"] = forms.MultipleChoiceField(
-            choices=Group.objects.all().values_list("id", "name"),
-            required=False,
-            label=_("Groups"),
-            help_text=_("Ctrl + Click to select multiple or unselect."),
-        )
-
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "is_active",
-            "is_superuser",
-            "groups",
-        )
-
-    def clean_password(self):
-        data = self.cleaned_data["password"]
-        if (
-            self.cleaned_data["password"] != ""
-            and len(self.cleaned_data["password"]) < 8
-        ):
-            raise forms.ValidationError(
-                _("Password should be at least 8 characters long")
-            )
-        return data
-
-    def clean(self):
-        cleaned_data = super(UserChangeForm, self).clean()
-        if (
-            cleaned_data.get("password") != ""
-            or cleaned_data.get("password_confirmation") != ""
-        ):
-            if cleaned_data.get("password") != cleaned_data.get(
-                "password_confirmation"
-            ):
-                raise forms.ValidationError(
-                    _("Password and password confirmation do not match")
-                )
-        return cleaned_data
-
-    def save(self, commit=True):
-        user = super(UserChangeForm, self).save(commit=False)
-        if commit:
-            user.save()
+        # Only set the password when it's populated. It's required on creation.
+        password = self.cleaned_data.get("password1", "")
+        if password != "":
+            user.set_password(password)
+        user.save()
+        # Process user groups. Groups from the form is a
+        # list of strings but the existing groups is a
+        # list of integers, therefore some conversion is
+        # needed in the if conditions bellow.
+        if "groups" in self.cleaned_data:
+            for group_id in self.cleaned_data["groups"]:
+                # Do not add already added groups
+                if int(group_id) not in self.initial_groups:
+                    group = Group.objects.get(id=group_id)
+                    user.groups.add(group)
+            # Remove groups not present in new_groups
+            for group_id in self.initial_groups:
+                if str(group_id) not in self.cleaned_data["groups"]:
+                    group = Group.objects.get(id=group_id)
+                    user.groups.remove(group)
         return user
 
 

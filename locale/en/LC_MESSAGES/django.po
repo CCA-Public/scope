@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-13 14:36+0000\n"
+"POT-Creation-Date: 2019-06-17 17:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: scope/forms.py:15 scope/views.py:98 scope/views.py:342 scope/views.py:654
+#: scope/forms.py:14 scope/views.py:98 scope/views.py:337 scope/views.py:649
 msgid "Identifier"
 msgstr ""
 
-#: scope/forms.py:19
+#: scope/forms.py:18
 msgid "Identifier does not match"
 msgstr ""
 
-#: scope/forms.py:24 scope/forms.py:65
+#: scope/forms.py:23 scope/forms.py:50
 msgid "Administrator"
 msgstr ""
 
-#: scope/forms.py:31 scope/forms.py:81 scope/views.py:159
+#: scope/forms.py:30 scope/forms.py:57 scope/views.py:159
 msgid "Groups"
 msgstr ""
 
-#: scope/forms.py:32 scope/forms.py:82 scope/forms.py:159
+#: scope/forms.py:31 scope/forms.py:58 scope/forms.py:130
 msgid "Ctrl + Click to select multiple or unselect."
 msgstr ""
 
-#: scope/forms.py:39 scope/forms.py:104
+#: scope/forms.py:77
 msgid "Password should be at least 8 characters long"
 msgstr ""
 
-#: scope/forms.py:118
+#: scope/forms.py:87
 msgid "Password and password confirmation do not match"
 msgstr ""
 
-#: scope/forms.py:158
+#: scope/forms.py:129
 msgid "Optional fields"
 msgstr ""
 
-#: scope/forms.py:164
+#: scope/forms.py:135
 msgid "Hide empty fields"
 msgstr ""
 
-#: scope/forms.py:166
+#: scope/forms.py:137
 msgid ""
 "Check to not display Dublin Core fields without data in the Collection and "
 "Folder view pages."
@@ -173,19 +173,19 @@ msgstr ""
 msgid "Incorrect date format for end date (%(date)s). Expected: yyyy-mm-dd."
 msgstr ""
 
-#: scope/views.py:99 scope/views.py:343 scope/views.py:655
+#: scope/views.py:99 scope/views.py:338 scope/views.py:650
 msgid "Title"
 msgstr ""
 
-#: scope/views.py:100 scope/views.py:344 scope/views.py:656
+#: scope/views.py:100 scope/views.py:339 scope/views.py:651
 msgid "Date"
 msgstr ""
 
-#: scope/views.py:101 scope/views.py:345 scope/views.py:657
+#: scope/views.py:101 scope/views.py:340 scope/views.py:652
 msgid "Description"
 msgstr ""
 
-#: scope/views.py:102 scope/views.py:346 scope/views.py:658
+#: scope/views.py:102 scope/views.py:341 scope/views.py:653
 msgid "Details"
 msgstr ""
 
@@ -218,57 +218,57 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: scope/views.py:293 scope/views.py:405 templates/digitalfile.html:27
+#: scope/views.py:288 scope/views.py:400 templates/digitalfile.html:27
 #: templates/digitalfile.html:29
 msgid "Filepath"
 msgstr ""
 
-#: scope/views.py:294 scope/views.py:406
+#: scope/views.py:289 scope/views.py:401
 msgid "Format"
 msgstr ""
 
-#: scope/views.py:295 scope/views.py:407
+#: scope/views.py:290 scope/views.py:402
 msgid "Size"
 msgstr ""
 
-#: scope/views.py:296 scope/views.py:408
+#: scope/views.py:291 scope/views.py:403
 msgid "Last modified"
 msgstr ""
 
-#: scope/views.py:297
+#: scope/views.py:292
 msgid "Collection name"
 msgstr ""
 
-#: scope/views.py:298 scope/views.py:409
+#: scope/views.py:293 scope/views.py:404
 msgid "File details"
 msgstr ""
 
-#: scope/views.py:496
+#: scope/views.py:491
 msgid ""
 "A background process has been launched to extract and parse the METS file. "
 "After the process finishes and the interface is reloaded, a link to the "
 "Folder will show up in the Folders table below."
 msgstr ""
 
-#: scope/views.py:529
+#: scope/views.py:524
 msgid ""
 "A background process has been launched to update the Collection metadata in "
 "the Elasticsearch index for the related Digital Files."
 msgstr ""
 
-#: scope/views.py:565
+#: scope/views.py:560
 msgid ""
 "A background process has been launched to update the ancestors metadata in "
 "the Elasticsearch index for the related Digital Files."
 msgstr ""
 
-#: scope/views.py:592
+#: scope/views.py:587
 msgid ""
 "A background process has been launched to delete the descendant Folders and "
 "Digital Files from the Elasticsearch indexes."
 msgstr ""
 
-#: scope/views.py:624
+#: scope/views.py:619
 msgid ""
 "A background process has been launched to delete the descendant Digital "
 "Files from the Elasticsearch index."
@@ -333,7 +333,7 @@ msgstr ""
 
 #: templates/collection.html:57 templates/collections.html:33
 #: templates/dip.html:76 templates/home.html:45 templates/orphan_dips.html:37
-#: templates/search.html:41 templates/users.html:36
+#: templates/search.html:41 templates/users.html:38
 msgid "See more"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgid "Content"
 msgstr ""
 
 #: templates/content.html:24 templates/edit_collection.html:19
-#: templates/edit_dip.html:24 templates/edit_user.html:17
+#: templates/edit_dip.html:24 templates/edit_user.html:19
 #: templates/new_collection.html:17 templates/new_dip.html:17
 #: templates/new_user.html:15 templates/settings.html:22
 msgid "Submit"
@@ -539,11 +539,10 @@ msgid "Edit Folder"
 msgstr ""
 
 #: templates/edit_user.html:6
-#, python-format
-msgid "User - %(user.username)s"
+msgid "User"
 msgstr ""
 
-#: templates/edit_user.html:11 templates/new_user.html:9 templates/users.html:6
+#: templates/edit_user.html:12 templates/new_user.html:9 templates/users.html:6
 #: templates/users.html:9
 msgid "Users"
 msgstr ""
@@ -647,10 +646,14 @@ msgid "Add new Folder"
 msgstr ""
 
 #: templates/includes/header.html:76
+msgid "Profile"
+msgstr ""
+
+#: templates/includes/header.html:77
 msgid "Log out"
 msgstr ""
 
-#: templates/includes/header.html:80
+#: templates/includes/header.html:81
 msgid "Log in"
 msgstr ""
 
@@ -690,7 +693,7 @@ msgstr ""
 msgid "Add new DIP"
 msgstr ""
 
-#: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:42
+#: templates/new_user.html:5 templates/new_user.html:10 templates/users.html:46
 msgid "Add new User"
 msgstr ""
 

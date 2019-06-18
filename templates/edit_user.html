@@ -3,14 +3,16 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}User - {{ user.username }}{% endblocktrans %}
+{% trans "User" %} - {{ instance.username }}
 {% endblock %}
 
 {% block content %}
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'users' %}">{% trans "Users" %}</a></li>
-    <li class="breadcrumb-item active">{{ user.username }}</li>
-  </ol>
+  {% if user.is_manager %}
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'users' %}">{% trans "Users" %}</a></li>
+      <li class="breadcrumb-item active">{{ instance.username }}</li>
+    </ol>
+  {% endif %}
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}

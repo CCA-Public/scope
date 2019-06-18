@@ -5,7 +5,6 @@ import zipfile
 from celery import chain
 from django.conf import settings as django_settings
 from django.contrib import messages
-from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.forms import modelform_factory, modelformset_factory
 from django.http import Http404, HttpResponse, StreamingHttpResponse
@@ -15,13 +14,7 @@ from django.utils.translation import gettext as _
 
 from .helpers import get_sort_params, get_page_from_search
 from .models import User, Collection, DIP, DigitalFile, DublinCore, Content
-from .forms import (
-    DeleteByDublinCoreForm,
-    UserCreationForm,
-    UserChangeForm,
-    DublinCoreSettingsForm,
-    ContentForm,
-)
+from .forms import DeleteByDublinCoreForm, UserForm, DublinCoreSettingsForm, ContentForm
 from .tasks import extract_mets, parse_mets, save_import_error
 from search.helpers import (
     add_query_to_search,
@@ -180,26 +173,14 @@ def new_user(request):
     if not request.user.is_manager():
         return redirect("home")
 
-    form = UserCreationForm(request.POST or None)
+    form = UserForm(request.POST or None)
 
-    # Disable superuser field for non-admin users
+    # Remove superuser field for non-admin users
     if not request.user.is_superuser:
-        form.fields["is_superuser"].disabled = True
+        form.fields.pop("is_superuser")
 
     if form.is_valid():
-        user = form.save(commit=False)
-
-        # Avoid superuser creation from non-admin user
-        if not request.user.is_superuser:
-            user.is_superuser = False
-
-        user.save()
-
-        # Add user groups
-        for group_id in form.cleaned_data["groups"]:
-            group = Group.objects.get(id=group_id)
-            user.groups.add(group)
-
+        form.save()
         return redirect("users")
 
     return render(request, "new_user.html", {"form": form})
@@ -207,53 +188,33 @@ def new_user(request):
 
 @login_required(login_url="/login/")
 def edit_user(request, pk):
-    if not request.user.is_manager():
+    # Allow self-edit and edits by managers
+    instance = get_object_or_404(User, pk=pk)
+    if request.user.pk != instance.pk and not request.user.is_manager():
         return redirect("home")
 
-    instance = get_object_or_404(User, pk=pk)
-    current_groups = list(instance.groups.values_list("id", flat=True))
-    current_is_superuser = instance.is_superuser
-    form = UserChangeForm(
-        request.POST or None, instance=instance, initial={"groups": current_groups}
-    )
-
-    # Disable superuser field for non-admin users
-    if not request.user.is_superuser:
-        form.fields["is_superuser"].disabled = True
-
-    if form.is_valid():
-        user = form.save(commit=False)
-
-        # Change password if requested
-        password = request.POST.get("password", "")
-        if password != "":
-            user.set_password(password)
-
-        # Avoid is_superuser change from non-admin user
-        if not request.user.is_superuser:
-            user.is_superuser = current_is_superuser
-
-        user.save()
-
-        # Update user groups. Groups from the form is a
-        # list of strings but the existing groups is a
-        # list of integers, therefore some conversion is
-        # needed in the if conditions bellow.
-        new_groups = form.cleaned_data["groups"]
-        for group_id in new_groups:
-            # Do not add already added groups
-            if int(group_id) not in current_groups:
-                group = Group.objects.get(id=group_id)
-                user.groups.add(group)
-        # Remove groups not present in new_groups
-        for group_id in current_groups:
-            if str(group_id) not in new_groups:
-                group = Group.objects.get(id=group_id)
-                user.groups.remove(group)
-
+    # Only superusers can edit superusers
+    if not request.user.is_superuser and instance.is_superuser:
         return redirect("users")
 
-    return render(request, "edit_user.html", {"form": form})
+    form = UserForm(request.POST or None, instance=instance)
+
+    # Remove superuser field for non-admin users
+    if not request.user.is_superuser or request.user.pk == instance.pk:
+        form.fields.pop("is_superuser")
+
+    # Remove active and groups fields on self-edit
+    if request.user.pk == instance.pk:
+        form.fields.pop("is_active")
+        form.fields.pop("groups")
+
+    if form.is_valid():
+        form.save()
+        # Redirect to users page when editing other user
+        if request.user.pk != instance.pk:
+            return redirect("users")
+
+    return render(request, "edit_user.html", {"form": form, "instance": instance})
 
 
 @login_required(login_url="/login/")

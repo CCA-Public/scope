@@ -56,6 +56,14 @@ class UserAccessTests(TestCase):
             ("basic", 302),
             ("viewer", 302),
         ],
+        "edit_superuser": [
+            ("unauth", 302),
+            ("admin", 200),
+            ("manager", 302),
+            ("editor", 302),
+            ("basic", 302),
+            ("viewer", 302),
+        ],
         "collection": [
             ("unauth", 302),
             ("admin", 200),
@@ -173,7 +181,9 @@ class UserAccessTests(TestCase):
     @patch("elasticsearch_dsl.DocType.save")
     def setUp(self, mock_es_save):
         # Create test users
-        User.objects.create_superuser("admin", "admin@example.com", "admin")
+        self.superuser = User.objects.create_superuser(
+            "admin", "admin@example.com", "admin"
+        )
         User.objects.create_user("basic", "basic@example.com", "basic")
         manager_user = User.objects.create_user(
             "manager", "manager@example.com", "manager"
@@ -210,7 +220,9 @@ class UserAccessTests(TestCase):
         and verifies if the user can see the page or gets redirected.
         """
         for page, responses in self.GET_PAGES.items():
-            if page in ["edit_user"]:
+            if page == "edit_superuser":
+                url = reverse("edit_user", kwargs={"pk": self.superuser.pk})
+            elif page == "edit_user":
                 url = reverse(page, kwargs={"pk": self.user.pk})
             elif page in ["collection", "edit_collection", "delete_collection"]:
                 url = reverse(page, kwargs={"pk": self.collection.pk})
@@ -246,6 +258,7 @@ class UserAccessTests(TestCase):
             "password2": "test123test",
         }
         edit_url = reverse("edit_user", kwargs={"pk": self.user.pk})
+        edit_superuser_url = reverse("edit_user", kwargs={"pk": self.superuser.pk})
         edit_data = {"username": "test_changed"}
         edit_data_2 = {"username": "test_changed_2"}
 
@@ -308,6 +321,11 @@ class UserAccessTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/users/")
         self.assertTrue(User.objects.filter(username="test_changed").exists())
+        # Manager, edit admin
+        response = self.client.post(edit_superuser_url, edit_data_2)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/users/")
+        self.assertFalse(User.objects.filter(username="test_changed_2").exists())
         self.client.logout()
 
         # Admin, create
