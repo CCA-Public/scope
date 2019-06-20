@@ -26,20 +26,20 @@
       {% endif %}
       {% with current_user=user %}
         {% for user in users %}
-          <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.first_name }}</td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.group_names|default:'' }}</td>
-            <td>{{ user.is_active }}</td>
-            <td>{{ user.is_superuser }}</td>
-            <td class="text-nowrap">
-              {% if current_user.is_superuser or not user.is_superuser %}
+          {% if current_user.is_superuser or not user.is_superuser %}
+            <tr>
+              <td>{{ user.username }}</td>
+              <td>{{ user.first_name }}</td>
+              <td>{{ user.last_name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.group_names|default:'' }}</td>
+              <td>{{ user.is_active }}</td>
+              <td>{{ user.is_superuser }}</td>
+              <td class="text-nowrap">
                 <a href="{% url 'edit_user' user.pk %}" class="btn btn-sm btn-primary">{% trans "See more" %}</a>
-              {% endif %}
-            </td>
-          </tr>
+              </td>
+            </tr>
+          {% endif %}
         {% endfor %}
       {% endwith %}
     </table>
