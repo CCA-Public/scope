@@ -1,5 +1,5 @@
 celery==4.2.1
-Django==2.1.7
+Django==2.2.4
 django_celery_results==1.0.1
 django-cleanup==2.1.0
 django_compressor==2.2
