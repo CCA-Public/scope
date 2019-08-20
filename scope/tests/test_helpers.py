@@ -29,11 +29,13 @@ class HelpersTests(TestCase):
         hosts = [
             "http://user:secret@localhost:62081",
             "https://user:secret@192.168.1.128",
+            "https://user:secret@HOST.com:8000",
         ]
         parsed_hosts = helpers.ss_hosts_parser(hosts)
         expected_hosts = {
             "http://localhost:62081": {"user": "user", "secret": "secret"},
             "https://192.168.1.128": {"user": "user", "secret": "secret"},
+            "https://HOST.com:8000": {"user": "user", "secret": "secret"},
         }
         self.assertEqual(parsed_hosts, expected_hosts)
 

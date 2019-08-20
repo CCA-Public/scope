@@ -24,9 +24,8 @@ def ss_hosts_parser(hosts):
         # Raise if credentials are not present
         if not parts.username or not parts.password:
             raise ValueError("Missing credentials for SS host: %s" % host)
-        url = "%s://%s" % (parts.scheme, parts.hostname)
-        if parts.port:
-            url = "%s:%s" % (url, parts.port)
+        # Use netloc instead of hostname and port to maintain capitalization
+        url = "%s://%s" % (parts.scheme, parts.netloc.split("@")[1])
         parsed_hosts[url] = {"user": parts.username, "secret": parts.password}
     return parsed_hosts
 
