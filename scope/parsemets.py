@@ -182,10 +182,10 @@ class METS(object):
         dc_data = self._parse_dc()
         if dc_data:
             logger.info("Updating DIP Dublin Core metadata")
-            # The `source` value is also used to find a related Collection,
-            # until slugs are implemented the relation is made using the DC
+            # The `relation` value is only used to find a related Collection.
+            # Until slugs are implemented the relation is made using the DC
             # identifier from the collections, which is not an unique field.
-            collection_id = dc_data.get("source", None)
+            collection_id = dc_data.pop("relation", None)
             if collection_id:
                 try:
                     dip.collection = Collection.objects.get(
@@ -314,6 +314,7 @@ class METS(object):
             "language": "",
             "coverage": "",
             "rights": "",
+            "relation": "",
         }
         for elem in dc_xml:
             key = str(elem.tag)
