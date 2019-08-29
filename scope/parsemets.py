@@ -181,27 +181,37 @@ class METS(object):
         # dmdSec and update DIP DublinCore object.
         dc_data = self._parse_dc()
         if dc_data:
+            logger.info("Looking for a related Collection")
+            # The `isPartOf` and `relation` values are only used to find a
+            # related Collection, giving priority to the `isPartOf` value.
+            is_part_of = dc_data.pop("isPartOf", None)
+            relation = dc_data.pop("relation", None)
+            if is_part_of:
+                # Remove AIC prefix if present (added by AM)
+                is_part_of = is_part_of.replace("AIC#", "")
+            for collection_identifier in [is_part_of, relation]:
+                if collection_identifier:
+                    try:
+                        # Until slugs are implemented the relation is made using
+                        # the DC identifier from the collections, which is not
+                        # an unique field.
+                        dip.collection = Collection.objects.get(
+                            dc__identifier=collection_identifier
+                        )
+                        dip.save(update_es=False)
+                        # Stop loop after finding a match
+                        break
+                    except Collection.DoesNotExist:
+                        logger.warning(
+                            "A Collection could not be found with identifier: %s"
+                            % collection_identifier
+                        )
+                    except Collection.MultipleObjectsReturned:
+                        logger.warning(
+                            "More than one Collection were found with identifier: %s"
+                            % collection_identifier
+                        )
             logger.info("Updating DIP Dublin Core metadata")
-            # The `relation` value is only used to find a related Collection.
-            # Until slugs are implemented the relation is made using the DC
-            # identifier from the collections, which is not an unique field.
-            collection_id = dc_data.pop("relation", None)
-            if collection_id:
-                try:
-                    dip.collection = Collection.objects.get(
-                        dc__identifier=collection_id
-                    )
-                    dip.save(update_es=False)
-                except Collection.DoesNotExist:
-                    logger.warning(
-                        "A Collection could not be found with identifier: %s"
-                        % collection_id
-                    )
-                except Collection.MultipleObjectsReturned:
-                    logger.warning(
-                        "More than one Collection were found with identifier: %s"
-                        % collection_id
-                    )
             # No validation is needed as all the fields are non
             # required string fields initiated with empty strings,
             # but do not update identifier with an empty value.
@@ -314,6 +324,7 @@ class METS(object):
             "language": "",
             "coverage": "",
             "rights": "",
+            "isPartOf": "",
             "relation": "",
         }
         for elem in dc_xml:
