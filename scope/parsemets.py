@@ -301,11 +301,12 @@ class METS(object):
         # Sort by date and loop over reversed DMD sections, check SIP
         # DMD ids to get the last updated SIP's Dublin Core metadata.
         dmdids = dmdids.split()
-        dmds = sorted(dmds, key=lambda e: e.get("CREATED"))
+        dmds = sorted(dmds, key=lambda e: e.get("CREATED", ""))
         for dmd in dmds[::-1]:
-            if dmd.get("ID") in dmdids:
+            if dmd.get("ID", "") in dmdids:
                 dc_xml = dmd.find("mdWrap/xmlData/dublincore")
-                break
+                if dc_xml and len(dc_xml):
+                    break
 
         # Parse all DC elements to a dictionary. Initiate all fields with
         # empty strings as no one can be null.
