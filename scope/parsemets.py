@@ -305,7 +305,7 @@ class METS(object):
         for dmd in dmds[::-1]:
             if dmd.get("ID", "") in dmdids:
                 dc_xml = dmd.find("mdWrap/xmlData/dublincore")
-                if dc_xml and len(dc_xml):
+                if dc_xml is not None and len(dc_xml):
                     break
 
         # Parse all DC elements to a dictionary. Initiate all fields with
