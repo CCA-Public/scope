@@ -129,6 +129,7 @@ The following environment variables are used to run the application:
 * `ES_INDEXES_SHARDS`: Number of shards for Elasticsearch indexes. *Default:* `1`.
 * `ES_INDEXES_REPLICAS`: Number of replicas for Elasticsearch indexes. *Default:* `0`.
 * `CELERY_BROKER_URL` **[REQUIRED]**: Redis server URL. E.g.: `redis://hostname:port`.
+* `CELERY_BROKER_VISIBILITY_TIMEOUT`: Time in seconds for Redis to redeliver a task if it has not been acknowledged by any worker ([more info](http://docs.celeryproject.org/en/latest/getting-started/brokers/redis.html#id1)). Set this to a higher value than the longest DIP import time expected. *Default:* `3600`.
 * `SS_HOSTS`: List of Storage Service hosts separated by comma. RFC-1738 formatted URLs must be used to set the credentials for each host. See the [the Storage Service integration notes](#storage-service-integration) bellow for more information.
 
 Make sure [the system locale environment variables](https://wiki.debian.org/Locale) are configured to use UTF-8 encoding.
