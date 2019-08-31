@@ -287,11 +287,13 @@ Environment=CELERYD_LOG_FILE=/home/scope/scope-worker.log
 WorkingDirectory=/home/scope/scope
 ExecStart=/home/scope/scope/venv/bin/celery \
             multi start scope-worker -A scope \
+            --concurrency=1 \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
 ExecReload=/home/scope/scope/venv/bin/celery \
             multi restart scope-worker -A scope \
+            --concurrency=1 \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
