@@ -32,7 +32,7 @@ The primary application, "scope", allows users to add, organize, and interact wi
 
 See the [user stories](https://github.com/CCA-Public/scope/wiki/User-Stories) for background on current and future features.
 
-See the [user manual](https://docs.google.com/document/d/1IjJW62w4ZeI19G6a3IkO6pzH4hh8Zl0wbZJ7rz1kOyc/edit?usp=sharing) for instructions on how to use the SCOPE v.1.0
+See the [user manual](https://docs.google.com/document/d/1IjJW62w4ZeI19G6a3IkO6pzH4hh8Zl0wbZJ7rz1kOyc/edit?usp=sharing) for instructions on how to use SCOPE v.1.0
 
 ## Data model
 
