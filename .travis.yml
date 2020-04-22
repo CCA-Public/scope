@@ -17,6 +17,8 @@ matrix:
     - python: "3.8"
       env: TOXENV=py38
     - python: "3.8"
+      env: TOXENV=checkformigrations
+    - python: "3.8"
       env: TOXENV=linting
 
 after_success:
