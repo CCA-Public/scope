@@ -11,7 +11,7 @@ class ViewsTests(TestCase):
         self.faq = Content.objects.get(key="03_faq")
 
     @patch("elasticsearch_dsl.Search.execute")
-    @patch("elasticsearch_dsl.Search.count", return_value=0)
+    @patch("elasticsearch_dsl.Search.count", autospec=True, return_value=0)
     @patch("scope.views.messages.error")
     def test_search_wrong_dates(self, mock_msg_error, mock_es_count, mock_es_exec):
         response = self.client.get(

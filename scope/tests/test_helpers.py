@@ -117,7 +117,7 @@ class HelpersTests(TestCase):
         self.assertEqual(sort_option, "format")
         self.assertEqual(sort_dir, "desc")
 
-    @patch("elasticsearch_dsl.Search.count", return_value=100)
+    @patch("elasticsearch_dsl.Search.count", autospec=True, return_value=100)
     def test_get_page_from_search_es_defaults(self, mock_es_count):
         # Elasticsearch search
         page = helpers.get_page_from_search(self.es_search, {})
@@ -130,7 +130,7 @@ class HelpersTests(TestCase):
         # The objects_list is the ES query, only with pagination
         self.assertEqual(page.object_list.to_dict(), {"from": 0, "size": 10})
 
-    @patch("django.db.models.query.QuerySet.count", return_value=100)
+    @patch("django.db.models.query.QuerySet.count", autospec=True, return_value=100)
     def test_get_page_from_search_orm_defaults(self, mock_orm_count):
         # ORM QuerySet
         page = helpers.get_page_from_search(self.orm_query_set, {})
@@ -141,7 +141,7 @@ class HelpersTests(TestCase):
         self.assertEqual(page.object_list.query.low_mark, 0)
         self.assertEqual(page.object_list.query.high_mark, 10)
 
-    @patch("elasticsearch_dsl.Search.count", return_value=100)
+    @patch("elasticsearch_dsl.Search.count", autospec=True, return_value=100)
     def test_get_page_from_search_es_with_params(self, mock_es_count):
         page = helpers.get_page_from_search(
             self.es_search, {"page": "2", "limit": "20"}
@@ -149,7 +149,7 @@ class HelpersTests(TestCase):
         self.assertEqual(page.number, 2)
         self.assertEqual(page.object_list.to_dict(), {"from": 20, "size": 20})
 
-    @patch("django.db.models.query.QuerySet.count", return_value=100)
+    @patch("django.db.models.query.QuerySet.count", autospec=True, return_value=100)
     def test_get_page_from_search_orm_with_params(self, mock_orm_count):
         page = helpers.get_page_from_search(
             self.orm_query_set, {"page": "2", "limit": "20"}
@@ -158,7 +158,7 @@ class HelpersTests(TestCase):
         self.assertEqual(page.object_list.query.low_mark, 20)
         self.assertEqual(page.object_list.query.high_mark, 40)
 
-    @patch("elasticsearch_dsl.Search.count", return_value=100)
+    @patch("elasticsearch_dsl.Search.count", autospec=True, return_value=100)
     def test_get_page_from_search_es_wrong_page(self, mock_es_count):
         # Not an integer
         page = helpers.get_page_from_search(self.es_search, {"page": "text"})
@@ -171,7 +171,7 @@ class HelpersTests(TestCase):
         self.assertEqual(page.number, 10)
         self.assertEqual(page.object_list.to_dict(), {"from": 90, "size": 10})
 
-    @patch("django.db.models.query.QuerySet.count", return_value=100)
+    @patch("django.db.models.query.QuerySet.count", autospec=True, return_value=100)
     def test_get_page_from_search_orm_wrong_page(self, mock_orm_count):
         # Not an integer
         page = helpers.get_page_from_search(self.orm_query_set, {"page": "text"})
@@ -186,7 +186,7 @@ class HelpersTests(TestCase):
         self.assertEqual(page.object_list.query.low_mark, 90)
         self.assertEqual(page.object_list.query.high_mark, 100)
 
-    @patch("elasticsearch_dsl.Search.count", return_value=100)
+    @patch("elasticsearch_dsl.Search.count", autospec=True, return_value=100)
     def test_get_page_from_search_es_wrong_limit(self, mock_es_count):
         for limit in self.WRONG_LIMITS:
             page = helpers.get_page_from_search(self.es_search, {"limit": limit})
@@ -194,7 +194,7 @@ class HelpersTests(TestCase):
             self.assertEqual(page.number, 1)
             self.assertEqual(page.object_list.to_dict(), {"from": 0, "size": 10})
 
-    @patch("django.db.models.query.QuerySet.count", return_value=100)
+    @patch("django.db.models.query.QuerySet.count", autospec=True, return_value=100)
     def test_get_page_from_search_orm_wrong_limit(self, mock_orm_count):
         for limit in self.WRONG_LIMITS:
             page = helpers.get_page_from_search(self.orm_query_set, {"limit": limit})

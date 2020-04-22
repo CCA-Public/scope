@@ -10,6 +10,7 @@ RUN set -ex \
     && apk add --update --no-cache --virtual .buildDeps \
         alpine-sdk \
         gcc \
+        libffi-dev \
         libxslt-dev \
         musl-dev \
     && pip install --no-cache-dir -r requirements/development.txt \

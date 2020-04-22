@@ -25,7 +25,7 @@ class CollectionTests(TestCase):
         self.collection = Collection.objects.create(link="http://fake.url", dc=dc)
 
     @patch("elasticsearch_dsl.Search.execute")
-    @patch("elasticsearch_dsl.Search.count", return_value=0)
+    @patch("elasticsearch_dsl.Search.count", autospec=True, return_value=0)
     def test_collection_view_success_status_code(self, mock_es_count, mock_es_exec):
         url = reverse("collection", kwargs={"pk": self.collection.pk})
         response = self.client.get(url)

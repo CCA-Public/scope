@@ -212,7 +212,7 @@ class UserAccessTests(TestCase):
         )
 
     @patch("elasticsearch_dsl.Search.execute")
-    @patch("elasticsearch_dsl.Search.count", return_value=0)
+    @patch("elasticsearch_dsl.Search.count", autospec=True, return_value=0)
     def test_get_pages(self, mock_es_count, mock_es_exec):
         """Get pages test.
 
