@@ -4,14 +4,14 @@ import shutil
 import tarfile
 import zipfile
 
+import requests
 from celery import shared_task
 from django.conf import settings
 from django.db.utils import DatabaseError
 from elasticsearch.exceptions import TransportError
-import requests
 
-from .parsemets import METS
 from .models import DIP
+from .parsemets import METS
 
 METS_RE = re.compile(r".*METS.[0-9a-f\-]{36}.*$")
 

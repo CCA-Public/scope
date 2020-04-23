@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 
-from django.db import migrations
 from django.contrib.auth.management import create_permissions
+from django.db import migrations
 
-from scope.models import Content, DublinCore, Setting
+from scope.models import Content
+from scope.models import DublinCore
+from scope.models import Setting
 
 
 def migrate_permissions(apps, schema_editor):

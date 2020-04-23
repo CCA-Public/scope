@@ -1,26 +1,40 @@
-from datetime import datetime
-import requests
 import zipfile
+from datetime import datetime
 
+import requests
 from celery import chain
 from django.conf import settings as django_settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.forms import modelform_factory, modelformset_factory
-from django.http import Http404, HttpResponse, StreamingHttpResponse
-
-from django.shortcuts import render, redirect, get_object_or_404
+from django.forms import modelform_factory
+from django.forms import modelformset_factory
+from django.http import Http404
+from django.http import HttpResponse
+from django.http import StreamingHttpResponse
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.utils.translation import gettext as _
 
-from .helpers import get_sort_params, get_page_from_search
-from .models import User, Collection, DIP, DigitalFile, DublinCore, Content
-from .forms import DeleteByDublinCoreForm, UserForm, DublinCoreSettingsForm, ContentForm
-from .tasks import extract_mets, parse_mets, save_import_error
-from search.helpers import (
-    add_query_to_search,
-    add_digital_file_aggs,
-    add_digital_file_filters,
-)
+from search.helpers import add_digital_file_aggs
+from search.helpers import add_digital_file_filters
+from search.helpers import add_query_to_search
+
+from .forms import ContentForm
+from .forms import DeleteByDublinCoreForm
+from .forms import DublinCoreSettingsForm
+from .forms import UserForm
+from .helpers import get_page_from_search
+from .helpers import get_sort_params
+from .models import DIP
+from .models import Collection
+from .models import Content
+from .models import DigitalFile
+from .models import DublinCore
+from .models import User
+from .tasks import extract_mets
+from .tasks import parse_mets
+from .tasks import save_import_error
 
 
 def _get_and_validate_digital_file_filters(request):

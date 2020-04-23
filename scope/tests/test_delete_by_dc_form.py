@@ -1,9 +1,12 @@
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.test import TestCase
 from unittest.mock import patch
 
-from scope.models import Collection, DIP, DublinCore
+from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
+
+from scope.models import DIP
+from scope.models import Collection
+from scope.models import DublinCore
 
 
 class DcByDcFormTests(TestCase):

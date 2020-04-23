@@ -1,9 +1,14 @@
-from django.contrib.auth.models import Group
-from django.urls import reverse
-from django.test import TestCase
 from unittest.mock import patch
 
-from scope.models import User, Collection, DIP, DigitalFile, DublinCore
+from django.contrib.auth.models import Group
+from django.test import TestCase
+from django.urls import reverse
+
+from scope.models import DIP
+from scope.models import Collection
+from scope.models import DigitalFile
+from scope.models import DublinCore
+from scope.models import User
 
 
 class UserAccessTests(TestCase):

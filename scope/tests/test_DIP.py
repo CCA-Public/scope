@@ -1,11 +1,14 @@
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.test import TestCase
-from django.urls import resolve
 from unittest.mock import patch
 
+from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import resolve
+from django.urls import reverse
+
+from scope.models import DIP
+from scope.models import Collection
+from scope.models import DublinCore
 from scope.views import dip
-from scope.models import Collection, DIP, DublinCore
 
 
 class DIPTests(TestCase):

@@ -1,11 +1,14 @@
+import logging
+
 from celery import shared_task
 from django.db.utils import DatabaseError
 from elasticsearch.exceptions import TransportError
 from elasticsearch.helpers import bulk
 from elasticsearch_dsl.connections import connections
-from scope.models import Collection, DIP, DigitalFile
 
-import logging
+from scope.models import DIP
+from scope.models import Collection
+from scope.models import DigitalFile
 
 # Use a normal logger to avoid redirecting both `stdout` and `stderr` to the
 # logger and back when using Celery's `get_task_logger`, and to avoid changing

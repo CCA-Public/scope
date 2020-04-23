@@ -1,8 +1,14 @@
-from django.test import TestCase
 from unittest.mock import patch
 
-from scope.models import Collection, DIP, DigitalFile, DublinCore
-from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
+from django.test import TestCase
+
+from scope.models import DIP
+from scope.models import Collection
+from scope.models import DigitalFile
+from scope.models import DublinCore
+from search.documents import CollectionDoc
+from search.documents import DigitalFileDoc
+from search.documents import DIPDoc
 
 
 class EsModelsSaveDeleteTests(TestCase):

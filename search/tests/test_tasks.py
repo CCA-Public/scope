@@ -1,8 +1,11 @@
-from django.test import TestCase
 from unittest.mock import patch
 
-from scope.models import DIP, DigitalFile
-from search.tasks import update_es_descendants, delete_es_descendants
+from django.test import TestCase
+
+from scope.models import DIP
+from scope.models import DigitalFile
+from search.tasks import delete_es_descendants
+from search.tasks import update_es_descendants
 
 
 class TasksTests(TestCase):

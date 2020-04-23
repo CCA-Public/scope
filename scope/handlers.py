@@ -1,7 +1,8 @@
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 
-from .models import Collection, DIP
+from .models import DIP
+from .models import Collection
 
 
 @receiver(pre_delete, sender=Collection, dispatch_uid="collection_pre_delete")

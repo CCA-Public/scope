@@ -1,11 +1,9 @@
 from django.test import TestCase
 
 from scope.models import DigitalFile
-from search.helpers import (
-    add_query_to_search,
-    add_digital_file_aggs,
-    add_digital_file_filters,
-)
+from search.helpers import add_digital_file_aggs
+from search.helpers import add_digital_file_filters
+from search.helpers import add_query_to_search
 
 
 class FunctionsTests(TestCase):

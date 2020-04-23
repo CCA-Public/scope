@@ -1,9 +1,11 @@
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.test import TestCase
 from unittest.mock import patch
 
-from scope.models import DIP, DigitalFile
+from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
+
+from scope.models import DIP
+from scope.models import DigitalFile
 
 
 class ImportFailureDisplayTests(TestCase):

@@ -1,12 +1,18 @@
-from datetime import datetime, timezone
-from django.core.exceptions import ValidationError
-from lxml import etree, objectify
-
 import logging
 import os
+from datetime import datetime
+from datetime import timezone
 
-from .helpers import convert_size, update_instance_from_dict
-from .models import Collection, DIP, DigitalFile, PREMISEvent
+from django.core.exceptions import ValidationError
+from lxml import etree
+from lxml import objectify
+
+from .helpers import convert_size
+from .helpers import update_instance_from_dict
+from .models import DIP
+from .models import Collection
+from .models import DigitalFile
+from .models import PREMISEvent
 
 logger = logging.getLogger("scope.parsemets")
 

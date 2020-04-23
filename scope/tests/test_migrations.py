@@ -1,9 +1,10 @@
 from django.contrib.auth.models import Group
-from django.db.migrations.executor import MigrationExecutor
 from django.db import connection
+from django.db.migrations.executor import MigrationExecutor
 from django.test import TransactionTestCase
 
-from scope.models import Content, Setting
+from scope.models import Content
+from scope.models import Setting
 
 
 class TestMigrations(TransactionTestCase):

@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.utils.translation import gettext_lazy as _
 
-from scope.models import DublinCore, Setting
+from scope.models import DublinCore
+from scope.models import Setting
 
 
 class DublinCoreSettingsTests(TestCase):

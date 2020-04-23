@@ -4,10 +4,11 @@ from unittest.mock import patch
 from django.contrib.auth.models import Group
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
 
-from scope.models import DIP, User
+from scope.models import DIP
+from scope.models import User
 
 
 class DIPStoredWebhookTest(APITestCase):

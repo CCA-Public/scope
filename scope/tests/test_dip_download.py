@@ -1,13 +1,16 @@
-from contextlib import contextmanager
 import os
-
-from django.conf import settings
-from django.urls import reverse
-from django.test import TestCase, override_settings
+from contextlib import contextmanager
 from unittest.mock import patch
-import vcr
 
-from scope.models import DIP, DublinCore, User
+import vcr
+from django.conf import settings
+from django.test import TestCase
+from django.test import override_settings
+from django.urls import reverse
+
+from scope.models import DIP
+from scope.models import DublinCore
+from scope.models import User
 
 
 @contextmanager

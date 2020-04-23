@@ -1,7 +1,9 @@
 import math
 from urllib.parse import urlparse
 
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
+from django.core.paginator import Paginator
 from django.db.models import FieldDoesNotExist
 
 

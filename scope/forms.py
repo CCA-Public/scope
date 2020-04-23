@@ -1,10 +1,13 @@
-from django.contrib.auth.models import Group
-from django.contrib.auth.forms import UserCreationForm
-from django.utils.translation import gettext_lazy as _
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
+from django.utils.translation import gettext_lazy as _
 from modeltranslation.forms import TranslationModelForm
 
-from .models import Content, User, DublinCore, Setting
+from .models import Content
+from .models import DublinCore
+from .models import Setting
+from .models import User
 
 
 class DeleteByDublinCoreForm(forms.ModelForm):

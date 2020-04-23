@@ -1,7 +1,7 @@
 import os
 
-from django import template
 import markdown
+from django import template
 
 from scope.models import Content
 

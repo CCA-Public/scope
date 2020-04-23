@@ -7,18 +7,23 @@ an `es_doc` attribute with the related DocType class from search.documents
 and a `get_es_data` method to transform to a dictionary representation of
 the ES document.
 """
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+from abc import abstractmethod
 from collections import OrderedDict
 
-from django.contrib.auth.models import Group, AbstractUser
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Group
 from django.db import models
-from django.utils.translation import gettext, gettext_lazy as _
-
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from jsonfield import JSONField
 
-from search.documents import CollectionDoc, DIPDoc, DigitalFileDoc
-from search.helpers import delete_document
 from scope.celery import app as celery_app
+from search.documents import CollectionDoc
+from search.documents import DigitalFileDoc
+from search.documents import DIPDoc
+from search.helpers import delete_document
+
 from .helpers import add_if_not_empty
 
 

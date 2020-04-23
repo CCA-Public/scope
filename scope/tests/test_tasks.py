@@ -1,13 +1,21 @@
 import os
+from unittest.mock import ANY
+from unittest.mock import MagicMock
+from unittest.mock import Mock
+from unittest.mock import patch
 
-from django.conf import settings
-from django.test import TestCase, override_settings
 import requests
-from unittest.mock import ANY, MagicMock, Mock, patch
 import vcr
+from django.conf import settings
+from django.test import TestCase
+from django.test import override_settings
 
-from scope.models import DIP, DigitalFile
-from scope.tasks import download_mets, extract_mets, parse_mets, save_import_error
+from scope.models import DIP
+from scope.models import DigitalFile
+from scope.tasks import download_mets
+from scope.tasks import extract_mets
+from scope.tasks import parse_mets
+from scope.tasks import save_import_error
 
 
 class TasksTests(TestCase):

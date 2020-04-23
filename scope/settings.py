@@ -8,11 +8,11 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+import os
+
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
-
 from envparse import env
-import os
 
 from .helpers import ss_hosts_parser
 

@@ -1,7 +1,9 @@
-from django.test import TestCase
 from unittest.mock import patch
 
-from scope.models import Content, User
+from django.test import TestCase
+
+from scope.models import Content
+from scope.models import User
 
 
 class ViewsTests(TestCase):

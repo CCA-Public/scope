@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 from django.conf import settings
-
 from elasticsearch_dsl.connections import connections
 
 

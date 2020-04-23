@@ -1,11 +1,16 @@
 from celery import chain
 from django.conf import settings
-from rest_framework import authentication, permissions, status
+from rest_framework import authentication
+from rest_framework import permissions
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from scope.models import DIP, DublinCore
-from scope.tasks import download_mets, parse_mets, save_import_error
+from scope.models import DIP
+from scope.models import DublinCore
+from scope.tasks import download_mets
+from scope.tasks import parse_mets
+from scope.tasks import save_import_error
 
 
 class DIPStoredWebhook(APIView):

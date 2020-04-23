@@ -1,15 +1,13 @@
-from elasticsearch_dsl import (
-    analyzer,
-    DocType,
-    InnerDoc,
-    Keyword,
-    Long,
-    MetaField,
-    Object,
-    Text,
-    Integer,
-    Date,
-)
+from elasticsearch_dsl import Date
+from elasticsearch_dsl import DocType
+from elasticsearch_dsl import InnerDoc
+from elasticsearch_dsl import Integer
+from elasticsearch_dsl import Keyword
+from elasticsearch_dsl import Long
+from elasticsearch_dsl import MetaField
+from elasticsearch_dsl import Object
+from elasticsearch_dsl import Text
+from elasticsearch_dsl import analyzer
 
 
 class BaseDoc(DocType):

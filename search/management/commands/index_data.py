@@ -5,7 +5,9 @@ from elasticsearch_dsl import analyzer
 from elasticsearch_dsl.connections import connections
 from tqdm import tqdm
 
-from scope.models import Collection, DIP, DigitalFile
+from scope.models import DIP
+from scope.models import Collection
+from scope.models import DigitalFile
 
 # Tuples with display name and models to index in ES.
 MODELS = [("collections", Collection), ("folders", DIP), ("digital files", DigitalFile)]

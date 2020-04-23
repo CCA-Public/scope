@@ -1,8 +1,12 @@
-from datetime import datetime, timezone
-from django.test import TestCase
+from datetime import datetime
+from datetime import timezone
 from unittest.mock import patch
 
-from scope.models import Collection, DIP, DigitalFile
+from django.test import TestCase
+
+from scope.models import DIP
+from scope.models import Collection
+from scope.models import DigitalFile
 
 
 class ModelsToDocsTests(TestCase):
