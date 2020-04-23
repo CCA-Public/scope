@@ -1,7 +1,9 @@
 [![Travis CI](https://travis-ci.org/CCA-Public/scope.svg?branch=master)](https://travis-ci.org/CCA-Public/scope)
 [![Codecov](https://codecov.io/gh/CCA-Public/scope/branch/master/graph/badge.svg)](https://codecov.io/gh/CCA-Public/scope)
 [![pyup](https://pyup.io/repos/github/CCA-Public/scope/shield.svg)](https://pyup.io/repos/github/CCA-Public/scope)
-[![Python 3](https://pyup.io/repos/github/CCA-Public/scope/python-3-shield.svg)](https://pyup.io/repos/github/CCA-Public/scope)
+[![Python Version](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)](https://devguide.python.org/#status-of-python-branches)
+[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/CCA-Public/scope/blob/master/LICENSE)
+
 
 # SCOPE: A Digital Archives Access Interface
 
@@ -111,7 +113,7 @@ The following steps are just an example of how to run the application in a produ
 
 ### Requirements
 
-* Python 3.4 or higher
+* Python 3.6 to 3.8
 * Elasticsearch 6.x
 * Redis
 
@@ -508,11 +510,13 @@ Compile translation files:
 docker-compose exec scope ./manage.py compilemessages
 ```
 
-To maintain the Docker image as small as possible, the build dependencies needed are removed after installing the requirements. Therefore, executing `tox` inside the container will fail installing those requirements. If you don't have Tox installed in the host and need to run the application tests and syntax checks, use one of the following commands to create a one go container to do so:
+To run the automated tests and checks configured with Tox in the required
+Python versions, the core developers' Python image for CI is available at
+[Quay.io](https://quay.io/repository/python-devs/ci-image). Use the following
+command to create a one go container to do so:
 
 ```
-docker run --rm -t -v `pwd`:/src -w /src python:3.6 /bin/bash -c "pip install tox && tox"
-docker run --rm -t -v `pwd`:/app omercnet/tox
+docker run --rm -t -v `pwd`:/src -w /src quay.io/python-devs/ci-image tox
 ```
 
 Access the logs:
