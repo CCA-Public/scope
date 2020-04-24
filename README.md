@@ -2,7 +2,7 @@
 [![Codecov](https://codecov.io/gh/CCA-Public/scope/branch/master/graph/badge.svg)](https://codecov.io/gh/CCA-Public/scope)
 [![pyup](https://pyup.io/repos/github/CCA-Public/scope/shield.svg)](https://pyup.io/repos/github/CCA-Public/scope)
 [![Python Version](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)](https://devguide.python.org/#status-of-python-branches)
-[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/CCA-Public/scope/blob/master/LICENSE)
+[![AGPLv3 license](https://img.shields.io/badge/license-AGPLv3-blue.svg)](https://github.com/CCA-Public/scope/blob/master/LICENSE)
 
 
 # SCOPE: A Digital Archives Access Interface
