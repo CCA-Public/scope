@@ -59,7 +59,7 @@ class METS:
         ("uuid", "./xmlData/event/eventIdentifier/eventIdentifierValue"),
         ("eventtype", ".xmlData/event/eventType"),
         ("datetime", "./xmlData/event/eventDateTime"),
-        ("detail", "./xmlData/event/eventDetail"),
+        ("detail", "./xmlData/event//eventDetail"),
         ("outcome", "./xmlData/event/eventOutcomeInformation/eventOutcome"),
         (
             "detailnote",
@@ -309,8 +309,7 @@ class METS:
         }
         for elem in dc_xml:
             key = str(elem.tag)
-            value = str(elem.text)
-            if key in dc_model and value:
-                dc_model[key] = value
+            if key in dc_model and elem.text:
+                dc_model[key] = str(elem.text)
 
         return dc_model
