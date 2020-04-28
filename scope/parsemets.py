@@ -1,4 +1,3 @@
-import logging
 import os
 from datetime import datetime
 from datetime import timezone
@@ -14,14 +13,12 @@ from .models import Collection
 from .models import DigitalFile
 from .models import PREMISEvent
 
-logger = logging.getLogger("scope.parsemets")
-
 
 class METSError(Exception):
     """Exception raised when there is a problem in the METS parsing process"""
 
 
-class METS(object):
+class METS:
     """Class for METS file parsing methods."""
 
     # Fields and xpaths for DigitalFile
@@ -75,19 +72,15 @@ class METS(object):
         self.dip_id = dip_id
         self.mets_root = self._get_mets_root()
 
-    def __str__(self):
-        return self.path
-
     def _get_mets_root(self):
         """Open XML and return the root element with all namespaces stripped."""
         tree = etree.parse(self.path)
         root = tree.getroot()
         for elem in root.getiterator():
-            if not hasattr(elem.tag, "find"):
-                continue
-            i = elem.tag.find("}")
-            if i >= 0:
-                elem.tag = elem.tag[i + 1 :]
+            if hasattr(elem.tag, "find"):
+                i = elem.tag.find("}")
+                if i >= 0:
+                    elem.tag = elem.tag[i + 1 :]
         objectify.deannotate(root, cleanup_namespaces=True)
         return root
 
@@ -95,21 +88,13 @@ class METS(object):
         """Parse METS and save data to DIP, DigitalFile, and PremisEvent models."""
         # Get DIP object
         dip = DIP.objects.get(pk=self.dip_id)
-        logger.info(
-            "Starting METS parsing process for DIP [Identifier: %s]" % dip.dc.identifier
-        )
 
         # Gather info for each file in filegroup "original"
         for file_ in self.mets_root.findall(".//fileGrp[@USE='original']/file"):
             amdsec_id = file_.get("ADMID")
             if not amdsec_id:
-                logger.warning("An original file is missing the ADMID attribute.")
                 continue
 
-            logger.info(
-                "Parsing original file metadata from AMD section [ADMID: %s]"
-                % amdsec_id
-            )
             file_data, premis_events = self._parse_file_metadata(amdsec_id)
             file_data = self._transform_file_metadata(file_data)
 
@@ -129,11 +114,9 @@ class METS(object):
                         "as an existing one from another DIP "
                         "(%s)." % uuid
                     )
-                logger.info("Updating DigitalFile [UUID: %s]" % uuid)
             except DigitalFile.DoesNotExist:
                 # Create DigitalFIle if it doesn't exist
                 digitalfile = DigitalFile(uuid=uuid)
-                logger.info("Creating DigitalFile [UUID: %s]" % uuid)
             # Add/update instance fields with file_data values
             digitalfile = update_instance_from_dict(digitalfile, file_data)
             digitalfile.dip = dip
@@ -165,11 +148,9 @@ class METS(object):
                             "UUID as an existing one from another DIP "
                             "(%s)." % uuid
                         )
-                        logger.info("Updating PREMISEvent [UUID: %s]" % uuid)
                 except PREMISEvent.DoesNotExist:
                     # Create PREMISEvent if it doesn't exist
                     premisevent = PREMISEvent(uuid=uuid)
-                    logger.info("Creating PREMISEvent [UUID: %s]" % uuid)
                 # Add/update instance fields with event values
                 premisevent = update_instance_from_dict(premisevent, event)
                 premisevent.digitalfile = digitalfile
@@ -187,7 +168,6 @@ class METS(object):
         # dmdSec and update DIP DublinCore object.
         dc_data = self._parse_dc()
         if dc_data:
-            logger.info("Looking for a related Collection")
             # The `isPartOf` and `relation` values are only used to find a
             # related Collection, giving priority to the `isPartOf` value.
             is_part_of = dc_data.pop("isPartOf", None)
@@ -207,17 +187,12 @@ class METS(object):
                         dip.save(update_es=False)
                         # Stop loop after finding a match
                         break
-                    except Collection.DoesNotExist:
-                        logger.warning(
-                            "A Collection could not be found with identifier: %s"
-                            % collection_identifier
-                        )
-                    except Collection.MultipleObjectsReturned:
-                        logger.warning(
-                            "More than one Collection were found with identifier: %s"
-                            % collection_identifier
-                        )
-            logger.info("Updating DIP Dublin Core metadata")
+                    except (
+                        Collection.DoesNotExist,
+                        Collection.MultipleObjectsReturned,
+                    ):
+                        pass
+
             # No validation is needed as all the fields are non
             # required string fields initiated with empty strings,
             # but do not update identifier with an empty value.
@@ -225,8 +200,6 @@ class METS(object):
                 dc_data.pop("identifier")
             dip.dc = update_instance_from_dict(dip.dc, dc_data)
             dip.dc.save()
-        else:
-            logger.info("No DIP Dublin Core metadata found")
 
         return dip
 
