@@ -41,7 +41,6 @@ class Command(BaseCommand):
                 es,
                 (obj.get_es_data() for obj in model.objects.all().iterator()),
                 index=index._name,
-                doc_type=document._doc_type.name,
             ):
                 progress_bar.update(1)
             progress_bar.close()

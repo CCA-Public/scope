@@ -26,7 +26,7 @@ class ModelsToDocsTests(TestCase):
         }
         self.assertEqual(doc_dict, collection.get_es_data())
 
-        # Verify DocType creation, avoid already tested transformation
+        # Verify Document creation, avoid already tested transformation
         with patch.object(Collection, "get_es_data", return_value=doc_dict):
             doc = collection.to_es_doc()
             self.assertEqual(collection.pk, doc.meta.id)
@@ -48,7 +48,7 @@ class ModelsToDocsTests(TestCase):
         }
         self.assertEqual(doc_dict, dip.get_es_data())
 
-        # Verify DocType creation, avoid already tested transformation
+        # Verify Document creation, avoid already tested transformation
         with patch.object(DIP, "get_es_data", return_value=doc_dict):
             doc = dip.to_es_doc()
             self.assertEqual(dip.pk, doc.meta.id)
@@ -76,7 +76,7 @@ class ModelsToDocsTests(TestCase):
         }
         self.assertEqual(doc_dict, digital_file.get_es_data())
 
-        # Verify DocType creation, avoid already tested transformation
+        # Verify Document creation, avoid already tested transformation
         with patch.object(DigitalFile, "get_es_data", return_value=doc_dict):
             doc = digital_file.to_es_doc()
             self.assertEqual(digital_file.uuid, doc.meta.id)

@@ -1,5 +1,5 @@
 from elasticsearch_dsl import Date
-from elasticsearch_dsl import DocType
+from elasticsearch_dsl import Document
 from elasticsearch_dsl import InnerDoc
 from elasticsearch_dsl import Integer
 from elasticsearch_dsl import Keyword
@@ -10,9 +10,8 @@ from elasticsearch_dsl import Text
 from elasticsearch_dsl import analyzer
 
 
-class BaseDoc(DocType):
+class BaseDoc(Document):
     class Meta:
-        all = MetaField(enabled=False)
         dynamic = MetaField("strict")
 
 

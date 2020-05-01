@@ -11,7 +11,7 @@ from scope.views import collection
 
 
 class CollectionTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         User = get_user_model()
         User.objects.create_user("temp", "temp@example.com", "temp")

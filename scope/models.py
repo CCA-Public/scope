@@ -3,7 +3,7 @@
 To connect Django models to elasticsearch-dsl documents declared in
 search.documents, an AbstractEsModel has been created with the ABC and
 Django model metas. The models extending AbstractEsModel must implement
-an `es_doc` attribute with the related DocType class from search.documents
+an `es_doc` attribute with the related Document class from search.documents
 and a `get_es_data` method to transform to a dictionary representation of
 the ES document.
 """
@@ -73,7 +73,7 @@ class AbstractModelMeta(ABCMeta, type(models.Model)):
 
 
 class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
-    """Abstract base model for models related to ES DocTypes."""
+    """Abstract base model for models related to ES Documents."""
 
     class Meta:
         abstract = True
@@ -112,7 +112,7 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
     @property
     @abstractmethod
     def es_doc(self):
-        """Related ES DocType from search.documents."""
+        """Related ES Document from search.documents."""
 
     @abstractmethod
     def get_es_data(self):
@@ -127,17 +127,13 @@ class AbstractEsModel(models.Model, metaclass=AbstractModelMeta):
         """Checks if descendants need to be updated in ES."""
 
     def to_es_doc(self):
-        """Model transformation to related DocType."""
+        """Model transformation to related ES Document."""
         data = self.get_es_data()
         return self.es_doc(meta={"id": data.pop("_id")}, **data)
 
     def delete_es_doc(self):
         """Call to remove related document from the ES index."""
-        delete_document(
-            index=self.es_doc._index._name,
-            doc_type=self.es_doc._doc_type.name,
-            id=self.pk,
-        )
+        delete_document(index=self.es_doc._index._name, id=self.pk)
 
 
 class DublinCore(models.Model):

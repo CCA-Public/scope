@@ -183,7 +183,7 @@ class UserAccessTests(TestCase):
         ],
     }
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         # Create test users
         self.superuser = User.objects.create_superuser(
@@ -348,7 +348,7 @@ class UserAccessTests(TestCase):
         self.assertTrue(User.objects.filter(username="test_changed_2").exists())
         self.client.logout()
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     @patch("scope.models.celery_app.send_task")
     def test_post_collection(self, mock_send_task, mock_es_save):
         """Post collection test.
@@ -449,7 +449,7 @@ class UserAccessTests(TestCase):
         )
         self.client.logout()
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     @patch("scope.models.celery_app.send_task")
     def test_post_dip(self, mock_send_task, mock_es_save):
         """Post DIP test.

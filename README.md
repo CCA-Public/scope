@@ -68,7 +68,7 @@ By default, the application has five levels of permissions:
 
 ## Technologies involved
 
-SCOPE is a Django application that uses Elasticsearch 6.x as search engine, Celery 4.2 to process asynchronous tasks, a SQLite database and Redis as message broker (probably in the future, as cache system too).
+SCOPE is a Django application that uses Elasticsearch as search engine, Celery to process asynchronous tasks, a SQLite database and Redis as message broker (probably in the future, as cache system too).
 
 ### Django, Celery and SQLite
 
@@ -88,9 +88,9 @@ Redis is used as broker in the current Celery implementation and it will probabl
 
 ### Elasticsearch
 
-Elasticsearch could also be installed in the same or different servers and its URL(s) can be configured through an environment variable read in the Django settings. The application expects Elasticsearch 6.x, which requires at least Java 8 in order to run. Only Oracle’s Java and the OpenJDK are supported and the same JVM version should be used on all Elasticsearch nodes and clients.
+Elasticsearch could also be installed in the same or different servers and its URL(s) can be configured through an environment variable read in the Django settings. The application requires Elasticsearch 7.x, which includes a a bundled version of [OpenJDK](http://openjdk.java.net/) from the JDK maintainers (GPLv2+CE). To use your own version of Java, see the [JVM version requirements](https://www.elastic.co/guide/en/elasticsearch/reference/7.x/setup.html#jvm-version).
 
-The Elasticsearch node/cluster configuration can be fully customized, however, for the current implementation, a single node with the the default JVM heap size of 1GB set by Elasticsearch would be more than enough. It could even be reduced to 512MB if more memory is needed for other parts of the application or to reduce its requirements. For more info on how to change the Elasticsearch configuration check [their documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html), specially [the JVM heap size page](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html).
+The Elasticsearch node/cluster configuration can be fully customized, however, for the current implementation, a single node with the the default JVM heap size of 1GB set by Elasticsearch would be more than enough. It could even be reduced to 512MB if more memory is needed for other parts of the application or to reduce its requirements. For more info on how to change the Elasticsearch configuration check [their documentation](https://www.elastic.co/guide/en/elasticsearch/reference/7.x/settings.html), specially [the JVM heap size page](https://www.elastic.co/guide/en/elasticsearch/reference/7.x/heap-size.html).
 
 The Elasticsearch indexes size will vary based on the application data and they will require some disk space, but it’s hard to tell how much at this point.
 
@@ -115,8 +115,8 @@ The following steps are just an example of how to run the application in a produ
 ### Requirements
 
 * Python 3.6 to 3.8
-* Elasticsearch 6.x
-* Redis
+* Elasticsearch 7.x
+* Redis (tested with 5.x)
 
 ### Environment
 
@@ -154,9 +154,9 @@ pip install virtualenv
 Install Java 8 and Elasticsearch:
 
 ```
-apt-get install apt-transport-https openjdk-8-jre
-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+apt-get install apt-transport-https
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
 apt-get update
 apt-get install elasticsearch
 systemctl daemon-reload
@@ -167,18 +167,22 @@ systemctl enable elasticsearch
 Verify Elasticsearch is running:
 
 ```
-curl -XGET http://localhost:9200
+curl -X GET "localhost:9200/?pretty"
 
 {
-  "name" : "ofgAtrJ",
+  "name" : "scope",
   "cluster_name" : "elasticsearch",
-  "cluster_uuid" : "3h9xSrVlRJmDHgQ8FLnByA",
+  "cluster_uuid" : "wcacahSSSAWHfx0WOrw4jw",
   "version" : {
-    "number" : "6.3.0",
-    "build_hash" : "db0d481",
-    "build_date" : "2017-02-09T22:05:32.386Z",
+    "number" : "7.6.2",
+    "build_flavor" : "default",
+    "build_type" : "deb",
+    "build_hash" : "ef48eb35cf30adf4db14086e8aabd07ef6fb113f",
+    "build_date" : "2020-03-26T06:34:37.794943Z",
     "build_snapshot" : false,
-    "lucene_version" : "6.4.1"
+    "lucene_version" : "8.4.0",
+    "minimum_wire_compatibility_version" : "6.8.0",
+    "minimum_index_compatibility_version" : "6.0.0-beta1"
   },
   "tagline" : "You Know, for Search"
 }

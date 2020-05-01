@@ -73,7 +73,6 @@ def update_es_descendants(class_name, pk):
             {
                 "_op_type": "update",
                 "_index": DigitalFile.es_doc._index._name,
-                "_type": DigitalFile.es_doc._doc_type.name,
                 "_id": uuid,
                 "script": script,
             }

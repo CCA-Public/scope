@@ -9,7 +9,7 @@ from scope.models import DigitalFile
 
 
 class ImportFailureDisplayTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         User = get_user_model()
         User.objects.create_superuser("admin", "admin@example.com", "admin")

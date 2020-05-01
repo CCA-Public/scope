@@ -19,7 +19,7 @@ class DIPStoredWebhookTest(APITestCase):
         self.admin_token = Token.objects.create(user=admin)
 
     @patch("scope.api_views.chain")
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_dip_stored_webhook_success(self, mock_es_save, mock_chain):
         self.client.credentials(HTTP_AUTHORIZATION="Token %s" % self.admin_token.key)
         origin = "http://192.168.1.128:62081"
@@ -73,7 +73,7 @@ class DIPStoredWebhookTest(APITestCase):
             response.data["detail"], "SS host not configured for Origin: %s" % origin
         )
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_dip_stored_webhook_dip_already_exists(self, mock_es_save):
         DIP.objects.create(ss_uuid=self.dip_uuid)
         self.client.credentials(HTTP_AUTHORIZATION="Token %s" % self.admin_token.key)

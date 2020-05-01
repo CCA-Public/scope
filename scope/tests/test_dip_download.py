@@ -31,7 +31,7 @@ def _sized_tmp_file(path, size):
 
 
 class DipDownloadTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         User.objects.create_superuser("admin", "admin@example.com", "admin")
         self.client.login(username="admin", password="admin")
@@ -76,7 +76,7 @@ class DipDownloadTests(TestCase):
             )
             self.assertEqual(response["X-Accel-Redirect"], "/media/fake.zip")
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     @patch("scope.views.zipfile.is_zipfile", return_value=False)
     def test_local_dip_download_tar_headers(self, mock_is_zipfile, mock_es_save):
         self.local_dip.objectszip = "fake.tar"

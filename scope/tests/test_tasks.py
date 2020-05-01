@@ -19,7 +19,7 @@ from scope.tasks import save_import_error
 
 
 class TasksTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         self.ss_uuid = "a2cddc10-6132-4690-8dd9-25ee7a01943f"
         self.mets_path = os.path.join(settings.MEDIA_ROOT, "METS.%s.xml" % self.ss_uuid)
@@ -56,7 +56,7 @@ class TasksTests(TestCase):
         SS_HOSTS={"http://192.168.1.128:62081": {"user": "test", "secret": "test"}}
     )
     @vcr.use_cassette("scope/tests/fixtures/vcr_cassettes/download_mets_success.yaml")
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_download_mets_success(self, mock_es_save):
         self.assertEqual(self.mets_path, download_mets(self.dip.pk))
         self.assertTrue(os.path.isfile(self.mets_path))
@@ -132,7 +132,7 @@ class TasksTests(TestCase):
 
     @patch("scope.models.celery_app.send_task")
     @patch("scope.tasks.os.remove")
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     @patch("scope.tasks.METS")
     def test_parse_mets(self, mock_mets, mock_es_save, mock_os_remove, mock_send_task):
         mock_mets().return_value = None
@@ -143,7 +143,7 @@ class TasksTests(TestCase):
         mock_os_remove.assert_called_with("/mets.xml")
 
     @patch("scope.models.celery_app.send_task")
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_save_import_error(self, mock_es_save, mock_send_task):
         save_import_error({}, "Error message", "Error trace", self.dip.pk)
         self.dip.refresh_from_db()

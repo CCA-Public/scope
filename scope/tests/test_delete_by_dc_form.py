@@ -10,7 +10,7 @@ from scope.models import DublinCore
 
 
 class DcByDcFormTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         User = get_user_model()
         User.objects.create_superuser("admin", "admin@example.com", "admin")

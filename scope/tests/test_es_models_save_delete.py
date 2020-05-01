@@ -12,7 +12,7 @@ from search.documents import DIPDoc
 
 
 class EsModelsSaveDeleteTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         dc = DublinCore.objects.create(identifier="1")
         self.collection = Collection.objects.create(dc=dc)
@@ -64,9 +64,7 @@ class EsModelsSaveDeleteTests(TestCase):
         uuid = self.digital_file.uuid
         self.digital_file.delete()
         mock_es_delete.assert_called_with(
-            index=DigitalFile.es_doc._index._name,
-            doc_type=DigitalFile.es_doc._doc_type.name,
-            id=uuid,
+            index=DigitalFile.es_doc._index._name, id=uuid
         )
         mock_send_task.assert_not_called()
 
@@ -75,9 +73,7 @@ class EsModelsSaveDeleteTests(TestCase):
     def test_dip_delete(self, mock_es_delete, mock_send_task):
         pk = self.dip.pk
         self.dip.delete()
-        mock_es_delete.assert_called_with(
-            index=DIP.es_doc._index._name, doc_type=DIP.es_doc._doc_type.name, id=pk
-        )
+        mock_es_delete.assert_called_with(index=DIP.es_doc._index._name, id=pk)
         mock_send_task.assert_called_with(
             "search.tasks.delete_es_descendants", args=("DIP", 1)
         )
@@ -87,11 +83,7 @@ class EsModelsSaveDeleteTests(TestCase):
     def test_collection_delete(self, mock_es_delete, mock_send_task):
         pk = self.collection.pk
         self.collection.delete()
-        mock_es_delete.assert_called_with(
-            index=Collection.es_doc._index._name,
-            doc_type=Collection.es_doc._doc_type.name,
-            id=pk,
-        )
+        mock_es_delete.assert_called_with(index=Collection.es_doc._index._name, id=pk)
         mock_send_task.assert_called_with(
             "search.tasks.delete_es_descendants", args=("Collection", 1)
         )

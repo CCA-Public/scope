@@ -13,19 +13,19 @@ from scope.parsemets import METSError
 
 
 class ParsemetsTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         self.dc = DublinCore.objects.create(identifier="A")
         self.dip = DIP.objects.create(dc=self.dc)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_only_original_files(self, mock_es_save):
         mets = METS("scope/tests/fixtures/mets/full.xml", self.dip.pk)
         mets.parse_mets()
         self.assertEqual(DigitalFile.objects.all().count(), 2)
         self.assertEqual(PREMISEvent.objects.all().count(), 13)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_no_metadata(self, mock_es_save):
         mets = METS("scope/tests/fixtures/mets/basic.xml", self.dip.pk)
         dip = mets.parse_mets()
@@ -34,7 +34,7 @@ class ParsemetsTests(TestCase):
         self.assertEqual(DigitalFile.objects.all().count(), 1)
         self.assertEqual(PREMISEvent.objects.all().count(), 1)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_metadata(self, mock_es_save):
         mets = METS("scope/tests/fixtures/mets/metadata.xml", self.dip.pk)
         dip = mets.parse_mets()
@@ -57,7 +57,7 @@ class ParsemetsTests(TestCase):
         }
         self.assertEqual(model_to_dict(dip.dc), expected_dc)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_metadata_updated(self, mock_es_save):
         mets = METS("scope/tests/fixtures/mets/updated.xml", self.dip.pk)
         dip = mets.parse_mets()
@@ -80,19 +80,19 @@ class ParsemetsTests(TestCase):
         }
         self.assertEqual(model_to_dict(dip.dc), expected_dc)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_empty_identifier(self, mock_es_save):
         mets = METS("scope/tests/fixtures/mets/empty_identifier.xml", self.dip.pk)
         dip = mets.parse_mets()
         self.assertEqual(dip.dc.identifier, self.dc.identifier)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_no_amd_section(self, mock_es_save):
         mets = METS("scope/tests/fixtures/mets/no_amdsec.xml", self.dip.pk)
         mets.parse_mets()
         self.assertEqual(DigitalFile.objects.all().count(), 1)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_collection_link_ispartof(self, mock_es_save):
         collection = Collection.objects.create(
             dc=DublinCore.objects.create(identifier="123")
@@ -101,7 +101,7 @@ class ParsemetsTests(TestCase):
         dip = mets.parse_mets()
         self.assertEqual(dip.collection, collection)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_collection_link_relation(self, mock_es_save):
         collection = Collection.objects.create(
             dc=DublinCore.objects.create(identifier="Relation")
@@ -110,7 +110,7 @@ class ParsemetsTests(TestCase):
         dip = mets.parse_mets()
         self.assertEqual(dip.collection, collection)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_collection_link_multiple_collections(self, mock_es_save):
         Collection.objects.create(dc=DublinCore.objects.create(identifier="123"))
         Collection.objects.create(dc=DublinCore.objects.create(identifier="123"))
@@ -118,7 +118,7 @@ class ParsemetsTests(TestCase):
         dip = mets.parse_mets()
         self.assertIsNone(dip.collection)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_malformed_mets(self, mock_es_save):
         mets_paths = [
             "scope/tests/fixtures/mets/no_file_uuid.xml",
@@ -131,7 +131,7 @@ class ParsemetsTests(TestCase):
             mets = METS(path, self.dip.pk)
             self.assertRaises(METSError, mets.parse_mets)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_duplicated_import_different_dips(self, mock_es_save):
         mets = METS("scope/tests/fixtures/mets/basic.xml", self.dip.pk)
         mets.parse_mets()
@@ -139,7 +139,7 @@ class ParsemetsTests(TestCase):
         mets = METS("scope/tests/fixtures/mets/basic.xml", other_dip.pk)
         self.assertRaises(METSError, mets.parse_mets)
 
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def test_event_detail(self, mock_es_save):
         """Checks even detail import in PREMIS v2 and v3."""
         mets = METS("scope/tests/fixtures/mets/event_detail.xml", self.dip.pk)

@@ -8,7 +8,7 @@ from scope.models import DublinCore
 
 
 class DcDeletionTests(TestCase):
-    @patch("elasticsearch_dsl.DocType.save")
+    @patch("elasticsearch_dsl.Document.save")
     def setUp(self, mock_es_save):
         dc = DublinCore.objects.create(identifier="1")
         self.collection = Collection.objects.create(dc=dc)
