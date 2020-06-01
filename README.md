@@ -188,7 +188,15 @@ curl -X GET "localhost:9200/?pretty"
 }
 ```
 
-Intall the Redis server, for example following [this tutorial from Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04). If you decide to install it in a different server, make sure to check [Redis' security documentation](https://redis.io/topics/security) and include the password into the 'CELERY_BROKER_URL' environment variable, following the `redis://:password@hostname:port/db_number` format. For a better level of persistence set 'appendonly' to `yes` in `/etc/redis/redis.conf` and reset the Redis service (`systemctl restart redis`), check [Redis' persistence documentation](https://redis.io/topics/persistence) for more information.
+Intall the Redis server:
+
+```
+apt-get install redis-server
+```
+
+Or you can follow [this tutorial from Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04). 
+
+If you decide to install it in a different server, make sure to check [Redis' security documentation](https://redis.io/topics/security) and include the password into the 'CELERY_BROKER_URL' environment variable, following the `redis://:password@hostname:port/db_number` format. For a better level of persistence set 'appendonly' to `yes` in `/etc/redis/redis.conf` and reset the Redis service (`systemctl restart redis`), check [Redis' persistence documentation](https://redis.io/topics/persistence) for more information.
 
 Create user to own and run the application, log in and make sure you're placed in its home folder:
 
