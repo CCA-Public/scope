@@ -445,7 +445,7 @@ Save the generated token as it will be needed to configure the Storage Service c
 
 #### Configure Storage Service instance(s) in SCOPE
 
-To authenticate the requests sent from SCOPE to fetch the DIP's METS file and download the DIP from the Storage Service instance(s), those instances must be declared in an environment variable called `SS_HOSTS`, which accepts a list of RFC-1738 URLs separated by comma. For example, to integrate SCOPE with an Storage Service instance with `https://ss.com` as URL, `user` as username and `secret` as API key, add the following to the environment file:
+To authenticate the requests sent from SCOPE to fetch the DIP's METS file and download the DIP from the Storage Service instance(s), those instances must be declared in an environment variable called `SS_HOSTS`, which accepts a list of RFC-1738 URLs separated by comma. For example, to integrate SCOPE with a Storage Service instance with `https://ss.com` as URL, `user` as username and `secret` as the Storage Service user's API key, add the following to the `~/scope-env` environment file:
 
 ```
 SS_HOSTS=https://user:secret@ss.com
