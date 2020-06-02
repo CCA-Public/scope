@@ -422,7 +422,13 @@ Make sure that the user running Nginx (usually 'www-data') has access to the med
 usermod -a -G scope www-data
 ```
 
-Reboot to reflect user changes.
+Reboot the OS to reflect user changes. Make sure the required services are running afterwards:
+
+```
+systemctl restart scope-worker
+systemctl restart scope-gunicorn
+systemctl restart nginx
+```
 
 ### Storage Service integration
 
