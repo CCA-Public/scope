@@ -110,7 +110,8 @@ The Elasticsearch indexes size will vary based on the application data and they 
 
 ## Installation
 
-The following steps are just an example of how to run the application in a production environment, with all the services involved sharing the same machine, over Ubuntu 16.04.
+The following steps are just an example of how to run the application in a production environment, with all the services involved sharing the same machine, over Ubuntu 20.04
+(LTS) x64.
 
 ### Requirements
 
@@ -142,23 +143,23 @@ Make sure [the system locale environment variables](https://wiki.debian.org/Loca
 As the root user, install pip, virtualenv and other needed libraries:
 
 ```
-apt-get update
-apt-get upgrade
-apt-get install build-essential gcc gettext python3-dev
+apt update
+apt upgrade
+apt install build-essential gcc gettext python3-dev
 wget https://bootstrap.pypa.io/get-pip.py
 python3 get-pip.py
 rm get-pip.py
 pip install virtualenv
 ```
 
-Install Java 8 and Elasticsearch:
+Install Elasticsearch:
 
 ```
-apt-get install apt-transport-https
+apt install apt-transport-https
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
-echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
-apt-get update
-apt-get install elasticsearch
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | tee /etc/apt/sources.list.d/elastic-7.x.list
+apt update
+apt install elasticsearch
 systemctl daemon-reload
 systemctl start elasticsearch
 systemctl enable elasticsearch
@@ -172,15 +173,15 @@ curl -X GET "localhost:9200/?pretty"
 {
   "name" : "scope",
   "cluster_name" : "elasticsearch",
-  "cluster_uuid" : "wcacahSSSAWHfx0WOrw4jw",
+  "cluster_uuid" : "pfyamzYjS62A8JgDAvHsww",
   "version" : {
-    "number" : "7.6.2",
+    "number" : "7.9.1",
     "build_flavor" : "default",
     "build_type" : "deb",
-    "build_hash" : "ef48eb35cf30adf4db14086e8aabd07ef6fb113f",
-    "build_date" : "2020-03-26T06:34:37.794943Z",
+    "build_hash" : "083627f112ba94dffc1232e8b42b73492789ef91",
+    "build_date" : "2020-09-01T21:22:21.964974Z",
     "build_snapshot" : false,
-    "lucene_version" : "8.4.0",
+    "lucene_version" : "8.6.2",
     "minimum_wire_compatibility_version" : "6.8.0",
     "minimum_index_compatibility_version" : "6.0.0-beta1"
   },
@@ -188,13 +189,55 @@ curl -X GET "localhost:9200/?pretty"
 }
 ```
 
-Intall the Redis server, for example following [this tutorial from Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04). If you decide to install it in a different server, make sure to check [Redis' security documentation](https://redis.io/topics/security) and include the password into the 'CELERY_BROKER_URL' environment variable, following the `redis://:password@hostname:port/db_number` format. For a better level of persistence set 'appendonly' to `yes` in `/etc/redis/redis.conf` and reset the Redis service (`systemctl restart redis`), check [Redis' persistence documentation](https://redis.io/topics/persistence) for more information.
+Intall Redis:
+
+```
+apt install redis-server
+nano /etc/redis/redis.conf
+```
+
+Change the `supervised` directive to use `systemd` and, for a better level of persistence,
+set `appendonly` to `yes`:
+
+```
+...
+
+# If you run Redis from upstart or systemd, Redis can interact with your
+# supervision tree. Options:
+#   supervised no      - no supervision interaction
+#   supervised upstart - signal upstart by putting Redis into SIGSTOP mode
+#   supervised systemd - signal systemd by writing READY=1 to $NOTIFY_SOCKET
+#   supervised auto    - detect upstart or systemd method based on
+#                        UPSTART_JOB or NOTIFY_SOCKET environment variables
+# Note: these supervision methods only signal "process is ready."
+#       They do not enable continuous liveness pings back to your supervisor.
+supervised systemd
+
+...
+
+# AOF and RDB persistence can be enabled at the same time without problems.
+# If the AOF is enabled on startup Redis will load the AOF, that is the file
+# with the better durability guarantees.
+#
+# Please check http://redis.io/topics/persistence for more information.
+
+appendonly yes
+...
+```
+
+Press Ctrl+X to save and exit, and restart the service:
+
+```
+systemctl restart redis
+```
+
+If you decide to install it in a different server, make sure to check [Redis' security documentation](https://redis.io/topics/security) and include the password into the 'CELERY_BROKER_URL' environment variable, following the `redis://:password@hostname:port/db_number` format.
 
 Create user to own and run the application, log in and make sure you're placed in its home folder:
 
 ```
-adduser scope
-su - scope
+adduser cca
+su - cca
 cd ~
 ```
 
@@ -287,25 +330,25 @@ After=network.target
 
 [Service]
 Type=forking
-User=scope
-Group=scope
-EnvironmentFile=/home/scope/scope-env
-Environment=CELERYD_PID_FILE=/home/scope/scope-worker.pid
-Environment=CELERYD_LOG_FILE=/home/scope/scope-worker.log
-WorkingDirectory=/home/scope/scope
-ExecStart=/home/scope/scope/venv/bin/celery \
+User=cca
+Group=cca
+EnvironmentFile=/home/cca/scope-env
+Environment=CELERYD_PID_FILE=/home/cca/scope-worker.pid
+Environment=CELERYD_LOG_FILE=/home/cca/scope-worker.log
+WorkingDirectory=/home/cca/scope
+ExecStart=/home/cca/scope/venv/bin/celery \
             multi start scope-worker -A scope \
             --concurrency=1 \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
-ExecReload=/home/scope/scope/venv/bin/celery \
+ExecReload=/home/cca/scope/venv/bin/celery \
             multi restart scope-worker -A scope \
             --concurrency=1 \
             --pidfile=${CELERYD_PID_FILE} \
             --logfile=${CELERYD_LOG_FILE} \
             --loglevel=WARNING
-ExecStop=/home/scope/scope/venv/bin/celery \
+ExecStop=/home/cca/scope/venv/bin/celery \
             multi stopwait scope-worker \
             --pidfile=${CELERYD_PID_FILE}
 
@@ -336,16 +379,16 @@ Description=Scope Gunicorn daemon
 After=network.target
 
 [Service]
-User=scope
-Group=scope
+User=cca
+Group=cca
 PrivateTmp=true
-PIDFile=/home/scope/scope-gunicorn.pid
-EnvironmentFile=/home/scope/scope-env
-WorkingDirectory=/home/scope/scope
-ExecStart=/home/scope/scope/venv/bin/gunicorn \
+PIDFile=/home/cca/scope-gunicorn.pid
+EnvironmentFile=/home/cca/scope-env
+WorkingDirectory=/home/cca/scope
+ExecStart=/home/cca/scope/venv/bin/gunicorn \
             --access-logfile /dev/null \
             --worker-class gevent \
-            --bind unix:/home/scope/scope-gunicorn.sock \
+            --bind unix:/home/cca/scope-gunicorn.sock \
             scope.wsgi:application
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
@@ -370,7 +413,7 @@ journalctl -u scope-gunicorn
 The Gunicorn service is using an Unix socket to listen for connections and we will use Nginx to proxy the application and to serve the uploaded DIP files. The `client_max_body_size` and `proxy_read_timeout` values should be changed based on the biggest DIP file and upload time expected. It should also be used to secure the site, but we won't cover that configuration in this example. Install Nginx and create a configuration file:
 
 ```
-apt-get install nginx
+apt install nginx
 nano /etc/nginx/sites-available/scope
 ```
 
@@ -378,7 +421,7 @@ With the following configuration:
 
 ```
 upstream scope {
-  server unix:/home/scope/scope-gunicorn.sock;
+  server unix:/home/cca/scope-gunicorn.sock;
 }
 
 server {
@@ -388,7 +431,7 @@ server {
 
   location /media/ {
     internal;
-    alias /home/scope/scope/media/;
+    alias /home/cca/scope/media/;
   }
 
   location / {
@@ -406,7 +449,7 @@ Link the site configuration to `sites-enabled` and remove the default configurat
 
 ```
 ln -s /etc/nginx/sites-available/scope /etc/nginx/sites-enabled
-rm /etc/nginx/sites-available/default
+rm /etc/nginx/sites-enabled/default
 ```
 
 Verify configuration and restart Nginx service:
@@ -416,10 +459,10 @@ nginx -t
 systemctl restart nginx
 ```
 
-Make sure that the user running Nginx (usually 'www-data') has access to the media folder and files by adding it to the 'scope' group:
+Make sure that the user running Nginx (usually 'www-data') has access to the media folder and files by adding it to the 'cca' group:
 
 ```
-usermod -a -G scope www-data
+usermod -a -G cca www-data
 ```
 
 Reboot to reflect user changes.
