@@ -5,7 +5,7 @@ django-cleanup==4.0.0
 django_compressor==2.4
 django-modeltranslation==0.15
 django-npm==1.0.0
-djangorestframework==3.11.0
+djangorestframework==3.12.2
 django-widget-tweaks==1.4.8
 elasticsearch-dsl==7.1.0 # pyup: <8.0
 envparse==0.2.0
