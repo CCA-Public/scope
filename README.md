@@ -577,6 +577,6 @@ To access the application with the default options visit http://localhost:43430 
 
 ## Credits
 
-SCOPE was produced by the Canadian Centre for Architecture (CCA) and developed by Artefactual Systems, based on an project initially conceived by Tim Walsh, digital archivist at CCA from June 2015 to May 2018. It is a project financed within the framework of the Montreal Cultural Development grant awarded by the City of Montreal and the Quebec Department of Culture and Communications.
+SCOPE was produced by the Canadian Centre for Architecture (CCA) and developed by Artefactual Systems, based on an project initially conceived by Tessa Walsh, digital archivist at CCA from June 2015 to May 2018. It is a project financed within the framework of the Montreal Cultural Development grant awarded by the City of Montreal and the Quebec Department of Culture and Communications.
 
-SCOPE a été conçue par le Centre Canadien d'Architecture (CCA) et développée par Artefactual Systems, à partir d’un concept initialement élaboré par Tim Walsh, archiviste numérique au CCA de juin 2015 à mai 2018. SCOPE est un projet financé dans le cadre de l’Entente sur le développement culturel de Montréal par la Ville de Montréal et le ministère de la Culture et des Communications.
+SCOPE a été conçue par le Centre Canadien d'Architecture (CCA) et développée par Artefactual Systems, à partir d’un concept initialement élaboré par Tessa Walsh, archiviste numérique au CCA de juin 2015 à mai 2018. SCOPE est un projet financé dans le cadre de l’Entente sur le développement culturel de Montréal par la Ville de Montréal et le ministère de la Culture et des Communications.
