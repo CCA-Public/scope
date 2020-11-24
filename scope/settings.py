@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "scope.staticfiles.Config",
-    "django_celery_results",
     "widget_tweaks",
     "compressor",
     "modeltranslation",
@@ -195,7 +194,6 @@ CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     "visibility_timeout": env.int("CELERY_BROKER_VISIBILITY_TIMEOUT", default=3600)
 }
-CELERY_RESULT_BACKEND = "django-db"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE

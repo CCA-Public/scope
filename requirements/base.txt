@@ -1,6 +1,5 @@
 celery==4.4.7 # pyup: <5.0
 Django==2.2.17 # pyup: <3.0
-django_celery_results==1.2.1
 django-cleanup==5.1.0
 django_compressor==2.4
 django-modeltranslation==0.16.1
