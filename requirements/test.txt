@@ -1,5 +1,5 @@
 -r base.txt
 
-coverage==5.1
-tox==3.14.6
-vcrpy==4.0.2
+coverage==5.3
+tox==3.20.1
+vcrpy==4.1.1
