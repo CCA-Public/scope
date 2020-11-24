@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-23 19:52+0000\n"
+"POT-Creation-Date: 2020-11-24 00:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,79 +56,79 @@ msgstr ""
 "Cocher pour ne pas afficher les champs de métadonnées Dublin Core qui sont "
 "vides dans les enregistrements Collection et Dossier."
 
-#: scope/models.py:144
+#: scope/models.py:140
 msgid "identifier"
 msgstr "identifiant de la ressource"
 
-#: scope/models.py:145 scope/tests/test_dublin_core_settings.py:11
+#: scope/models.py:141 scope/tests/test_dublin_core_settings.py:11
 msgid "title"
 msgstr "titre"
 
-#: scope/models.py:146 scope/tests/test_dublin_core_settings.py:12
+#: scope/models.py:142 scope/tests/test_dublin_core_settings.py:12
 msgid "creator"
 msgstr "créateur"
 
-#: scope/models.py:147 scope/tests/test_dublin_core_settings.py:13
+#: scope/models.py:143 scope/tests/test_dublin_core_settings.py:13
 msgid "subject"
 msgstr "sujet"
 
-#: scope/models.py:148 scope/tests/test_dublin_core_settings.py:14
+#: scope/models.py:144 scope/tests/test_dublin_core_settings.py:14
 msgid "description"
 msgstr "description"
 
-#: scope/models.py:149 scope/tests/test_dublin_core_settings.py:15
+#: scope/models.py:145 scope/tests/test_dublin_core_settings.py:15
 msgid "publisher"
 msgstr "éditeur"
 
-#: scope/models.py:150 scope/tests/test_dublin_core_settings.py:16
+#: scope/models.py:146 scope/tests/test_dublin_core_settings.py:16
 msgid "contributor"
 msgstr "contributeur"
 
-#: scope/models.py:151 scope/tests/test_dublin_core_settings.py:17
+#: scope/models.py:147 scope/tests/test_dublin_core_settings.py:17
 msgid "date"
 msgstr "date"
 
-#: scope/models.py:152 scope/tests/test_dublin_core_settings.py:18
+#: scope/models.py:148 scope/tests/test_dublin_core_settings.py:18
 msgid "type"
 msgstr "type"
 
-#: scope/models.py:153 scope/tests/test_dublin_core_settings.py:19
+#: scope/models.py:149 scope/tests/test_dublin_core_settings.py:19
 msgid "format"
 msgstr "format"
 
-#: scope/models.py:154 scope/tests/test_dublin_core_settings.py:20
+#: scope/models.py:150 scope/tests/test_dublin_core_settings.py:20
 msgid "source"
 msgstr "source"
 
-#: scope/models.py:155 scope/tests/test_dublin_core_settings.py:21
+#: scope/models.py:151 scope/tests/test_dublin_core_settings.py:21
 msgid "language"
 msgstr "langue"
 
-#: scope/models.py:156 scope/tests/test_dublin_core_settings.py:22
+#: scope/models.py:152 scope/tests/test_dublin_core_settings.py:22
 msgid "coverage"
 msgstr "couverture"
 
-#: scope/models.py:157 scope/tests/test_dublin_core_settings.py:23
+#: scope/models.py:153 scope/tests/test_dublin_core_settings.py:23
 msgid "rights"
 msgstr "gestion des droits"
 
-#: scope/models.py:239
+#: scope/models.py:235
 msgid "finding aid"
 msgstr "instrument de recherche"
 
-#: scope/models.py:274
+#: scope/models.py:270
 msgid "DIP file"
 msgstr "fichier DIP"
 
-#: scope/models.py:274
+#: scope/models.py:270
 msgid "Related DIP (only tar and zip files allowed)."
 msgstr "DIP associé (fichiers tar et zip autorisés seulement)"
 
-#: scope/models.py:280
+#: scope/models.py:276
 msgid "collection"
 msgstr "collection"
 
-#: scope/models.py:344
+#: scope/models.py:340
 #, python-format
 msgid ""
 "An error occurred during the process executed to extract and parse the METS "
@@ -137,20 +137,20 @@ msgstr ""
 "Une erreur s'est produite lors du traitement du fichier METS."
 "%(error_message)s Veuillez contacter un administrateur."
 
-#: scope/models.py:449
+#: scope/models.py:445
 msgid "content"
 msgstr "Contenu"
 
-#: scope/models.py:453 templates/collections.html:5 templates/home.html:6
+#: scope/models.py:449 templates/collections.html:5 templates/home.html:6
 #: templates/includes/header.html:7 templates/includes/header.html:16
 msgid "Home"
 msgstr "Accueil"
 
-#: scope/models.py:453 templates/login.html:6 templates/login.html:16
+#: scope/models.py:449 templates/login.html:6 templates/login.html:16
 msgid "Login"
 msgstr "Connexion"
 
-#: scope/models.py:453 templates/includes/header.html:24
+#: scope/models.py:449 templates/includes/header.html:24
 msgid "FAQ"
 msgstr "FAQ"
 
