@@ -32,10 +32,12 @@ services:
     volumes:
       - node_modules:/src/node_modules
       - .:/src
-    command: 'watchmedo auto-restart -p *.py -i ./.tox/* -R -- celery -A scope worker -l info'
+    command: >
+      watchmedo auto-restart -p *.py -i ./.tox/* -R --
+        celery -A scope worker -l info
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.2
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
@@ -48,16 +50,16 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
     ports:
-      - '43431:9200'
+      - '127.0.0.1:43431:9200'
 
   redis:
-    image: redis:4-alpine
+    image: redis:alpine
     user: redis
     command: '--appendonly yes'
     volumes:
       - redis_data:/data
     ports:
-      - '43432:6379'
+      - '127.0.0.1:43432:6379'
 
   nginx:
     image: nginx:stable-alpine
@@ -65,4 +67,4 @@ services:
       - ./media:/src/media:ro
       - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - '43430:80'
+      - '127.0.0.1:43430:80'
