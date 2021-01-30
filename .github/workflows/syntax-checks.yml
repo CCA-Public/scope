@@ -1,0 +1,26 @@
+name: Syntax checks
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+jobs:
+  syntax-checks:
+    runs-on: ubuntu-20.04
+    name: Lint (black/flake8/isort)
+    steps:
+    - name: Check out
+      uses: actions/checkout@v2
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+    - name: Install
+      run: pip install pre-commit
+    - name: Run
+      # - Path export could be removed after:
+      #   https://github.com/actions/virtual-environments/issues/2455
+      run: |
+        export PATH="$PATH:$HOME/.local/bin"
+        pre-commit run --all-files --show-diff-on-failure
