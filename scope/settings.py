@@ -151,14 +151,13 @@ NPM_ROOT_PATH = BASE_DIR
 NPM_STATIC_FILES_PREFIX = "lib"
 NPM_FILE_PATTERNS = {
     "@fortawesome": ["fontawesome-free/webfonts/fa-solid-900.*"],
-    "bootstrap": ["dist/js/bootstrap.min.*"],
+    "bootstrap": ["dist/js/bootstrap.bundle.min.*"],
     "bootstrap-datepicker": [
         "dist/css/bootstrap-datepicker3.standalone.min.css",
         "dist/js/bootstrap-datepicker.min.js",
         "dist/locales/bootstrap-datepicker.fr.min.js",
     ],
     "jquery": ["dist/jquery.slim.min.*"],
-    "popper.js": ["dist/umd/popper.min.*"],
     "typeface-roboto": ["files/roboto-latin-400.*"],
 }
 

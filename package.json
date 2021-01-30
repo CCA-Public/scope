@@ -4,12 +4,11 @@
   "description": "A Digital Archives Access Interface",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-free": "5.8.1",
-    "bootstrap": "4.3.1",
-    "bootstrap-datepicker": "1.8.0",
+    "@fortawesome/fontawesome-free": "5.15.2",
+    "bootstrap": "4.6.0",
+    "bootstrap-datepicker": "1.9.0",
     "jquery": "3.5.1",
-    "popper.js": "1.14.7",
-    "typeface-roboto": "0.0.54"
+    "typeface-roboto": "1.1.13"
   },
   "devDependencies": {
     "cypress": "6.3.0",

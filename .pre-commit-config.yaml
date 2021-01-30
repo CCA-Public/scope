@@ -3,15 +3,15 @@ default_language_version:
 
 repos:
 - repo: https://github.com/ambv/black
-  rev: 19.10b0
+  rev: 20.8b1
   hooks:
   - id: black
     args: [--safe, --quiet]
 - repo: https://gitlab.com/pycqa/flake8
-  rev: 3.7.9
+  rev: 3.8.4
   hooks:
   - id: flake8
 - repo: https://github.com/timothycrosley/isort
-  rev: 4.3.21
+  rev: 5.7.0
   hooks:
   - id: isort

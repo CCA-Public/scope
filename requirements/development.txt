@@ -1,4 +1,4 @@
 -r test.txt
 
 argh==0.26.2
-watchdog==0.10.4
+watchdog==1.0.2
