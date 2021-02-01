@@ -10,5 +10,9 @@
     "jquery": "3.5.1",
     "popper.js": "1.14.7",
     "typeface-roboto": "0.0.54"
+  },
+  "devDependencies": {
+    "cypress": "6.3.0",
+    "cypress-file-upload": "5.0.2"
   }
 }

@@ -1,0 +1,30 @@
+[Unit]
+Description=Scope Celery Worker
+After=network.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+EnvironmentFile=/home/runner/work/scope/scope/etc/environment
+Environment=CELERYD_PID_FILE=/home/runner/work/scope/scope-worker.pid
+Environment=CELERYD_LOG_FILE=/home/runner/work/scope/scope-worker.log
+WorkingDirectory=/home/runner/work/scope/scope
+ExecStart=/home/runner/work/scope/scope/venv/bin/celery \
+            multi start scope-worker -A scope \
+            --concurrency=1 \
+            --pidfile=${CELERYD_PID_FILE} \
+            --logfile=${CELERYD_LOG_FILE} \
+            --loglevel=WARNING
+ExecReload=/home/runner/work/scope/scope/venv/bin/celery \
+            multi restart scope-worker -A scope \
+            --concurrency=1 \
+            --pidfile=${CELERYD_PID_FILE} \
+            --logfile=${CELERYD_LOG_FILE} \
+            --loglevel=WARNING
+ExecStop=/home/runner/work/scope/scope/venv/bin/celery \
+            multi stopwait scope-worker \
+            --pidfile=${CELERYD_PID_FILE}
+
+[Install]
+WantedBy=multi-user.target

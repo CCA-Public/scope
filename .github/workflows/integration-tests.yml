@@ -1,0 +1,62 @@
+name: Integration tests
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+jobs:
+  integration-tests:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [Chrome, Electron, Firefox]
+    name: ${{ matrix.browser }}
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    - name: Start containerized services
+      run: |
+        sudo sysctl -w vm.max_map_count=262144
+        docker-compose up -d elasticsearch redis
+    - name: Set up application
+      # - Path export could be removed after:
+      #   https://github.com/actions/virtual-environments/issues/2455
+      # - Exporting environment file instead of workflow environment
+      #   to avoid mismatches with the Gunicorn and Celery services.
+      run: |
+        export PATH="$PATH:$HOME/.local/bin"
+        export $(cat etc/environment)
+        sudo apt install gettext
+        pip install virtualenv
+        virtualenv venv
+        source venv/bin/activate  
+        pip install -r requirements.txt
+        nodeenv --python-virtualenv
+        npm ci --only=prod
+        ./manage.py migrate
+        ./manage.py index_data
+        ./manage.py create_ci_superuser
+        ./manage.py compilemessages
+        ./manage.py collectstatic
+        ./manage.py compress
+        deactivate
+    - name: Start application services
+      run: |
+        sudo cp etc/systemd/system/* /etc/systemd/system/
+        sudo systemctl start scope-worker scope-gunicorn
+    - name: Install and configure Nginx
+      run: |
+        sudo apt install nginx
+        sudo cp etc/nginx/sites-available/scope /etc/nginx/sites-available/
+        sudo ln -s /etc/nginx/sites-available/scope /etc/nginx/sites-enabled
+        sudo rm -f /etc/nginx/sites-enabled/default
+        sudo nginx -t
+        sudo systemctl restart nginx
+    - name: Run tests
+      env:
+        BROWSER: ${{ matrix.browser }}
+      run: |
+        docker run -v $PWD:/src -w /src --network=host -e CYPRESS_VIDEO=false \
+          -e CYPRESS_BASE_URL=http://localhost cypress/browsers bash -c \
+          "npm install --only=dev && npx cypress run -b ${BROWSER,}"

@@ -33,3 +33,8 @@ scope/static/styles/main.css.map
 
 # Node modules
 node_modules/
+
+# Cypress
+cypress/downloads
+cypress/screenshots
+cypress/videos

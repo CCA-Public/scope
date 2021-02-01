@@ -25,6 +25,7 @@
   * [Serve](#serve)
   * [Storage Service integration](#storage-service-integration)
 * [Development](#development)
+* [Testing](#testing)
 * [Credits](#credits)
 
 ## Overview
@@ -564,6 +565,26 @@ Compile translation files:
 docker-compose exec scope ./manage.py compilemessages
 ```
 
+Access the logs:
+
+```
+docker-compose logs -f scope elasticsearch nginx
+```
+
+To access the application with the default options visit http://localhost:43430 in the browser.
+
+## Testing
+
+### Unit tests
+
+If you're using the development environment, you can run the Django unit tests within the
+`scope` container (all of them or individually):
+
+```
+docker-compose exec scope ./manage.py test
+docker-compose exec scope ./manage.py test scope.tests.test_helpers.HelpersTests.test_convert_size
+```
+
 To run the automated tests and checks configured with Tox in the required
 Python versions, the core developers' Python image for CI is available at
 [Quay.io](https://quay.io/repository/python-devs/ci-image). Use the following
@@ -573,13 +594,55 @@ command to create a one go container to do so:
 docker run --rm -t -v `pwd`:/src -w /src quay.io/python-devs/ci-image tox
 ```
 
-Access the logs:
+### Integration tests
+
+The application includes a set of end to end tests developed with
+[Cypress.io](https://www.cypress.io/). To run this tests locally, check Cypress' dependencies
+for you OS and run:
 
 ```
-docker-compose logs -f scope elasticsearch nginx
+npm install --only=dev
+npx cypress install
+npx cypress open
 ```
 
-To access the application with the default options visit http://localhost:43430 in the browser.
+They also provide a set of Docker images that will allow you to run the tests in a container,
+for example:
+
+- To run the tests in the terminal with the default browser (Electron), you can use their base image:
+
+```
+docker run --rm -v $PWD:/src -w /src --network=host cypress/base:14.15.4 bash -c "npm install -D && npx cypress install && npx cypress run"
+```
+
+- And you could use their browsers image to test over Firefox and Chrome:
+
+```
+docker run --rm -v $PWD:/src -w /src --network=host cypress/browsers bash -c "npm install -D && npx cypress install && npx cypress run --browser firefox"
+```
+
+By default, these tests will try to access the application in http://localhost:43430 using
+`ci_admin/ci_admin` as credentials. To change this defaults use the following environment variables:
+
+```
+CYPRESS_baseUrl
+CYPRESS_username
+CYPRESS_password
+```
+
+They could be set locally or passed to the Docker container:
+
+```
+docker run --rm -v $PWD:/src -w /src --network=host \
+  -e CYPRESS_baseUrl=https://example.com \
+  -e CYPRESS_username=user \
+  -e CYPRESS_password=secret \
+  cypress/base:14.15.4 bash -c "npm install -D && npx cypress install && npx cypress run"
+```
+
+While these variables could be configured to test a production like instance, the tests may
+leave residual data in such instance (for example in the case of failure), so it's recomended
+to backup the database and media folder to be able to restore them after the tests.
 
 ## Credits
 

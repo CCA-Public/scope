@@ -1,0 +1,7 @@
+{
+  "baseUrl": "http://localhost:43430",
+  "env": {
+    "username": "ci_admin",
+    "password": "ci_admin"
+  }
+}

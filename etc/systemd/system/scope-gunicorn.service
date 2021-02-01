@@ -1,0 +1,21 @@
+[Unit]
+Description=Scope Gunicorn daemon
+After=network.target
+
+[Service]
+User=root
+Group=root
+PrivateTmp=true
+PIDFile=/home/runner/work/scope/scope-gunicorn.pid
+EnvironmentFile=/home/runner/work/scope/scope/etc/environment
+WorkingDirectory=/home/runner/work/scope/scope
+ExecStart=/home/runner/work/scope/scope/venv/bin/gunicorn \
+            --access-logfile /dev/null \
+            --worker-class gevent \
+            --bind unix:/home/runner/work/scope/scope-gunicorn.sock \
+            scope.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target

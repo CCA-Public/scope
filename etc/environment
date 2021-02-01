@@ -1,0 +1,4 @@
+DJANGO_ALLOWED_HOSTS=localhost
+DJANGO_SECRET_KEY=secret_key
+ES_HOSTS=localhost:43431
+CELERY_BROKER_URL=redis://localhost:43432

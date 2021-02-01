@@ -1,0 +1,23 @@
+upstream scope {
+  server unix:/home/runner/work/scope/scope-gunicorn.sock;
+}
+
+server {
+  listen 80;
+  server_name localhost;
+  client_max_body_size 500M;
+
+  location /media/ {
+    internal;
+    alias /home/runner/work/scope/scope/media/;
+  }
+
+  location / {
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_redirect off;
+    proxy_buffering off;
+    proxy_read_timeout 600s;
+    proxy_pass http://scope;
+  }
+}
