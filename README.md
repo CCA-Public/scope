@@ -119,8 +119,8 @@ The following steps are just an example of how to run the application in a produ
 ### Requirements
 
 * Python 3.6 to 3.8
-* Elasticsearch 7.x
-* Redis (tested with 5.x)
+* Elasticsearch 7
+* Redis 4 to 6
 
 ### Environment
 
