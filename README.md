@@ -1,4 +1,5 @@
-[![Travis CI](https://travis-ci.org/CCA-Public/scope.svg?branch=master)](https://travis-ci.org/CCA-Public/scope)
+[![Integration tests](https://github.com/CCA-Public/scope/workflows/Integration%20tests/badge.svg)](https://github.com/CCA-Public/scope/actions?query=workflow%3A%22Integration+tests%22)
+[![Unit tests](https://github.com/CCA-Public/scope/workflows/Unit%20tests/badge.svg)](https://github.com/CCA-Public/scope/actions?query=workflow%3A%22Unit+tests%22)
 [![Codecov](https://codecov.io/gh/CCA-Public/scope/branch/master/graph/badge.svg)](https://codecov.io/gh/CCA-Public/scope)
 [![pyup](https://pyup.io/repos/github/CCA-Public/scope/shield.svg)](https://pyup.io/repos/github/CCA-Public/scope)
 [![Python Version](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)](https://devguide.python.org/#status-of-python-branches)
