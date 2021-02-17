@@ -597,7 +597,7 @@ docker run --rm -t -v `pwd`:/src -w /src quay.io/python-devs/ci-image tox
 ### Integration tests
 
 The application includes a set of end to end tests developed with
-[Cypress.io](https://www.cypress.io/). To run this tests locally, check Cypress' dependencies
+[Cypress.io](https://www.cypress.io/). To run these tests locally, check Cypress' dependencies
 for you OS and run:
 
 ```
