@@ -1,45 +1,31 @@
-FROM python:3.8-alpine
+FROM python:3.8-slim-bullseye
 
 ENV PYTHONUNBUFFERED 1
 
 RUN set -ex \
-    && apk add --update --no-cache --virtual .buildDeps \
-      alpine-sdk \
+    && apt-get update \
+    && apt-get install -y \
       gcc \
       libffi-dev \
       libxslt-dev \
-      musl-dev
+      musl-dev \
+      gettext \
+      nodejs \
+      npm
 
 COPY requirements /build
 
-RUN set -ex \
-    && pip install --no-cache-dir -r /build/development.txt \
-    && runDeps="$( \
-      scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
-        | tr ',' '\n' \
-        | sort -u \
-        | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 \
-          { next } { print "so:" $1 }' \
-    )" \
-    && apk add --no-cache --virtual .runDeps \
-      $runDeps \
-      gettext \
-      nodejs-npm
+RUN set -ex  pip install --no-cache-dir -r /build/development.txt
 
 COPY package.json package-lock.json /build/
 
-RUN set -ex \
-    && npm install --prefix /build \
-    && apk del .buildDeps \
-    && rm -rf /usr/src/python
+RUN set -ex npm install --prefix /build
 
 COPY . /src
 
 WORKDIR /src
 
-RUN set -xe \
-    && mv /build/node_modules ./ \
-    && rm -rf /build
+RUN set -xe mv /build/node_modules ./
 
 EXPOSE 8000
 
