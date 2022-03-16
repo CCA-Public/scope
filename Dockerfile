@@ -15,17 +15,17 @@ RUN set -ex \
 
 COPY requirements /build
 
-RUN set -ex  pip install --no-cache-dir -r /build/development.txt
+RUN pip install --no-cache-dir -r /build/development.txt
 
 COPY package.json package-lock.json /build/
 
-RUN set -ex npm install --prefix /build
+RUN npm install --prefix /build
 
 COPY . /src
 
 WORKDIR /src
 
-RUN set -xe mv /build/node_modules ./
+RUN mv /build/node_modules ./
 
 EXPOSE 8000
 
