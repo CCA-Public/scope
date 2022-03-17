@@ -6,6 +6,7 @@ django-modeltranslation==0.16.1
 django-npm==1.0.0
 djangorestframework==3.12.2
 django-widget-tweaks==1.4.8
+eaasi-uvi-client==0.1.0
 elasticsearch==7.13.0
 elasticsearch-dsl==7.3.0 # pyup: <8.0
 envparse==0.2.0

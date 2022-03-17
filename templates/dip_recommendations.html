@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load custom_tags %}
+{% load i18n %}
+
+{% block title %}
+{% blocktrans %}Folder {{ dip }} - EaaSI UVI recommendations{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+  <ol class="breadcrumb">
+    {% trans "Untitled" as untitled %}
+    <li class="breadcrumb-item"><a href="{% url 'collections' %}">{% trans "Collections" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collection' dip.collection.pk %}">{{ dip.collection.dc.title|default:untitled }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dip' dip.pk %}">{{ dip.dc.title|default:untitled }}</a></li>
+    <li class="breadcrumb-item active">{% trans "Emulation environment recommendations" %}</li>
+  </ol>
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">{% trans "EaaSI UVI recommendations" %}</h5>
+    </div>
+    <div class="card-body">
+      <p>{{ api_results }}</p>
+    </div>
+  </div>
+{% endblock %}

@@ -47,6 +47,7 @@ urlpatterns = [
     url(r"^folder/(?P<pk>\d+)/delete/$", views.delete_dip, name="delete_dip"),
     url(r"^folder/(?P<pk>\d+)/$", views.dip, name="dip"),
     url(r"^folder/(?P<pk>\d+)/download$", views.download_dip, name="download_dip"),
+    url(r"^folder/(?P<pk>\d+)/recommend$", views.recommend_dip_environments, name="recommend_dip_environments"),
     url(r"^object/(?P<pk>[-\w-]+)$", views.digital_file, name="digital_file"),
     url(r"^new_folder/", views.new_dip, name="new_dip"),
     url(r"^orphan_folders/", views.orphan_dips, name="orphan_dips"),

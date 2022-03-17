@@ -43,6 +43,7 @@
           </p>
           <p>{% trans "By clicking on the button below you'll download all the digital files included in this folder." %}</p>
           <a href="{% url 'download_dip' dip.pk %}" class="btn btn-primary">{% trans "Download DIP" %}</a>
+          <a href="{% url 'recommend_dip_environments' dip.pk %}" class="btn btn-primary">{% trans "Recommend emulation environments" %}</a>
         </div>
       </div>
     </div>

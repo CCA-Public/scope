@@ -16,6 +16,7 @@ services:
       - ES_HOSTS=elasticsearch:9200
       - CELERY_BROKER_URL=redis://redis:6379
       - SS_HOSTS=http://test:test@192.168.1.128:62081
+      - EAASI_HOST=https://eaas.archivematica.net
     volumes:
       - node_modules:/src/node_modules
       - .:/src

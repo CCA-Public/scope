@@ -15,6 +15,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.utils.translation import gettext as _
+from eaasi_uvi_client import EaaSIUVIClient, ResultNotFound
 
 from search.helpers import add_digital_file_aggs
 from search.helpers import add_digital_file_filters
@@ -689,6 +690,36 @@ def download_dip(request, pk):
     if content_length:
         response["Content-Length"] = content_length
     return response
+
+
+@login_required(login_url="/login/")
+def recommend_dip_environments(request, pk):
+    dip = get_object_or_404(DIP, pk=pk)
+    if not django_settings.EAASI_HOST:
+        raise RuntimeError("Configuration not found for EaaSI host.")
+    if dip.objectszip:
+        # TODO: Upload DIP so it's fetchable via URL by EaaSI server.
+        # For now, we fake it with DATA_URL.
+        # With a real DIP, how do we make sure that EaaSI is basing its
+        # recommendations on the actual digital objects, and not e.g. the METS?
+        DATA_URL = "https://github.com/tw4l/sample-data/blob/main/fmt-38.zip?raw=true"
+        eaas_client = EaaSIUVIClient(
+            base_url=django_settings.EAASI_HOST,
+            data_url=DATA_URL
+        )
+        try:
+            results = eaas_client.get_recommendations()
+        except (requests.ConnectionError, ResultNotFound) as err:
+            results = "Error fetching recommendations: {}".format(err)
+        return render(
+            request,
+            "dip_recommendations.html",
+            {
+                "dip": dip,
+                "api_results": results,
+            },
+        )
+    return redirect("dip", pk=pk)
 
 
 @login_required(login_url="/login/")

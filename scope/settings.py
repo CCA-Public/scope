@@ -211,3 +211,7 @@ REST_FRAMEWORK = {
 SS_HOSTS = env(
     "SS_HOSTS", cast=list, subcast=str, postprocessor=ss_hosts_parser, default=[]
 )
+
+# EaaSI
+
+EAASI_HOST = env("EAASI_HOST")
