@@ -700,6 +700,11 @@ def recommend_dip_environments(request, pk):
     if dip.objectszip:
         # TODO: Upload DIP so it's fetchable via URL by EaaSI server.
         # For now, we fake it with DATA_URL.
+        # To do the real thing:
+        # 1. Copy DIP to /eaasi/tmp-storage on EaaSI server
+        # 2. Use file:// URL that matches location in Docker container
+        #    e.g. "file:///tmp-storage/fmt-38.zip"
+        # 3. Delete DIP from EaaSI server
         # With a real DIP, how do we make sure that EaaSI is basing its
         # recommendations on the actual digital objects, and not e.g. the METS?
         DATA_URL = "https://github.com/tw4l/sample-data/blob/main/fmt-38.zip?raw=true"
